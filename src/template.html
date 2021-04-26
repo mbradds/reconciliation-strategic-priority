@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="src/GCWeb/css/theme.min.css" />
+    <link rel="stylesheet" href="src/GCWeb/css/gcwu.custom.css" />
+    <noscript>
+      <link rel="stylesheet" href="src/GCWeb/wet-boew/css/noscript.min.css" />
+    </noscript>
+    <link
+      rel="stylesheet"
+      href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css"
+      integrity="sha512-xodZBNTC5n17Xt2atTPuE1HxjVMSvLVW9ocqUKLsCC5CXdbqCmblAshOMAS6/keqq/sMZMZ19scR4PsZChSR7A=="
+      crossorigin=""
+    />
+    <link rel="stylesheet" href="/dist/main.css" />
+    <title>Pipeline Profiles</title>
+  </head>
+
+  <body>
+    <div class="container mrgn-bttm-xl">
+      <div class="row">
+        <div class="col-md-12">
+          <h2>First Nations Section</h2>
+          <p class="small">Section updated April 2021</p>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-6 mrgn-tp-md">
+          <p>
+            A significant amount of CER regualted pipelines and facilities
+            reside within First Nations Reserves. Many of the CER's events,
+            including incident review, conditions complaince, inspections, and
+            complaince verification activities, among others rely on involvement
+            from First Nations groups as a key stakeholder.
+          </p>
+          <p>
+            This section of the pipeline profiles highlights the intersections
+            and proximity of CER regulated infrastructure and activities with
+            First Nations Reserves, as well as historic treaty lands.
+          </p>
+          <p>
+            Reconciliation with Canada's First Nations communities is one of the
+            CER's four strategic priorities. Learn more about how we engage with
+            Indigenous Peoples
+            <a
+              href="https://www.cer-rec.gc.ca/en/consultation-engagement/indigenous-engagement/index.html"
+              >here</a
+            >.
+          </p>
+        </div>
+        <div class="col-md-6">
+          <div id="treaty-length"></div>
+        </div>
+      </div>
+      <!-- <div class="row mrgn-bttm-md">
+        <div class="col-md-12">
+          <h3>Dashboard: NGTL Intersection with First Nations Reserves</h3>
+        </div>
+      </div> -->
+      <div class="row mrgn-tp-md mrgn-bttm-sm">
+        <div class="col-md-7">
+          <section class="panel panel-default" id="map-panel">
+            <header class="panel-heading">
+              <h5 class="panel-title">
+                Map - CER Regulated Pipeline & First Nations Reserves
+              </h5>
+            </header>
+            <div class="panel-body" id="map"></div>
+          </section>
+        </div>
+        <div class="col-md-5">
+          <section class="panel panel-default fn-panel" id="click-fn-info">
+            <header class="panel-heading">
+              <h5 class="panel-title">Intersection Details</h5>
+            </header>
+            <div class="panel-body">
+              <div id="intersection-details">
+                <div class="alert alert-info">
+                  <p>Click on a map region to view extra info</p>
+                </div>
+              </div>
+            </div>
+          </section>
+          <button
+            type="button"
+            id="reset-map"
+            class="btn btn-default btn-block"
+          >
+            Reset Map
+          </button>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-12">
+          <section class="panel panel-default" id="geo-summary">
+            <header class="panel-heading">
+              <h5 class="panel-title">Geographic summary</h5>
+            </header>
+            <div class="panel-body">
+              <ul class="lst-spcd">
+                <li id="overlap-meta-point"></li>
+                <li id="incident-meta-point"></li>
+              </ul>
+            </div>
+          </section>
+        </div>
+      </div>
+    </div>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.js"></script>
+    <script src="src/GCWeb/wet-boew/js/wet-boew.min.js"></script>
+    <!-- <script src="https://d3js.org/d3.v6.js"></script>
+    <script src="https://d3js.org/d3-scale.v3.min.js"></script> -->
+    <script
+      src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"
+      integrity="sha512-XQoYMqMTK8LvdxXYG3nZ448hOEQiglfqkJs1NOQV44cWnUrBc8PkAOcXy20w0vlaXaVUearIOBhiXZ5V3ynxwA=="
+      crossorigin=""
+    ></script>
+    <script src="./dist/bundle_index.js"></script>
+  </body>
+</html>

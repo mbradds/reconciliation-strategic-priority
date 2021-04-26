@@ -1,0 +1,22 @@
+#map {
+  height: 550px;
+}
+
+#fn-tooltip tr {
+  border-bottom: 1pt solid #dcdcdc;
+  width: 300px;
+  overflow: visible;
+}
+
+.fn-panel {
+  overflow: auto;
+}
+
+.text-val {
+  font-weight: bold;
+  font-style: normal;
+}
+
+#click-fn-info {
+  margin-bottom: 15px;
+}
