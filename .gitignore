@@ -16,3 +16,6 @@ __pycache__
 src/data_management/*
 !src/data_management/cer_gis.py
 node_modules
+npm-debug.log
+.DS_Store
+/*.env
