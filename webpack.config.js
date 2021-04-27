@@ -5,13 +5,50 @@ const { CleanWebpackPlugin } = require("clean-webpack-plugin");
 // const BundleAnalyzerPlugin = require("webpack-bundle-analyzer")
 //   .BundleAnalyzerPlugin;
 
+const webpackOutputs = (function () {
+  const filenames = [
+    "ngtl",
+    "trans_mountain",
+    "alliance",
+    "norman_wells",
+    "enbridge_mainline",
+    "foothills",
+    "keystone",
+    "tcpl",
+    "trans_northern",
+    "westcoast",
+  ];
+
+  function entryJs() {
+    const paths = {};
+    filenames.forEach((name) => {
+      paths[name] = `./src/entry_points/${name}.js`;
+    });
+    return paths;
+  }
+
+  function outputHtml() {
+    const html = filenames.map((name) => {
+      return new HtmlWebpackPlugin({
+        filename: `${name}.html`,
+        template: "src/template.html",
+        chunks: [`${name}`],
+        minify: { collapseWhitespace: false },
+      });
+    });
+    return html;
+  }
+
+  return {
+    entryJs: entryJs,
+    outputHtml: outputHtml,
+  };
+})();
+
 module.exports = {
   // mode: "development",
   mode: "production",
-
-  entry: {
-    trans_mountain: "./src/entry_points/trans_mountain.js",
-  },
+  entry: webpackOutputs.entryJs(),
   output: {
     path: path.resolve(__dirname, "dist"),
     publicPath: "/dist/",
@@ -19,10 +56,7 @@ module.exports = {
   },
 
   plugins: [
-    new HtmlWebpackPlugin({
-      filename: "trans_mountain.html",
-      template: "src/template.html",
-    }),
+    ...webpackOutputs.outputHtml(),
 
     new CopyWebpackPlugin({
       patterns: [
