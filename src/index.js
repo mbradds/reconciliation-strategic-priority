@@ -225,7 +225,10 @@ export function landDashboard(landFeature, poly2Length, incidentFeature) {
   }
 
   function resetZoom(map, geoLayer, fly = false) {
-    var padd = [25, 25];
+    let padd = [25, 25];
+    if (Object.keys(geoLayer._layers).length === 1) {
+      padd = [270, 270];
+    }
     if (fly) {
       map.flyToBounds(geoLayer.getBounds(), {
         duration: 0.25,
@@ -271,7 +274,7 @@ export function landDashboard(landFeature, poly2Length, incidentFeature) {
       resetZoom(map, geoLayer, true);
       removeIncidents(map);
       document.getElementById("intersection-details").innerHTML =
-        '<div class="alert alert-info"><p>Click on a map region to view extra info</p></div>';
+        '<div class="alert alert-info"><p>Click on a region to view extra info</p></div>';
     });
   }
 

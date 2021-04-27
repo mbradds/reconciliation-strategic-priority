@@ -1,4 +1,4 @@
-import landFeature from "../company_data/EnbridgeNormanWells/poly1.json";
+import landFeature from "../company_data_min/EnbridgeNormanWells.json";
 import poly2Length from "../company_data/EnbridgeNormanWells/poly2.json";
 import incidentFeature from "../company_data/EnbridgeNormanWells/events.json";
 import { landDashboard } from "../index.js";

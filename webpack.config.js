@@ -12,7 +12,6 @@ const webpackOutputs = (function () {
     "alliance",
     "norman_wells",
     "enbridge_mainline",
-    "foothills",
     "keystone",
     "tcpl",
     "trans_northern",
