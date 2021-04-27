@@ -8,9 +8,11 @@
   "description": "",
   "main": "index.js",
   "scripts": {
+    "start": "node server.js",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "set NODE_OPTIONS=--max-old-space-size=10000 && webpack",
-    "start": "webpack serve",
+    "build": "webpack",
+    "heroku-postbuild": "webpack",
+    "dev": "webpack serve",
     "maps": "sh ./src/maps_min.sh"
   },
   "author": "",
@@ -31,6 +33,7 @@
   },
   "dependencies": {
     "@babel/runtime": "^7.13.8",
+    "compression": "^1.7.4",
     "mapshaper": "^0.5.41"
   }
 }

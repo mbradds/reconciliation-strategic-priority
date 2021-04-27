@@ -1,8 +1,3 @@
-// trans mountain
-// import landFeature from "./company_data/TransMountainPipelineULC/reserve.json";
-// import poly2Length from "./company_data/TransMountainPipelineULC/oldTreaty.json";
-// import incidentFeature from "./company_data/TransMountainPipelineULC/events.json";
-
 export function landDashboard(landFeature, poly2Length, incidentFeature) {
   const cerPalette = {
     "Night Sky": "#054169",
@@ -90,6 +85,7 @@ export function landDashboard(landFeature, poly2Length, incidentFeature) {
     var map = new L.map(config.div, {
       zoomDelta: config.zoomDelta,
       minZoom: 5,
+      maxZoom: 12,
       zoomSnap: 0.25,
       // padding: [200, 200],
     }).setView(config.initZoomTo, config.initZoomLevel);
