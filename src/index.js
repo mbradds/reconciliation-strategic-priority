@@ -1,3 +1,14 @@
+import "leaflet/dist/leaflet.css";
+import * as L from "leaflet";
+// delete L.Icon.Default.prototype._getIconUrl;
+// L.Icon.Default.mergeOptions({
+//   iconRetinaUrl: require("leaflet/dist/images/marker-icon-2x.png"),
+//   iconUrl: require("leaflet/dist/images/marker-icon.png"),
+//   shadowUrl: require("leaflet/dist/images/marker-shadow.png"),
+// });
+// var L = require('leaflet');
+// import { L } from "leaflet";
+
 export function landDashboard(landFeature, poly2Length, incidentFeature) {
   const cerPalette = {
     "Night Sky": "#054169",

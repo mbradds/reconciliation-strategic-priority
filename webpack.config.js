@@ -85,6 +85,20 @@ module.exports = {
           loader: "babel-loader",
         },
       },
+      {
+        test: /\.css$/,
+        use: [{ loader: "style-loader" }, { loader: "css-loader" }],
+      },
+      {
+        test: /\.(png|jpg|jpeg|gif|svg|woff|woff2|ttf|eot)$/,
+        use: {
+          loader: "file-loader",
+          options: {
+            publicPath: "dist/images/",
+            outputPath: "images",
+          },
+        },
+      },
     ],
   },
 
@@ -99,7 +113,21 @@ module.exports = {
     compress: true,
   },
 
+  // optimization: {
+  //   minimize: true,
+  // },
+
   optimization: {
-    minimize: true,
+    splitChunks: {
+      chunks: "all",
+      cacheGroups: {
+        defaultVendors: {
+          enforce: true,
+          test: /[\\/]node_modules[\\/]/,
+          filename: "js/[name].vendor.js",
+          reuseExistingChunk: true,
+        },
+      },
+    },
   },
 };
