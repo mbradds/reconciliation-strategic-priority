@@ -56,7 +56,7 @@ module.exports = {
 
   plugins: [
     ...webpackOutputs.outputHtml(),
-
+    // new BundleAnalyzerPlugin(),
     new CopyWebpackPlugin({
       patterns: [
         {
@@ -113,18 +113,17 @@ module.exports = {
     compress: true,
   },
 
-  // optimization: {
-  //   minimize: true,
-  // },
-
   optimization: {
+    minimize: true,
+    usedExports: true,
+    runtimeChunk: true,
     splitChunks: {
       chunks: "all",
       cacheGroups: {
         defaultVendors: {
           enforce: true,
-          test: /[\\/]node_modules[\\/]/,
-          filename: "js/[name].vendor.js",
+          test: /node_modules/,
+          filename: "js/vendor.js",
           reuseExistingChunk: true,
         },
       },
