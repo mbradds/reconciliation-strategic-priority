@@ -1,5 +1,4 @@
 import geopandas as gpd
-from geopandas.tools import sjoin
 import os
 import pandas as pd
 import json
@@ -111,6 +110,7 @@ def import_geodata(path, d_type, crs_target):
             del data[remove]
         data['OPERATOR'] = [x.strip() for x in data['OPERATOR']]
         data['OPERATOR'] = data['OPERATOR'].replace(companies)
+        data = data[data['STATUS'] != "Approved"].copy().reset_index(drop=True)
 
     elif d_type == "incidents":
         remove = ['Reported Date',
@@ -167,9 +167,11 @@ def line_clip(pipe,
 
     if pipe.crs != land.crs:
         print('Warning: Different CRS: '+str(pipe.crs)+' '+str(land.crs))
+    
+    pipe = pipe.dissolve(by=['OPERATOR', 'PLNAME', 'STATUS']).reset_index()
 
-    pipe_on_land = sjoin(pipe, land, how='inner', op='intersects').reset_index(drop=True)
-    land_on_pipe = sjoin(land, pipe, how='inner', op='intersects').reset_index(drop=True)
+    pipe_on_land = gpd.sjoin(pipe, land, how='inner', op='intersects').reset_index(drop=True)
+    land_on_pipe = gpd.sjoin(land, pipe, how='inner', op='intersects').reset_index(drop=True)
     land_on_pipe = land_on_pipe.drop_duplicates(subset=polygon_id)
     # check for invalid polygons
     # https://stackoverflow.com/questions/13062334/polygon-intersection-error-in-shapely-shapely-geos-topologicalerror-the-opera
@@ -182,19 +184,20 @@ def line_clip(pipe,
     # print('completed spatial join')
 
     if os.path.isfile(script_dir+'/'+clip_location) and not forceclip:
-        pipe_on_land = gpd.read_file(script_dir+'/'+clip_location)
+        pipe_clipped = gpd.read_file(script_dir+'/'+clip_location)
         print('clip already complete with crs: '+str(pipe_on_land.crs))
 
     else:
-        # print('starting clip')
-        pipe_on_land = gpd.clip(pipe_on_land, land_on_pipe)
-        pipe_on_land = to_metres(pipe_on_land, crs_target=crs_proj)
+        print('starting clip')
+        pipe_clipped = gpd.clip(pipe_on_land, land_on_pipe).copy()
+        pipe_clipped = to_metres(pipe_clipped, crs_target=crs_proj)
         # print('finished clip with CRS: '+str(pipe_on_land.crs))
-        pipe_on_land = pipe_on_land.to_crs(crs_geo)
-        pipe_on_land.crs = crs_geo
+        pipe_clipped = pipe_clipped.to_crs(crs_geo)
+        pipe_clipped.crs = crs_geo
+        pipe_clipped.to_file(os.getcwd()+'/test/tm_test.shp')
         if save:
-            pipe_on_land.to_file(os.getcwd()+'/'+clip_location)
-            print('saved pipe_on_land (clip) with crs: '+str(pipe_on_land.crs))
+            pipe_clipped.to_file(os.getcwd()+'/'+clip_location)
+            print('saved pipe_on_land (clip) with crs: '+str(pipe_clipped.crs))
 
     # convert back to geographic CRS after length/distance measures are calculated.
     land_on_pipe = land_on_pipe.to_crs(crs_geo)
@@ -204,16 +207,17 @@ def line_clip(pipe,
         land_on_pipe.to_file(os.getcwd()+'/'+poly1_on_pipe_location)
         print('saved land_on_pipe with crs: '+str(land_on_pipe.crs))
 
-    return pipe_on_land, land_on_pipe
+    return pipe_clipped, land_on_pipe
 
 
 def to_metres(gdf, crs_target, length=True):
 
     gdf = gdf.set_geometry('geometry')
     if gdf.crs != crs_target:
-        gdf['geometry'] = gdf['geometry'].to_crs(crs_target)
+        print('wrong crs for length!')
+        gdf['geometry'] = gdf.geometry.to_crs(crs_target)
     if length:
-        gdf['length_gpd'] = gdf['geometry'].length
+        gdf['length_gpd'] = gdf.geometry.length
     return gdf
 
 
@@ -347,11 +351,11 @@ def worker(company, pipe, poly1, poly2, incidents):
                                              forceclip=True)
 
     pipe_on_poly2, poly2_on_pipe = line_clip(pipec2,
-                                             poly2c,
-                                             crs_proj=crs_proj,
-                                             crs_geo=crs_geo,
-                                             polygon_id="TAG_ID",
-                                             forceclip=True)
+                                              poly2c,
+                                              crs_proj=crs_proj,
+                                              crs_geo=crs_geo,
+                                              polygon_id="TAG_ID",
+                                              forceclip=True)
 
     output_poly1(pipe_on_poly1, poly1_on_pipe, company)
     eventProximity(incidents, poly1_on_pipe, company)
@@ -364,14 +368,15 @@ if __name__ == "__main__":
     start = time.time()
     jobs = []
     poly1, pipe, poly2, incidents = import_files(crs_target=crs_proj)
-    for company in companies.values():
-        # worker(company, pipe, poly1, poly2, incidents) # single thread
-        p = mp.Process(target=worker, args=(company, pipe, poly1, poly2, incidents, ))
-        jobs.append(p)
-        p.start()
+    # for company in companies.values():
+    for company in ["Trans Mountain Pipeline ULC"]:
+        worker(company, pipe, poly1, poly2, incidents) # single thread
+        # p = mp.Process(target=worker, args=(company, pipe, poly1, poly2, incidents, ))
+        # jobs.append(p)
+        # p.start()
 
-    for proc in jobs:
-        proc.join()
+    # for proc in jobs:
+    #     proc.join()
 
     elapsed = (time.time() - start)
     print("GIS process time:", round(elapsed, 0), ' seconds')

@@ -23,34 +23,32 @@ export function landDashboard(landFeature, poly2Length, incidentFeature) {
   const lengthUnits = (val) => {
     if (val >= 1000) {
       return [(val / 1000).toFixed(1), "kilometers"];
-    } else {
-      return [val.toFixed(1), "metres"];
     }
+    return [val.toFixed(1), "metres"];
   };
 
   function setupHeight() {
-    const addStyle = (val) => {
-      return `<i class="bg-primary text-val">&nbsp${val}&nbsp</i>`;
-    };
+    const addStyle = (val) =>
+      `<i class="bg-primary text-val">&nbsp${val}&nbsp</i>`;
     document.addEventListener(
       "DOMContentLoaded",
-      function () {
-        var [totalLength, totalFeatures] = [0, 0];
-        landFeature.features.map((poly) => {
+      () => {
+        let [totalLength, totalFeatures] = [0, 0];
+        landFeature.features.forEach((poly) => {
           totalLength += poly.properties.length_gpd;
           totalFeatures += 1;
         });
-        var lengthInfo = lengthUnits(totalLength);
+        const lengthInfo = lengthUnits(totalLength);
 
-        var htmlLiOver = `Approximately ${addStyle(lengthInfo[0])} ${
+        const htmlLiOver = `Approximately ${addStyle(lengthInfo[0])} ${
           lengthInfo[1]
         } of regulated pipeline passes directly through ${addStyle(
           totalFeatures
         )} First Nations Reserves.`;
         document.getElementById("overlap-meta-point").innerHTML = htmlLiOver;
 
-        var incidentMeta = incidentFeature.meta;
-        var htmlLiInc = `There have been ${addStyle(
+        const incidentMeta = incidentFeature.meta;
+        const htmlLiInc = `There have been ${addStyle(
           incidentMeta.on
         )} reported system incidents on First Nations Reserves and, ${addStyle(
           incidentMeta["15km"]
@@ -58,24 +56,25 @@ export function landDashboard(landFeature, poly2Length, incidentFeature) {
 
         document.getElementById("incident-meta-point").innerHTML = htmlLiInc;
 
-        var div = document.getElementById("click-fn-info");
-        var dbHeight = document.getElementById("map-panel").clientHeight;
-        var resetBtnHeight = document.getElementById("reset-map").clientHeight;
-        var otherHeight = 15 + resetBtnHeight;
-        var clickDivHeight = `${(dbHeight - otherHeight).toFixed(0)}`;
-        div.setAttribute("style", "height:" + clickDivHeight + "px");
+        const div = document.getElementById("click-fn-info");
+        const dbHeight = document.getElementById("map-panel").clientHeight;
+        const resetBtnHeight =
+          document.getElementById("reset-map").clientHeight;
+        const otherHeight = 15 + resetBtnHeight;
+        const clickDivHeight = `${(dbHeight - otherHeight).toFixed(0)}`;
+        div.setAttribute("style", `height:${clickDivHeight}px`);
       },
       false
     );
   }
 
   function addpoly2Length(treaties) {
-    var treatyDiv = document.getElementById("treaty-length");
-    var treatyHtml = '<table class="table">';
+    const treatyDiv = document.getElementById("treaty-length");
+    let treatyHtml = '<table class="table">';
     treatyHtml += ` <caption>CER pipeline within Pre 1975 Historic Treaty land</caption>`;
     treatyHtml += `<thead><tr><th scope="col" class="col-sm-6">Treaty Name</th><th scope="col" class="col-sm-6">Operating Km</th></tr></thead>`;
     treatyHtml += `<tbody>`;
-    treaties.map((land) => {
+    treaties.forEach((land) => {
       treatyHtml += `<tr><td>${land.ENAME}:</td><td> ${(
         land.length_gpd / 1000
       ).toFixed(0)} km</td></tr>`;
@@ -85,7 +84,7 @@ export function landDashboard(landFeature, poly2Length, incidentFeature) {
   }
 
   function leafletBaseMap(config) {
-    var map = new L.map(config.div, {
+    const map = new L.map(config.div, {
       zoomDelta: config.zoomDelta,
       minZoom: 5,
       maxZoom: 12,
@@ -97,13 +96,13 @@ export function landDashboard(landFeature, poly2Length, incidentFeature) {
       attribution:
         '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
     }).addTo(map);
-    //map.setMinZoom(config.minZoom);
+    // map.setMinZoom(config.minZoom);
     return map;
   }
 
   function removeIncidents(map) {
-    map.eachLayer(function (layer) {
-      if (layer.options.hasOwnProperty("type")) {
+    map.eachLayer((layer) => {
+      if (Object.prototype.hasOwnProperty.call(layer.options, "type")) {
         layer.remove();
       }
     });
@@ -111,23 +110,22 @@ export function landDashboard(landFeature, poly2Length, incidentFeature) {
 
   function addIncidents(map, name) {
     removeIncidents(map);
-    const addCircle = (x, y, color, fillColor, fillOpacity, r, name) => {
-      return L.circle([x, y], {
-        color: color,
-        fillColor: fillColor,
-        fillOpacity: fillOpacity,
+    const addCircle = (x, y, color, fillColor, fillOpacity, r, circleName) =>
+      L.circle([x, y], {
+        color,
+        fillColor,
+        fillOpacity,
         radius: r,
         weight: 1,
-        name: name,
+        circleName,
         type: "incident",
       }).bindTooltip(`<strong>${name}</strong>`);
-    };
 
-    var incidents = incidentFeature[name];
-    var proximityCount = { on: 0, close: 0 };
+    const incidents = incidentFeature[name];
+    const proximityCount = { on: 0, close: 0 };
     if (incidents) {
-      var points = incidents.map((p) => {
-        if (p.distance == 0) {
+      const points = incidents.map((p) => {
+        if (p.distance === 0) {
           proximityCount.on += 1;
         } else {
           proximityCount.close += 1;
@@ -135,8 +133,8 @@ export function landDashboard(landFeature, poly2Length, incidentFeature) {
         return addCircle(
           p.loc[0],
           p.loc[1],
-          cerPalette["Cool Grey"], //border
-          cerPalette["hcRed"], //fill
+          cerPalette["Cool Grey"], // border
+          cerPalette.hcRed, // fill
           1,
           1000,
           p.incidentId
@@ -149,39 +147,40 @@ export function landDashboard(landFeature, poly2Length, incidentFeature) {
 
   const formatCommaList = (text) => {
     if (text.includes("/")) {
-      let itemList = text.split("/");
+      const itemList = text.split("/");
       let brokenText = `<ul style="margin-bottom: 0px">`;
-      itemList.map((i) => {
+      itemList.forEach((i) => {
         brokenText += `<li>${i.split("-")[0].trim()}</li>`;
       });
       brokenText += `</ul>`;
       return brokenText;
-    } else {
-      return `${text}`;
     }
+    return `${text}`;
   };
 
   function onEachFeature(feature, layer) {
     const alertClass = (val, type) => {
-      if (type == "on" && val > 0) {
+      if (type === "on" && val > 0) {
         return "alert alert-danger";
-      } else if (type == "close" && val > 0) {
-        return "alert alert-warning";
-      } else {
-        return "alert alert-success";
       }
+      if (type === "close" && val > 0) {
+        return "alert alert-warning";
+      }
+      return "alert alert-success";
     };
 
     layer.on({
-      click: function (e) {
+      click(e) {
         this._map.fitBounds(e.target.getBounds(), {
           padding: [200, 200],
         });
 
-        // console.log(feature.properties);
-        var proximityCount = addIncidents(this._map, feature.properties.NAME1);
-        var length = lengthUnits(feature.properties.length_gpd);
-        var popHtml =
+        const proximityCount = addIncidents(
+          this._map,
+          feature.properties.NAME1
+        );
+        const length = lengthUnits(feature.properties.length_gpd);
+        let popHtml =
           '<div class="col-md-12"> <table class="table" style="margin-bottom:0px">';
         popHtml += `<caption>${feature.properties.NAME1}</caption>`;
         popHtml += `<tbody>`;
@@ -213,8 +212,9 @@ export function landDashboard(landFeature, poly2Length, incidentFeature) {
   }
 
   function toolText(layer) {
-    var length = lengthUnits(layer.length_gpd);
-    var table = `<table id="fn-tooltip">`;
+    // console.log(layer);
+    const length = lengthUnits(layer.length_gpd);
+    let table = `<table id="fn-tooltip">`;
     table += `<caption><b>${layer.NAME1}</b></caption>`;
     table += `<tr><td>Pipeline Name: </td> <td><b>${layer.OPERATOR}</td></tr>`;
     table += `<tr><td>Land Type: </td> <td><b>${layer.ALTYPE}</td></tr>`;
@@ -243,33 +243,32 @@ export function landDashboard(landFeature, poly2Length, incidentFeature) {
     addpoly2Length(poly2Length);
     setupHeight();
 
-    var map = leafletBaseMap({
+    const map = leafletBaseMap({
       div: "map",
       zoomDelta: 0.25,
       initZoomLevel: 4,
       initZoomTo: [55, -119],
     });
 
-    var reserveStyle = {
+    const reserveStyle = {
       fillColor: cerPalette["Night Sky"],
-      color: cerPalette["Sun"],
+      color: cerPalette.Sun,
       weight: 20,
       opacity: 0.5,
       fillOpacity: 1,
     };
 
-    var geoLayer = L.geoJSON(landFeature, {
+    const geoLayer = L.geoJSON(landFeature, {
       style: reserveStyle,
-      onEachFeature: onEachFeature,
+      onEachFeature,
     })
-      .bindTooltip(function (layer) {
-        return toolText(layer.feature.properties);
-      })
+      .bindTooltip((layer) => toolText(layer.feature.properties))
       .addTo(map);
 
     resetZoom(map, geoLayer);
 
-    document.getElementById("reset-map").addEventListener("click", (event) => {
+    // can add: addEventListener("click", (event) =>
+    document.getElementById("reset-map").addEventListener("click", () => {
       resetZoom(map, geoLayer, true);
       removeIncidents(map);
       document.getElementById("intersection-details").innerHTML =
