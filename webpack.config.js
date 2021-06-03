@@ -27,20 +27,18 @@ const webpackOutputs = (function () {
   }
 
   function outputHtml() {
-    const html = filenames.map((name) => {
-      return new HtmlWebpackPlugin({
+    const html = filenames.map((name) => new HtmlWebpackPlugin({
         filename: `${name}.html`,
         template: "src/template.html",
         chunks: [`${name}`],
         minify: { collapseWhitespace: false },
-      });
-    });
+      }));
     return html;
   }
 
   return {
-    entryJs: entryJs,
-    outputHtml: outputHtml,
+    entryJs,
+    outputHtml,
   };
 })();
 

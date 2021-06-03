@@ -5,8 +5,6 @@ import json
 import time
 import multiprocessing as mp
 script_dir = os.path.dirname(__file__)
-# crs_proj = 'EPSG:3857'
-# crs_geo = 'EPSG:3857'
 crs_proj = 'EPSG:2960'
 crs_geo = 'EPSG:4269'
 
@@ -24,6 +22,21 @@ companies = {"ALLIANCE PIPELINE LTD. (A159)": "Alliance Pipeline Ltd.",
              "TRANSCANADA KEYSTONE PIPELINE GP LTD. (T241)": "TransCanada Keystone Pipeline GP Ltd.",
              "TRANSCANADA PIPELINES LIMITED (T211)": "TransCanada PipeLines Limited",
              "WESTCOAST ENERGY INC., CARRYING ON BUSINESS AS SPECTRA ENERGY TRANSMISSION (W102)": "Westcoast Energy Inc."}
+
+
+def import_tmx(crs_target=crs_proj):
+    data = gpd.read_file(os.path.join(script_dir, "tmx/centreline.json"))
+    data = data.set_geometry('geometry')
+    data = data.to_crs(crs_target)
+    data.crs = crs_target
+    for delete in ['OBJECTID', 'FolderPath', 'Shape_Length']:
+        del data[delete]
+
+    data['OPERATOR'] = "Trans Mountain Pipeline ULC"
+    data["PLNAME"] = "TMX"
+    data["STATUS"] = "Approved"
+    data = data.dissolve(by=['OPERATOR', 'PLNAME', 'STATUS']).reset_index()
+    return data
 
 
 def import_geodata(path, d_type, crs_target):
@@ -110,7 +123,13 @@ def import_geodata(path, d_type, crs_target):
             del data[remove]
         data['OPERATOR'] = [x.strip() for x in data['OPERATOR']]
         data['OPERATOR'] = data['OPERATOR'].replace(companies)
+
+        # remove the old tmx
+        data = data.drop(data[(data['STATUS'] == 'Approved') & (data['OPERATOR'] == 'Trans Mountain Pipeline ULC')].index)
         data = data[data['STATUS'] != "Approved"].copy().reset_index(drop=True)
+        # add the new tmx
+        tmx = import_tmx()
+        data = pd.concat([data, tmx], ignore_index=True)
 
     elif d_type == "incidents":
         remove = ['Reported Date',
@@ -155,6 +174,7 @@ def line_clip(pipe,
               crs_geo,
               polygon_id,
               forceclip=True,
+              landCol="NAME1",
               clip_location='',
               poly1_on_pipe_location='',
               save=False):
@@ -167,45 +187,40 @@ def line_clip(pipe,
 
     if pipe.crs != land.crs:
         print('Warning: Different CRS: '+str(pipe.crs)+' '+str(land.crs))
-    
+
     pipe = pipe.dissolve(by=['OPERATOR', 'PLNAME', 'STATUS']).reset_index()
 
     pipe_on_land = gpd.sjoin(pipe, land, how='inner', op='intersects').reset_index(drop=True).copy()
     land_on_pipe = gpd.sjoin(land, pipe, how='inner', op='intersects').reset_index(drop=True).copy()
     land_on_pipe = land_on_pipe.drop_duplicates(subset=polygon_id)
-    
+
     # check for invalid polygons
     # https://stackoverflow.com/questions/13062334/polygon-intersection-error-in-shapely-shapely-geos-topologicalerror-the-opera
-    # pipe_on_land["PLNAME"] = [x+str(i) for x, i in zip(pipe_on_land['PLNAME'], pipe_on_land.index)]
-    # pipe_on_land.to_file(os.getcwd()+'/test/pre_clip/tm.geojson', driver="GeoJSON")
     for shp in [pipe_on_land, land_on_pipe]:
         shp['valid'] = [x.is_valid for x in shp['geometry']]
         del shp['index_right']
         # shp['geometry'] = [shape.buffer(0) if valid == False else shape for shape, valid in zip(shp['geometry'], shp['valid'])]
-
-    # print('completed spatial join')
 
     if os.path.isfile(script_dir+'/'+clip_location) and not forceclip:
         pipe_clipped = gpd.read_file(script_dir+'/'+clip_location)
         print('clip already complete with crs: '+str(pipe_on_land.crs))
 
     else:
-        print('starting clip')
         completed = []
-        for landName in land_on_pipe["NAME1"]:
-            p1 = pipe_on_land[pipe_on_land["NAME1"] == landName].copy()
-            l1 = land_on_pipe[land_on_pipe["NAME1"] == landName].copy()
-     
+        for landName in land_on_pipe[landCol]:
+            p1 = pipe_on_land[pipe_on_land[landCol] == landName].copy()
+            l1 = land_on_pipe[land_on_pipe[landCol] == landName].copy()
+
             clip1 = gpd.clip(p1, l1).copy()
             clip1 = to_metres(clip1, crs_target=crs_proj)
             clip1 = clip1.to_crs(crs_geo)
             clip1.crs = crs_geo
             completed.append(clip1)
-        
+
         if len(completed) > 0:
             pipe_clipped = pd.concat(completed, ignore_index=True)
         else:
-            pipe_clipped = pipe
+            pipe_clipped = pd.DataFrame()
         if save:
             pipe_clipped.to_file(os.getcwd()+'/'+clip_location)
             print('saved pipe_on_land (clip) with crs: '+str(pipe_clipped.crs))
@@ -213,7 +228,6 @@ def line_clip(pipe,
     # convert back to geographic CRS after length/distance measures are calculated.
     land_on_pipe = land_on_pipe.to_crs(crs_geo)
     land_on_pipe.crs = crs_geo
-    # land_on_pipe.to_file(os.getcwd()+'/test/shape/tm_shape.geojson', driver="GeoJSON")
 
     if save:
         land_on_pipe.to_file(os.getcwd()+'/'+poly1_on_pipe_location)
@@ -237,41 +251,52 @@ def output_poly1(pipe, overlap, company):
     folder_name = company.replace(' ', '').replace('.', '')
     if not os.path.exists("../company_data/"+folder_name):
         os.mkdir("../company_data/"+folder_name)
-    
+
+    meta = {"company": company}
+
     if not overlap.empty:
         del pipe['geometry']
         del pipe['valid']
         overlap = overlap[['NAME1', 'geometry']].copy()
         overlap = overlap.drop_duplicates(subset='NAME1')
-    
-        # This breaks out all the status's
-        # pipe = pipeGroup.groupby(['NAME1', 'NAME2', 'OPERATOR', 'STATUS', 'ALTYPE']).agg({'PLNAME': ' - '.join,
-        #                                                                                   'length_gpd': sum}).reset_index()
-        # pipe = pd.pivot_table(pipe, values=['length_gpd'], index=['NAME1', 'NAME2', 'OPERATOR', 'ALTYPE', 'PLNAME'], columns=['STATUS'])
-        # pipe = pipe.reset_index()
-        pipe = pipe.groupby(['NAME1',
-                             'NAME2',
-                             'OPERATOR',
-                             'ALTYPE']).agg({'PLNAME': list,
-                                             'STATUS': list,
-                                             'length_gpd': sum})
-    
-        # TODO: add STATUS to groupby and split output into geojson and json metadata
-        pipe = pipe.reset_index()
-        for listCol in ['PLNAME', 'STATUS']:
-            pipe[listCol] = ['/'.join(list(set(x))) for x in pipe[listCol]]
-        pipe['length_gpd'] = pipe['length_gpd'].round(1)
 
+        pipe = pipe.sort_values(by=["NAME1", "STATUS", "PLNAME"])
+        landInfo = {}
+        totalLength = 0
+        for land in set(pipe['NAME1']):
+            p1 = pipe[pipe['NAME1'] == land].copy()
 
-        overlap = overlap.merge(pipe, how='inner', on='NAME1')
+            landMeta = {"altype": list(p1["ALTYPE"])[0],
+                        "operator": list(p1["OPERATOR"])[0]}
+            currentLand = []
+            for plname, status, altype, length in zip(p1['PLNAME'],
+                                                      p1['STATUS'],
+                                                      p1['ALTYPE'],
+                                                      p1['length_gpd']):
+                currentLand.append({"plname": plname,
+                                    "status": status,
+                                    # "altype": altype,
+                                    "length": round(length, 1)})
+
+                totalLength = totalLength + length
+            landInfo[land] = {"overlaps": currentLand, "meta": landMeta}
+
+            with open('../company_data/'+folder_name+'/landInfo.json', 'w') as fp:
+                json.dump(landInfo, fp)
+
+        meta["totalLength"] = round(totalLength, 1)
         overlap = overlap.to_crs(crs_geo)
         overlap.crs = crs_geo
-        overlap.to_file("../company_data/"+folder_name+"/poly1.json", driver='GeoJSON')
+        overlap.to_file("../company_data/"+folder_name+"/poly1.json", driver="GeoJSON")
 
     else:
+        meta["totalLength"] = 0
         overlap = {'company': company, "overlaps": 0}
         with open('../company_data/'+folder_name+'/poly1.json', 'w') as f:
             json.dump(overlap, f)
+
+    with open('../company_data/'+folder_name+'/meta.json', 'w') as fp:
+        json.dump(meta, fp)
 
     return overlap
 
@@ -279,8 +304,9 @@ def output_poly1(pipe, overlap, company):
 def output_poly2(pipe, company):
     folder_name = company.replace(' ', '').replace('.', '')
     if not pipe.empty:
-        for delete in ['PLNAME', 'geometry', 'TAG_ID', 'valid', 'FNAME', 'SBTP_ENAME', 'SBTP_FNAME']:
-            del pipe[delete]
+        for delete in ['PLNAME', 'geometry', 'valid', 'FNAME', 'SBTP_ENAME', 'SBTP_FNAME']:
+            if delete in pipe:
+                del pipe[delete]
         pipe = pipe.groupby(['OPERATOR', 'ENAME', 'STATUS']).sum().reset_index()
         pipe = pipe[pipe['STATUS'] == "Operating"]
         pipe['ENAME'] = [x.split("(")[0].strip() for x in pipe['ENAME']]
@@ -361,37 +387,37 @@ def worker(company, pipe, poly1, poly2, incidents):
                                              crs_proj=crs_proj,
                                              crs_geo=crs_geo,
                                              polygon_id="NAME1",
-                                             forceclip=True)
+                                             forceclip=True,
+                                             landCol="NAME1")
 
-    # pipe_on_poly2, poly2_on_pipe = line_clip(pipec2,
-    #                                           poly2c,
-    #                                           crs_proj=crs_proj,
-    #                                           crs_geo=crs_geo,
-    #                                           polygon_id="TAG_ID",
-    #                                           forceclip=True)
+    pipe_on_poly2, poly2_on_pipe = line_clip(pipec2,
+                                             poly2c,
+                                             crs_proj=crs_proj,
+                                             crs_geo=crs_geo,
+                                             polygon_id="TAG_ID",
+                                             forceclip=True,
+                                             landCol="ENAME")
 
     output_poly1(pipe_on_poly1, poly1_on_pipe, company)
     eventProximity(incidents, poly1_on_pipe, company)
-    # output_poly2(pipe_on_poly2, company)
+    output_poly2(pipe_on_poly2, company)
     print('Done:' + company)
     return
 
 
 if __name__ == "__main__":
+
     start = time.time()
     jobs = []
     poly1, pipe, poly2, incidents = import_files(crs_target=crs_proj)
     for company in companies.values():
-    # oneCompany = "Foothills Pipe Lines Ltd." 
-    # oneCompany = "Trans Mountain Pipeline ULC" 
-    # for company in [oneCompany]:
-        worker(company, pipe, poly1, poly2, incidents) # single thread
-        # p = mp.Process(target=worker, args=(company, pipe, poly1, poly2, incidents, ))
-        # jobs.append(p)
-        # p.start()
+        # worker(company, pipe, poly1, poly2, incidents) # single thread
+        p = mp.Process(target=worker, args=(company, pipe, poly1, poly2, incidents, ))
+        jobs.append(p)
+        p.start()
 
-    # for proc in jobs:
-    #     proc.join()
+    for proc in jobs:
+        proc.join()
 
     elapsed = (time.time() - start)
     print("GIS process time:", round(elapsed, 0), ' seconds')

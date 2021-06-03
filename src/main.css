@@ -20,3 +20,18 @@
 #click-fn-info {
   margin-bottom: 15px;
 }
+
+.center-header {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 5px;
+  margin-bottom: 20px;
+}
+
+.center-footer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 5px;
+}

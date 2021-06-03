@@ -1,7 +1,13 @@
 import "leaflet/dist/leaflet.css";
 import * as L from "leaflet";
 
-export function landDashboard(landFeature, poly2Length, incidentFeature) {
+export function landDashboard(
+  landFeature,
+  landInfo,
+  poly2Length,
+  incidentFeature,
+  meta
+) {
   const cerPalette = {
     "Night Sky": "#054169",
     Sun: "#FFBE4B",
@@ -22,10 +28,17 @@ export function landDashboard(landFeature, poly2Length, incidentFeature) {
 
   const lengthUnits = (val) => {
     if (val >= 1000) {
-      return [(val / 1000).toFixed(1), "kilometers"];
+      return [(val / 1000).toFixed(1), "km"];
     }
-    return [val.toFixed(1), "metres"];
+    return [val.toFixed(1), "m"];
   };
+
+  function setTitle() {
+    const mapTitle = document.getElementById("leaflet-map-title");
+    mapTitle.innerText = `Map - ${meta.company} & First Nations Reserves`;
+  }
+
+  setTitle();
 
   function setupHeight() {
     const addStyle = (val) =>
@@ -33,12 +46,11 @@ export function landDashboard(landFeature, poly2Length, incidentFeature) {
     document.addEventListener(
       "DOMContentLoaded",
       () => {
-        let [totalLength, totalFeatures] = [0, 0];
-        landFeature.features.forEach((poly) => {
-          totalLength += poly.properties.length_gpd;
+        let totalFeatures = 0;
+        landFeature.features.forEach(() => {
           totalFeatures += 1;
         });
-        const lengthInfo = lengthUnits(totalLength);
+        const lengthInfo = lengthUnits(meta.totalLength);
 
         const htmlLiOver = `Approximately ${addStyle(lengthInfo[0])} ${
           lengthInfo[1]
@@ -108,6 +120,10 @@ export function landDashboard(landFeature, poly2Length, incidentFeature) {
     });
   }
 
+  function getSum(total, num) {
+    return total + num.length;
+  }
+
   function addIncidents(map, name) {
     removeIncidents(map);
     const addCircle = (x, y, color, fillColor, fillOpacity, r, circleName) =>
@@ -145,19 +161,6 @@ export function landDashboard(landFeature, poly2Length, incidentFeature) {
     return proximityCount;
   }
 
-  const formatCommaList = (text) => {
-    if (text.includes("/")) {
-      const itemList = text.split("/");
-      let brokenText = `<ul style="margin-bottom: 0px">`;
-      itemList.forEach((i) => {
-        brokenText += `<li>${i.split("-")[0].trim()}</li>`;
-      });
-      brokenText += `</ul>`;
-      return brokenText;
-    }
-    return `${text}`;
-  };
-
   function onEachFeature(feature, layer) {
     const alertClass = (val, type) => {
       if (type === "on" && val > 0) {
@@ -171,6 +174,9 @@ export function landDashboard(landFeature, poly2Length, incidentFeature) {
 
     layer.on({
       click(e) {
+        const layerInfo = landInfo[feature.properties.NAME1];
+        const totalLength = layerInfo.overlaps.reduce(getSum, 0);
+
         this._map.fitBounds(e.target.getBounds(), {
           padding: [200, 200],
         });
@@ -179,47 +185,60 @@ export function landDashboard(landFeature, poly2Length, incidentFeature) {
           this._map,
           feature.properties.NAME1
         );
-        const length = lengthUnits(feature.properties.length_gpd);
-        let popHtml =
-          '<div class="col-md-12"> <table class="table" style="margin-bottom:0px">';
-        popHtml += `<caption>${feature.properties.NAME1}</caption>`;
+        const total = lengthUnits(totalLength);
+        let popHtml = '<div class="col-md-12">';
+
+        popHtml += `<h3 class="center-header">${feature.properties.NAME1}</h3>`;
+
+        // first table: pipeline overlaps
+        popHtml += `<table class="table" style="margin-bottom:0px">`;
+        popHtml += `<caption>Pipeline Overlaps</caption>`;
         popHtml += `<tbody>`;
-        popHtml += `<tr><td>Land Type:</td><td><b>${feature.properties.ALTYPE}<b></td></tr>`;
-        popHtml += `<tr><td>Pipeline Length:</td><td><b>${length[0]} ${length[1]}<b></td></tr>`;
-        popHtml += `<tr><td>Pipeline Status:</td><td><b>${formatCommaList(
-          feature.properties.STATUS
-        )}</b></td></tr>`;
-        popHtml += `<tr><td>Pipeline Sections:</td><td><b>${formatCommaList(
-          feature.properties.PLNAME
-        )}</b></td></tr>`;
+        layerInfo.overlaps.forEach((overlap) => {
+          const l = lengthUnits(overlap.length);
+          popHtml += `<tr><td>${overlap.plname} (${overlap.status})</td><td><b>${l[0]}${l[1]}<b></td></tr>`;
+        });
+        if (layerInfo.overlaps.length > 1) {
+          popHtml += `<tr><td>Total: </td><td><b>${total[0]}${total[1]}<b></td></tr>`;
+        }
         popHtml += `</tbody>`;
-        popHtml += "</table></div>";
+        popHtml += "</table>";
+
+        // second table: incident overlaps
+        popHtml += `<table class="table" style="margin-bottom:0px">`;
+        popHtml += `<caption>Incident Overlaps</caption>`;
+        popHtml += "</table>";
+
         popHtml += `<div style="margin-bottom: 15px" class="${alertClass(
           proximityCount.on,
           "on"
-        )} col-md-12"><p>${proximityCount.on} incidents within ${
-          feature.properties.NAME1
-        }</p></div>`;
+        )} col-md-12"><p>${
+          proximityCount.on
+        } incidents directly within</p></div>`;
         popHtml += `<div class="${alertClass(
           proximityCount.close,
           "close"
-        )} col-md-12"><p>${proximityCount.close} incidents within 15km of ${
-          feature.properties.NAME1
-        }</p></div>`;
+        )} col-md-12"><p>${
+          proximityCount.close
+        } incidents within 15km</p></div>`;
+        popHtml += "</div>";
         document.getElementById("intersection-details").innerHTML = popHtml;
       },
     });
   }
 
   function toolText(layer) {
-    // console.log(layer);
-    const length = lengthUnits(layer.length_gpd);
+    const layerInfo = landInfo[layer.NAME1];
+    const totalLength = layerInfo.overlaps.reduce(getSum, 0);
+    const length = lengthUnits(totalLength);
+
     let table = `<table id="fn-tooltip">`;
     table += `<caption><b>${layer.NAME1}</b></caption>`;
-    table += `<tr><td>Pipeline Name: </td> <td><b>${layer.OPERATOR}</td></tr>`;
-    table += `<tr><td>Land Type: </td> <td><b>${layer.ALTYPE}</td></tr>`;
-    table += `<tr><td>Pipeline length: </td> <td><b>${length[0]} ${length[1]}</td></tr>`;
+    // table += `<tr><td>Pipeline Name: </td> <td><b>${layerInfo.meta.operator}</td></tr>`;
+    table += `<tr><td>Land Type:&nbsp</td> <td><b>${layerInfo.meta.altype}</td></tr>`;
+    table += `<tr><td>Total overlap:&nbsp</td> <td><b>${length[0]} ${length[1]}</td></tr>`;
     table += "</table>";
+    table += `<i class="center-footer">Click to view details</i>`;
     return table;
   }
 
