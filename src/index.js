@@ -6,7 +6,8 @@ export function landDashboard(
   landInfo,
   poly2Length,
   incidentFeature,
-  meta
+  meta,
+  line = false
 ) {
   const cerPalette = {
     "Night Sky": "#054169",
@@ -99,7 +100,7 @@ export function landDashboard(
     const map = new L.map(config.div, {
       zoomDelta: config.zoomDelta,
       minZoom: 5,
-      maxZoom: 12,
+      maxZoom: 16,
       zoomSnap: 0.25,
       // padding: [200, 200],
     }).setView(config.initZoomTo, config.initZoomLevel);
@@ -283,6 +284,26 @@ export function landDashboard(
     })
       .bindTooltip((layer) => toolText(layer.feature.properties))
       .addTo(map);
+
+    if (line) {
+      L.geoJSON(line, {
+        style: {
+          fillColor: cerPalette.Aubergine,
+          color: cerPalette.Aubergine,
+          className: "no-hover",
+          fillOpacity: 1,
+        },
+      }).addTo(map);
+
+      const info = L.control();
+      info.onAdd = function () {
+        this._div = L.DomUtil.create("div", "info");
+        this._div.innerHTML = `<h4 style='color:${cerPalette.Aubergine};'>&#9473;&#9473;&#9473; TMX</h4>`;
+        return this._div;
+      };
+
+      info.addTo(map);
+    }
 
     resetZoom(map, geoLayer);
 

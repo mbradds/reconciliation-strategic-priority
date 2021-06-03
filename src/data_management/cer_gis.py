@@ -36,6 +36,12 @@ def import_tmx(crs_target=crs_proj):
     data["PLNAME"] = "TMX"
     data["STATUS"] = "Approved"
     data = data.dissolve(by=['OPERATOR', 'PLNAME', 'STATUS']).reset_index()
+
+    tmx = data.copy()
+    tmx = tmx.to_crs(crs_geo)
+    tmx.crs = crs_geo
+    tmx.to_file("../company_data/TransMountainPipelineULC/tmx.json", driver="GeoJSON")
+
     return data
 
 
