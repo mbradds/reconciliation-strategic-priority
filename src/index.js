@@ -127,18 +127,17 @@ export function landDashboard(
 
   function addIncidents(map, name) {
     removeIncidents(map);
-    const addCircle = (x, y, color, fillColor, fillOpacity, r, circleName) =>
+    const incidents = incidentFeature[name];
+    const addCircle = (x, y, color, fillColor, fillOpacity, r, eventInfo) =>
       L.circle([x, y], {
         color,
         fillColor,
         fillOpacity,
         radius: r,
         weight: 1,
-        circleName,
         type: "incident",
-      }).bindTooltip(`<strong>${name}</strong>`);
+      }).bindTooltip(`<strong>${eventInfo.incidentId}</strong>`);
 
-    const incidents = incidentFeature[name];
     const proximityCount = { on: 0, close: 0 };
     if (incidents) {
       const points = incidents.map((p) => {
@@ -154,7 +153,7 @@ export function landDashboard(
           cerPalette.hcRed, // fill
           1,
           1000,
-          p.incidentId
+          p
         );
       });
       L.featureGroup(points).addTo(map);
