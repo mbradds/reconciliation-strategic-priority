@@ -1,5 +1,6 @@
 import "leaflet/dist/leaflet.css";
 import * as L from "leaflet";
+import { equalizeHeight } from "./util";
 
 export function landDashboard(
   landFeature,
@@ -84,7 +85,7 @@ export function landDashboard(
   function addpoly2Length(treaties) {
     const treatyDiv = document.getElementById("treaty-length");
     let treatyHtml = '<table class="table">';
-    treatyHtml += ` <caption>CER pipeline within Pre 1975 Historic Treaty land</caption>`;
+    // treatyHtml += ` <caption>CER pipeline within Pre 1975 Historic Treaty land</caption>`;
     treatyHtml += `<thead><tr><th scope="col" class="col-sm-6">Treaty Name</th><th scope="col" class="col-sm-6">Operating Km</th></tr></thead>`;
     treatyHtml += `<tbody>`;
     treaties.forEach((land) => {
@@ -260,6 +261,7 @@ export function landDashboard(
 
   function buildDashboard() {
     addpoly2Length(poly2Length);
+    equalizeHeight("eq1", "eq2")
     setupHeight();
 
     const map = leafletBaseMap({

@@ -11,51 +11,62 @@
       <link rel="stylesheet" href="./GCWeb/wet-boew/css/noscript.min.css" />
     </noscript>
     <link rel="stylesheet" href="./main.css" />
-    <title>Pipeline Profiles</title>
+    <title>Map Prototype</title>
   </head>
 
   <body>
     <div class="container mrgn-bttm-xl">
-      <div class="row">
+      <div class="row mrgn-bttm-md">
         <div class="col-md-12">
-          <h2>New Pipeline Profiles Section</h2>
-          <p class="small">Section updated April 2021</p>
+          <h2>IAMC Map Prototype</h2>
+          <p class="small">Updated August 2021</p>
         </div>
       </div>
       <div class="row">
-        <div class="col-md-6 mrgn-tp-md">
-          <p>
-            A significant amount of CER regualted pipelines and facilities
-            reside within First Nations Reserves. Many of the CER's events,
-            including incident review, conditions complaince, inspections, and
-            complaince verification activities, among others rely on involvement
-            from First Nations groups as a key stakeholder.
-          </p>
-          <p>
-            This section of the pipeline profiles highlights the intersections
-            and proximity of CER regulated infrastructure and activities with
-            First Nations Reserves, as well as historic treaty lands.
-          </p>
-          <p>
-            Reconciliation with Canada's First Nations communities is one of the
-            CER's four strategic priorities. Learn more about how we engage with
-            Indigenous Peoples
-            <a
-              href="https://www.cer-rec.gc.ca/en/consultation-engagement/indigenous-engagement/index.html"
-              >here</a
-            >.
-          </p>
+        <div class="col-md-6">
+          <section class="panel panel-default">
+            <header class="panel-heading">
+              <h5 class="panel-title">Introduction</h5>
+            </header>
+            <div class="panel-body" id="eq1">
+              <p>
+                A significant amount of CER regualted pipelines and facilities
+                reside within First Nations Reserves. Many of the CER's events,
+                including incident review, conditions complaince, inspections,
+                and complaince verification activities, among others rely on
+                involvement from First Nations groups as a key stakeholder.
+              </p>
+              <p>
+                This dashboard highlights the intersections and proximity of CER
+                regulated infrastructure and activities with First Nations
+                Reserves, as well as historic treaty lands.
+              </p>
+              <p>
+                Reconciliation with Canada's First Nations communities is one of
+                the CER's four strategic priorities. Learn more about how we
+                engage with Indigenous Peoples
+                <a
+                  href="https://www.cer-rec.gc.ca/en/consultation-engagement/indigenous-engagement/index.html"
+                  >here</a
+                >.
+              </p>
+            </div>
+          </section>
         </div>
         <div class="col-md-6">
-          <div id="treaty-length"></div>
+          <section class="panel panel-default">
+            <header class="panel-heading">
+              <h5 class="panel-title">
+                CER pipeline within Pre 1975 Historic Treaty land
+              </h5>
+            </header>
+            <div class="panel-body" id="eq2">
+              <div id="treaty-length"></div>
+            </div>
+          </section>
         </div>
       </div>
-      <!-- <div class="row mrgn-bttm-md">
-        <div class="col-md-12">
-          <h3>Dashboard: NGTL Intersection with First Nations Reserves</h3>
-        </div>
-      </div> -->
-      <div class="row mrgn-tp-md mrgn-bttm-sm">
+      <div class="row mrgn-tp-md mrgn-bttm-md">
         <div class="col-md-8">
           <section class="panel panel-default" id="map-panel">
             <header class="panel-heading">
@@ -90,7 +101,7 @@
         <div class="col-md-12">
           <section class="panel panel-default" id="geo-summary">
             <header class="panel-heading">
-              <h5 class="panel-title">Geographic summary</h5>
+              <h5 class="panel-title">Geographic Overlap Summary</h5>
             </header>
             <div class="panel-body">
               <ul class="lst-spcd">
@@ -99,7 +110,7 @@
               </ul>
             </div>
           </section>
-          <section class="panel panel-info mrgn-tp-xl">
+          <section class="panel panel-warning mrgn-tp-lg">
             <header class="panel-heading">
               <h5 class="panel-title">Opportunities list</h5>
             </header>
@@ -111,6 +122,7 @@
                 </li>
                 <li>Add other land types to the map.</li>
                 <li>Add more details about each incident.</li>
+                <li>Build this into a new section on the CER's pipeline profiles.</li>
               </ul>
             </div>
           </section>
