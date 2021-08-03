@@ -1,5 +1,6 @@
 import "leaflet/dist/leaflet.css";
 import * as L from "leaflet";
+import justWhy from "ie-gang";
 import { equalizeHeight } from "./util";
 
 export function landDashboard(
@@ -259,11 +260,7 @@ export function landDashboard(
     }
   }
 
-  function buildDashboard() {
-    addpoly2Length(poly2Length);
-    equalizeHeight("eq1", "eq2")
-    setupHeight();
-
+  function loadMap() {
     const map = leafletBaseMap({
       div: "map",
       zoomDelta: 0.25,
@@ -315,7 +312,36 @@ export function landDashboard(
       document.getElementById("intersection-details").innerHTML =
         '<div class="alert alert-info"><p>Click on a region to view extra info</p></div>';
     });
+
+    return map;
   }
 
-  buildDashboard();
+  function loadNonMap() {
+    const warningParams = {
+      message:
+        "We noticed you are using Internet Explorer. Please switch to any other browser to view the map.",
+      type: "alert",
+      title: "Old Browser Warning",
+      applyIE: false,
+    };
+    justWhy.ieWarn(warningParams);
+    addpoly2Length(poly2Length);
+    equalizeHeight("eq1", "eq2");
+    setupHeight();
+  }
+
+  async function buildPage() {
+    loadNonMap();
+    const map = await loadMap();
+    return map;
+  }
+
+  buildPage().then(() => {
+    document.getElementsByClassName("loader").forEach((div) => {
+      const divToHide = div;
+      divToHide.style.display = "none";
+    });
+
+    console.log("done map");
+  });
 }

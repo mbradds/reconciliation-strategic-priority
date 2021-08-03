@@ -1,6 +1,6 @@
 #!/bin/bash
-simplify_base_pct=15
-simplify_prs=0.001
+simplify_base_pct=100
+simplify_prs=0.0001
 
 #ngtl example
 #mapshaper -i src/company_data/NOVAGasTransmissionLtd/poly1.json -proj EPSG:4269 -simplify $simplify_base_pct% keep-shapes -o src/company_data_min/NOVAGasTransmissionLtd.json

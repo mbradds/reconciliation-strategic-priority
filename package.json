@@ -43,6 +43,7 @@
     "@babel/runtime": "^7.14.8",
     "compression": "^1.7.4",
     "express": "^4.17.1",
+    "ie-gang": "^1.0.4",
     "leaflet": "^1.7.1",
     "mapshaper": "^0.5.64"
   }
