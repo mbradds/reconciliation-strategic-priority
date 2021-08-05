@@ -3,6 +3,8 @@ import * as L from "leaflet";
 import justWhy from "ie-gang";
 import { equalizeHeight } from "./util";
 
+require("./main.css");
+
 export function landDashboard(
   landFeature,
   landInfo,

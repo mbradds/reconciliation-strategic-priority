@@ -1,6 +1,8 @@
 const path = require("path");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 const CopyWebpackPlugin = require("copy-webpack-plugin");
+const MiniCssExtractPlugin = require("mini-css-extract-plugin");
+const CssMinimizerPlugin = require("css-minimizer-webpack-plugin");
 const { CleanWebpackPlugin } = require("clean-webpack-plugin");
 // const BundleAnalyzerPlugin = require("webpack-bundle-analyzer")
 //   .BundleAnalyzerPlugin;
@@ -27,12 +29,15 @@ const webpackOutputs = (function () {
   }
 
   function outputHtml() {
-    const html = filenames.map((name) => new HtmlWebpackPlugin({
-        filename: `${name}.html`,
-        template: "src/template.html",
-        chunks: [`${name}`],
-        minify: { collapseWhitespace: false },
-      }));
+    const html = filenames.map(
+      (name) =>
+        new HtmlWebpackPlugin({
+          filename: `${name}.html`,
+          template: "src/template.html",
+          chunks: [`${name}`],
+          minify: { collapseWhitespace: true },
+        })
+    );
     return html;
   }
 
@@ -49,7 +54,7 @@ module.exports = {
   output: {
     path: path.resolve(__dirname, "dist"),
     publicPath: "/dist/",
-    filename: "js/[name].js",
+    filename: "js/[name].[contenthash].js",
   },
 
   plugins: [
@@ -57,10 +62,6 @@ module.exports = {
     // new BundleAnalyzerPlugin(),
     new CopyWebpackPlugin({
       patterns: [
-        {
-          from: path.resolve(__dirname, "src", "main.css"),
-          to: path.resolve(__dirname, "dist", "main.css"),
-        },
         {
           from: path.resolve(__dirname, "src", "GCWeb"),
           to: path.resolve(__dirname, "dist", "GCWeb"),
@@ -70,6 +71,9 @@ module.exports = {
           to: path.resolve(__dirname, "dist", "wet-boew"),
         },
       ],
+    }),
+    new MiniCssExtractPlugin({
+      filename: "main.[contenthash].css",
     }),
     new CleanWebpackPlugin(),
   ],
@@ -84,18 +88,26 @@ module.exports = {
         },
       },
       {
+        test: /\.css$/i,
+        exclude: /node_modules/,
+        use: [MiniCssExtractPlugin.loader, "css-loader"],
+      },
+      {
         test: /\.css$/,
+        include: /node_modules/,
         use: [{ loader: "style-loader" }, { loader: "css-loader" }],
       },
       {
-        test: /\.(png|jpg|jpeg|gif|svg|woff|woff2|ttf|eot)$/,
+        test: /\.png$/,
         use: {
           loader: "file-loader",
           options: {
             publicPath: "dist/images/",
             outputPath: "images",
+            name: "[name].[contenthash].png",
           },
         },
+        type: "javascript/auto",
       },
     ],
   },
@@ -113,6 +125,7 @@ module.exports = {
 
   optimization: {
     minimize: true,
+    minimizer: [`...`, new CssMinimizerPlugin()],
     usedExports: true,
     runtimeChunk: true,
     splitChunks: {
@@ -121,7 +134,7 @@ module.exports = {
         defaultVendors: {
           enforce: true,
           test: /node_modules/,
-          filename: "js/vendor.js",
+          filename: "js/vendor.[contenthash].js",
           reuseExistingChunk: true,
         },
       },
