@@ -1,7 +1,7 @@
 import "leaflet/dist/leaflet.css";
 import * as L from "leaflet";
 import justWhy from "ie-gang";
-import { equalizeHeight } from "./util";
+import { equalizeHeight, cerPalette } from "./util";
 
 require("./main.css");
 
@@ -13,23 +13,12 @@ export function landDashboard(
   meta,
   line = false
 ) {
-  const cerPalette = {
-    "Night Sky": "#054169",
-    Sun: "#FFBE4B",
-    Ocean: "#5FBEE6",
-    Forest: "#559B37",
-    Flame: "#FF821E",
-    Aubergine: "#871455",
-    "Dim Grey": "#8c8c96",
-    "Cool Grey": "#42464B",
-    hcBlue: "#7cb5ec",
-    hcGreen: "#90ed7d",
-    hcPink: "#f15c80",
-    hcRed: "#f45b5b",
-    hcAqua: "#2b908f",
-    hcPurple: "#8085e9",
-    hcLightBlue: "#91e8e1",
-  };
+  function setLeafletHeight() {
+    const clientSize = Math.floor(window.innerHeight * 0.7);
+    const leafletDiv = document.getElementById("map");
+    leafletDiv.setAttribute("style", `height:${clientSize}px`);
+    leafletDiv.style.height = `${clientSize}px`;
+  }
 
   const lengthUnits = (val) => {
     if (val >= 1000) {
@@ -46,6 +35,8 @@ export function landDashboard(
   setTitle();
 
   function setupHeight() {
+    // dynamically size leaflet container
+
     const addStyle = (val) =>
       `<i class="bg-primary text-val">&nbsp${val}&nbsp</i>`;
     document.addEventListener(
@@ -333,6 +324,7 @@ export function landDashboard(
   }
 
   async function buildPage() {
+    setLeafletHeight();
     loadNonMap();
     const map = await loadMap();
     return map;
