@@ -38,8 +38,9 @@ export function landDashboard(
   function setupHeight() {
     // dynamically size leaflet container
 
-    const addStyle = (val) =>
-      `<i class="bg-primary text-val">&nbsp${val}&nbsp</i>`;
+    const addStyle = (val) => `<strong>${val}</strong>`;
+    const flagClass = (val) =>
+      val > 0 ? "alert alert-danger" : "alert alert-success";
     document.addEventListener(
       "DOMContentLoaded",
       () => {
@@ -57,13 +58,22 @@ export function landDashboard(
         document.getElementById("overlap-meta-point").innerHTML = htmlLiOver;
 
         const incidentMeta = incidentFeature.meta;
-        const htmlLiInc = `There have been ${addStyle(
+        const htmlLiIncOn = `<div class="${flagClass(
           incidentMeta.on
-        )} reported system incidents on First Nations Reserves and, ${addStyle(
-          incidentMeta["15km"]
-        )} incidents within 15 km of First Nations Reserves.`;
+        )}"><p>There have been ${addStyle(
+          incidentMeta.on
+        )} reported system incidents directly on First Nations Reserves.</p></div>`;
 
-        document.getElementById("incident-meta-point").innerHTML = htmlLiInc;
+        const htmlLiIncOff = `<div class="${flagClass(
+          incidentMeta["15km"]
+        )}"><p>There have been ${addStyle(
+          incidentMeta["15km"]
+        )} reported system incidents within 15 km of First Nations Reserves.</p></div>`;
+
+        document.getElementById("incident-meta-point-on").innerHTML =
+          htmlLiIncOn;
+        document.getElementById("incident-meta-point-off").innerHTML =
+          htmlLiIncOff;
 
         const div = document.getElementById("click-fn-info");
         const dbHeight = document.getElementById("map-panel").clientHeight;
@@ -335,7 +345,7 @@ export function landDashboard(
   }
 
   async function buildPage() {
-    setLeafletHeight(0.8);
+    setLeafletHeight(0.75);
     loadNonMap();
     const map = await loadMap();
     return map;

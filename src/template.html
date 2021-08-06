@@ -18,7 +18,7 @@
       <div class="row mrgn-bttm-md">
         <div class="col-md-12">
           <div id="ie-warning"></div>
-          <h2>IAMC Map Prototype</h2>
+          <h1>IAMC Map Prototype</h1>
           <p class="small">Updated August 2021</p>
         </div>
       </div>
@@ -66,7 +66,21 @@
           </section>
         </div>
       </div>
-      <div class="row mrgn-tp-md mrgn-bttm-md">
+      <div class="row">
+        <div class="col-md-12">
+          <h2>Map Dashboard</h2>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-4">
+          <div class="alert alert-warning">
+            <p id="overlap-meta-point"></p>
+          </div>
+        </div>
+        <div class="col-md-4" id="incident-meta-point-on"></div>
+        <div class="col-md-4" id="incident-meta-point-off"></div>
+      </div>
+      <div class="row mrgn-tp-sm mrgn-bttm-md">
         <div class="col-md-9">
           <section class="panel panel-default" id="map-panel">
             <header class="panel-heading">
@@ -101,20 +115,41 @@
       </div>
       <div class="row">
         <div class="col-md-12">
-          <section class="panel panel-default" id="geo-summary">
+          <details>
+            <summary><strong>Dashboard Instructions</strong></summary>
+            <ul class="lst-spcd">
+              <li>Please use Chrome or Edge when viewing this prototype!</li>
+              <li>
+                You may need to refresh the page or press F5 to view the most
+                recent version of the prototype.
+              </li>
+              <li>
+                Use your mouse, trackpad, or the buttons in the upper left
+                corner of the map to zoom in and out.
+              </li>
+              <li>
+                Click the "Reset Map" button to reset the map scope and sidebar.
+              </li>
+              <li>
+                The yellow highlighted blue regions correspond to First Nations
+                reserves where an overlap with CER Infrastructure has been
+                detected using an automated GIS process.
+              </li>
+              <li>
+                The calculations, distances, and totals are estimates based on
+                the best available data and GIS assumptions. The accuracy of
+                this map is not guaranteed, and the values/analysis are subject
+                to change based on data availability and GIS assumptions.
+              </li>
+            </ul>
+          </details>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-12">
+          <section class="panel panel-info mrgn-tp-lg">
             <header class="panel-heading">
-              <h5 class="panel-title">Geographic Overlap Summary</h5>
-            </header>
-            <div class="panel-body">
-              <ul class="lst-spcd">
-                <li id="overlap-meta-point"></li>
-                <li id="incident-meta-point"></li>
-              </ul>
-            </div>
-          </section>
-          <section class="panel panel-warning mrgn-tp-lg">
-            <header class="panel-heading">
-              <h5 class="panel-title">Opportunities list</h5>
+              <h5 class="panel-title">Opportunities/Ideas list</h5>
             </header>
             <div class="panel-body">
               <ul class="lst-spcd">
