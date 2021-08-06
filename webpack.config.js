@@ -70,6 +70,10 @@ module.exports = {
           from: path.resolve(__dirname, "src", "wet-boew"),
           to: path.resolve(__dirname, "dist", "wet-boew"),
         },
+        {
+          from: path.resolve(__dirname, "src", "traditional_territory", "images"),
+          to: path.resolve(__dirname, "dist", "images"),
+        },
       ],
     }),
     new MiniCssExtractPlugin({

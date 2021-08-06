@@ -39,6 +39,11 @@
   margin-top: 5px;
 }
 
+.territory-popup {
+  overflow-y: hidden;
+  overflow-x: hidden;
+}
+
 .info {
   padding: 6px 8px;
   font: 14px/16px Arial, Helvetica, sans-serif;

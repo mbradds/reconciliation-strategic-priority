@@ -2,6 +2,7 @@ import "leaflet/dist/leaflet.css";
 import * as L from "leaflet";
 import justWhy from "ie-gang";
 import { equalizeHeight, cerPalette } from "./util";
+import { addTraditionalTerritory } from "./traditional_territory/territoryPopUp";
 
 require("./main.css");
 
@@ -229,7 +230,6 @@ export function landDashboard(
 
     let table = `<table id="fn-tooltip">`;
     table += `<caption><b>${layer.NAME1}</b></caption>`;
-    // table += `<tr><td>Pipeline Name: </td> <td><b>${layerInfo.meta.operator}</td></tr>`;
     table += `<tr><td>Land Type:&nbsp</td> <td><b>${layerInfo.meta.altype}</td></tr>`;
     table += `<tr><td>Total overlap:&nbsp</td> <td><b>${length[0]} ${length[1]}</td></tr>`;
     table += "</table>";
@@ -237,19 +237,25 @@ export function landDashboard(
     return table;
   }
 
-  function resetZoom(map, geoLayer, fly = false) {
+  function resetZoom(map, geoLayer, territoryLayer, fly = false) {
     let padd = [25, 25];
+    let fullBounds = geoLayer.getBounds();
+    if (territoryLayer) {
+      fullBounds = fullBounds.extend(territoryLayer.getBounds());
+    }
     if (Object.keys(geoLayer._layers).length === 1) {
       padd = [270, 270];
     }
     if (fly) {
-      map.flyToBounds(geoLayer.getBounds(), {
+      map.flyToBounds(fullBounds, {
         duration: 0.25,
         easeLinearity: 1,
         padding: padd,
       });
     } else {
-      map.fitBounds(geoLayer.getBounds(), { padding: padd });
+      map.fitBounds(fullBounds, {
+        padding: padd,
+      });
     }
   }
 
@@ -285,22 +291,27 @@ export function landDashboard(
           fillOpacity: 1,
         },
       }).addTo(map);
+    }
 
+    let territoryLayer = false;
+    if (meta.company === "Trans Mountain Pipeline ULC") {
+      territoryLayer = addTraditionalTerritory(map);
       const info = L.control();
       info.onAdd = function () {
         this._div = L.DomUtil.create("div", "info");
-        this._div.innerHTML = `<h4 style='color:${cerPalette.Aubergine};'>&#9473;&#9473;&#9473; TMX</h4>`;
+        let legend = `<h4 style='color:${cerPalette.Aubergine};'>&#9473;&#9473;&#9473; TMX</h4>`;
+        legend += `<h4 style='color:${cerPalette["Cool Grey"]};'>&#11044; Traditional Territory</h4>`;
+        this._div.innerHTML = legend;
         return this._div;
       };
-
       info.addTo(map);
     }
 
-    resetZoom(map, geoLayer);
+    resetZoom(map, geoLayer, territoryLayer);
 
     // can add: addEventListener("click", (event) =>
     document.getElementById("reset-map").addEventListener("click", () => {
-      resetZoom(map, geoLayer, true);
+      resetZoom(map, geoLayer, territoryLayer, true);
       removeIncidents(map);
       document.getElementById("intersection-details").innerHTML =
         '<div class="alert alert-info"><p>Click on a region to view extra info</p></div>';
