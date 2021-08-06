@@ -13,8 +13,8 @@ export function landDashboard(
   meta,
   line = false
 ) {
-  function setLeafletHeight() {
-    const clientSize = Math.floor(window.innerHeight * 0.7);
+  function setLeafletHeight(scale = 0.7) {
+    const clientSize = Math.floor(window.innerHeight * scale);
     const leafletDiv = document.getElementById("map");
     leafletDiv.setAttribute("style", `height:${clientSize}px`);
     leafletDiv.style.height = `${clientSize}px`;
@@ -324,7 +324,7 @@ export function landDashboard(
   }
 
   async function buildPage() {
-    setLeafletHeight();
+    setLeafletHeight(0.8);
     loadNonMap();
     const map = await loadMap();
     return map;
@@ -335,7 +335,5 @@ export function landDashboard(
       const divToHide = div;
       divToHide.style.display = "none";
     });
-
-    console.log("done map");
   });
 }
