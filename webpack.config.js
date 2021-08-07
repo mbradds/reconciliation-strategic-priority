@@ -48,8 +48,8 @@ const webpackOutputs = (function () {
 })();
 
 module.exports = {
-  // mode: "development",
-  mode: "production",
+  mode: "development",
+  // mode: "production",
   entry: webpackOutputs.entryJs(),
   output: {
     path: path.resolve(__dirname, "dist"),

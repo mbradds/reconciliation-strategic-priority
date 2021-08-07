@@ -1,6 +1,6 @@
 {
   "name": "reconciliation-strategic-priority",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "sideEffects": false,
   "engines": {
     "node": "14.x",
@@ -11,9 +11,9 @@
   "scripts": {
     "start": "node server.js",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "webpack",
+    "build": "set NODE_OPTIONS=--max_old_space_size=8192 && webpack",
     "heroku-postbuild": "webpack",
-    "dev": "webpack serve",
+    "dev": "set NODE_OPTIONS=--max_old_space_size=8192 && webpack serve",
     "maps": "sh ./src/maps_min.sh"
   },
   "author": "",

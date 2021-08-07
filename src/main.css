@@ -24,6 +24,18 @@
   margin-bottom: 15px;
 }
 
+#region-click-text {
+  vertical-align: middle;
+  display: inline-block;
+  box-shadow: 0 0 10px 5px #ffbe4b;
+  color: #fff;
+  background-color: #054169;
+  opacity: 0.8;
+  padding: 0.01em 0.15em 0.01em 0.25em;
+  margin-right: 0.05em;
+  border-radius: 0.2em;
+}
+
 .center-header {
   display: flex;
   justify-content: center;

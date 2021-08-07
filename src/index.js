@@ -19,6 +19,7 @@ export function landDashboard(
     const leafletDiv = document.getElementById("map");
     leafletDiv.setAttribute("style", `height:${clientSize}px`);
     leafletDiv.style.height = `${clientSize}px`;
+    return clientSize;
   }
 
   const lengthUnits = (val) => {
@@ -37,7 +38,6 @@ export function landDashboard(
 
   function setupHeight() {
     // dynamically size leaflet container
-
     const addStyle = (val) => `<strong>${val}</strong>`;
     const flagClass = (val) =>
       val > 0 ? "alert alert-danger" : "alert alert-success";
@@ -269,7 +269,7 @@ export function landDashboard(
     }
   }
 
-  function loadMap() {
+  function loadMap(mapHeight) {
     const map = leafletBaseMap({
       div: "map",
       zoomDelta: 0.25,
@@ -304,27 +304,28 @@ export function landDashboard(
     }
 
     let territoryLayer = false;
+    let legend = `<h4><span id="region-click-text" style="height: 10px;">&nbsp;&nbsp;&nbsp;</span>&nbsp;&nbsp;First Nation Reserve</h4>`;
     if (meta.company === "Trans Mountain Pipeline ULC") {
-      territoryLayer = addTraditionalTerritory(map);
-      const info = L.control();
-      info.onAdd = function () {
-        this._div = L.DomUtil.create("div", "info");
-        let legend = `<h4 style='color:${cerPalette.Aubergine};'>&#9473;&#9473;&#9473; TMX</h4>`;
-        legend += `<h4 style='color:${cerPalette["Cool Grey"]};'>&#11044; Traditional Territory</h4>`;
-        this._div.innerHTML = legend;
-        return this._div;
-      };
-      info.addTo(map);
+      territoryLayer = addTraditionalTerritory(map, mapHeight);
+      legend += `<h4 style='color:${cerPalette.Aubergine};'>&#9473;&#9473; TMX</h4>`;
+      legend += `<h4 style='color:${cerPalette["Cool Grey"]};'>&#11044; Traditional Territory</h4>`;
     }
+    const info = L.control();
+    info.onAdd = function () {
+      this._div = L.DomUtil.create("div", "info");
+      this._div.innerHTML = legend;
+      return this._div;
+    };
+    info.addTo(map);
 
     resetZoom(map, geoLayer, territoryLayer);
 
-    // can add: addEventListener("click", (event) =>
     document.getElementById("reset-map").addEventListener("click", () => {
       resetZoom(map, geoLayer, territoryLayer, true);
       removeIncidents(map);
+      map.closePopup();
       document.getElementById("intersection-details").innerHTML =
-        '<div class="alert alert-info"><p>Click on a region to view extra info</p></div>';
+        '<div class="alert alert-info"><p>Click on a <span id="region-click-text">region</span> to view extra info</p></div>';
     });
 
     return map;
@@ -345,9 +346,9 @@ export function landDashboard(
   }
 
   async function buildPage() {
-    setLeafletHeight(0.75);
+    const mapHeight = setLeafletHeight(0.75);
     loadNonMap();
-    const map = await loadMap();
+    const map = await loadMap(mapHeight);
     return map;
   }
 
