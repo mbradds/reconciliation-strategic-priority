@@ -48,8 +48,8 @@ const webpackOutputs = (function () {
 })();
 
 module.exports = {
-  mode: "development",
-  // mode: "production",
+  // mode: "development",
+  mode: "production",
   entry: webpackOutputs.entryJs(),
   output: {
     path: path.resolve(__dirname, "dist"),
@@ -131,14 +131,17 @@ module.exports = {
     minimize: true,
     minimizer: [`...`, new CssMinimizerPlugin()],
     usedExports: true,
-    runtimeChunk: true,
+    // runtimeChunk: true,
+    runtimeChunk: {
+      name: "shared/runtime.js",
+    },
     splitChunks: {
       chunks: "all",
       cacheGroups: {
         defaultVendors: {
           enforce: true,
           test: /node_modules/,
-          filename: "js/vendor.[contenthash].js",
+          filename: "js/shared/vendor.[contenthash].js",
           reuseExistingChunk: true,
         },
       },

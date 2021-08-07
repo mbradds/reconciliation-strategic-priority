@@ -81,6 +81,8 @@ def import_geodata(path, d_type, crs_target):
                         'WEBREF',
                         'ACCURACY']
 
+        data["ALTYPE"] = data["ALTYPE"].replace({"Indian Reserve":
+                                                 "First Nations Reserve"})
         for remove in poly1_remove:
             del data[remove]
 
