@@ -1,7 +1,6 @@
 import "leaflet/dist/leaflet.css";
 import * as L from "leaflet";
-import justWhy from "ie-gang";
-import { equalizeHeight, cerPalette } from "./util";
+import { equalizeHeight, cerPalette, justWhy } from "./util";
 import { addTraditionalTerritory } from "./traditional_territory/territoryPopUp";
 
 require("./main.css");
@@ -332,30 +331,33 @@ export function landDashboard(
   }
 
   function loadNonMap() {
-    const warningParams = {
-      message:
-        "We noticed you are using Internet Explorer. Please switch to any other browser to view the map.",
-      type: "alert",
-      title: "Old Browser Warning",
-      applyIE: false,
-    };
-    justWhy.ieWarn(warningParams);
     addpoly2Length(poly2Length);
     equalizeHeight("eq1", "eq2");
     setupHeight();
   }
 
-  async function buildPage() {
-    const mapHeight = setLeafletHeight(0.75);
-    loadNonMap();
-    const map = await loadMap(mapHeight);
-    return map;
+  function main() {
+    async function buildPage() {
+      const mapHeight = setLeafletHeight(0.75);
+      loadNonMap();
+      const map = await loadMap(mapHeight);
+      return map;
+    }
+
+    buildPage().then(() => {
+      document.getElementsByClassName("loader").forEach((div) => {
+        const divToHide = div;
+        divToHide.style.display = "none";
+      });
+    });
   }
 
-  buildPage().then(() => {
-    document.getElementsByClassName("loader").forEach((div) => {
-      const divToHide = div;
-      divToHide.style.display = "none";
+  if (!justWhy()) {
+    main();
+  } else {
+    document.getElementsByClassName("container-fluid").forEach((div) => {
+      const ieDiv = div;
+      ieDiv.innerHTML = `<section class="alert alert-danger mrgn-tp-lg"><h2>Outdated Browser</h2><p>This web app does not support internet explorer. Please paste the link into <strong>Microsoft Edge</strong> or <strong>Google Chrome</strong>.</p></section>`;
     });
-  });
+  }
 }
