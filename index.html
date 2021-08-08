@@ -102,6 +102,15 @@
         </div>
       </div>
     </div>
+    <script>
+      if (/* @cc_on!@ */ false || !!document.documentMode) {
+        var ieDivs = document.getElementsByClassName("container");
+        for (var i = 0; i <= ieDivs.length; i++) {
+          ieDivs[i].innerHTML =
+            '<section class="alert alert-danger mrgn-tp-lg"><h2>Outdated Browser</h2><p>This web app does not support internet explorer. Please paste the link into <strong>Microsoft Edge</strong> or <strong>Google Chrome</strong>.</p></section>';
+        }
+      }
+    </script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.js"></script>
     <script src="./dist/GCWeb/wet-boew/js/wet-boew.min.js"></script>
   </body>

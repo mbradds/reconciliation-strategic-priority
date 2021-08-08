@@ -37,7 +37,3 @@ export const cerPalette = {
   hcPurple: "#8085e9",
   hcLightBlue: "#91e8e1",
 };
-
-export function justWhy() {
-  return /* @cc_on!@ */ false || !!document.documentMode;
-}

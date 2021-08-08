@@ -1,6 +1,6 @@
 import "leaflet/dist/leaflet.css";
 import * as L from "leaflet";
-import { equalizeHeight, cerPalette, justWhy } from "./util";
+import { equalizeHeight, cerPalette } from "./util";
 import { addTraditionalTerritory } from "./traditional_territory/territoryPopUp";
 
 require("./main.css");
@@ -351,13 +351,5 @@ export function landDashboard(
       });
     });
   }
-
-  if (!justWhy()) {
-    main();
-  } else {
-    document.getElementsByClassName("container-fluid").forEach((div) => {
-      const ieDiv = div;
-      ieDiv.innerHTML = `<section class="alert alert-danger mrgn-tp-lg"><h2>Outdated Browser</h2><p>This web app does not support internet explorer. Please paste the link into <strong>Microsoft Edge</strong> or <strong>Google Chrome</strong>.</p></section>`;
-    });
-  }
+  main();
 }
