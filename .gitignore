@@ -3,7 +3,6 @@
 __pycache__
 *.log
 *.sql
-*.csv
 *.shp
 *.xlsx
 *.twb
@@ -13,8 +12,7 @@ __pycache__
 *.pickle
 .ipynb_checkpoints
 /dist
-src/data_management/*
-!src/data_management/cer_gis.py
+src/data_management/raw_data/*
 node_modules
 npm-debug.log
 .DS_Store

@@ -25,7 +25,7 @@ companies = {"ALLIANCE PIPELINE LTD. (A159)": "Alliance Pipeline Ltd.",
 
 
 def import_tmx(crs_target=crs_proj):
-    data = gpd.read_file(os.path.join(script_dir, "tmx/centreline.json"))
+    data = gpd.read_file(os.path.join(script_dir, "raw_data", "tmx/centreline.json"))
     data = data.set_geometry('geometry')
     data = data.to_crs(crs_target)
     data.crs = crs_target
@@ -153,7 +153,7 @@ def import_geodata(path, d_type, crs_target):
                                                                   data.Latitude))
         data = data.rename(columns={'Approximate Volume Released (m³)': 'Approximate Volume Released'})
         data.crs = crs_geo
-        data.to_file("./incidents_geo/incidents.shp")
+        data.to_file("./raw_data/incidents_geo/incidents.shp")
         data = data.to_crs(crs_proj)
         data.crs = crs_proj
 
@@ -162,10 +162,10 @@ def import_geodata(path, d_type, crs_target):
 
 
 def import_files(crs_target):
-    data_paths = {'poly1': './AL_TA_CA_SHP_eng/AL_TA_CA_2_129_eng.shp',
-                  'pipe': './pipeline/pipeline.shp',
-                  'poly2': './Traite_Pre_1975_Treaty_SHP/Traite_Pre_1975_Treaty_SHP.shp',
-                  'incidents': './incident-data.csv'}
+    data_paths = {'poly1': './raw_data/AL_TA_CA_SHP_eng/AL_TA_CA_2_129_eng.shp',
+                  'pipe': './raw_data/pipeline/pipeline.shp',
+                  'poly2': './raw_data/Traite_Pre_1975_Treaty_SHP/Traite_Pre_1975_Treaty_SHP.shp',
+                  'incidents': './raw_data/incident-data.csv'}
     # pool = mp.Pool(processes=len(data_paths))
     # results = [pool.apply_async(import_geodata, args=(path, d_type, crs_target, )) for d_type, path in data_paths.items()]
     # out = [p.get() for p in results]

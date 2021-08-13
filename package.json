@@ -14,7 +14,8 @@
     "build": "set NODE_OPTIONS=--max_old_space_size=8192 && webpack",
     "heroku-postbuild": "webpack",
     "dev": "set NODE_OPTIONS=--max_old_space_size=8192 && webpack serve",
-    "maps": "sh ./src/maps_min.sh"
+    "maps": "sh ./src/data_management/maps_min.sh",
+    "get-data": "sh ./src/data_management/get_data.sh"
   },
   "author": "",
   "license": "ISC",
