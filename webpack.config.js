@@ -31,7 +31,7 @@ const webpackOutputs = (function () {
     const html = filenames.map(
       (name) =>
         new HtmlWebpackPlugin({
-          filename: `${name}.html`,
+          filename: `html/${name}.html`,
           template: "src/template.html",
           chunks: [`${name}`],
           minify: { collapseWhitespace: true },
@@ -52,7 +52,7 @@ module.exports = {
   entry: webpackOutputs.entryJs(),
   output: {
     path: path.resolve(__dirname, "dist"),
-    publicPath: "/dist/",
+    // publicPath: "/dist/",
     filename: "js/[name].[contenthash].js",
   },
 
@@ -70,7 +70,16 @@ module.exports = {
           to: path.resolve(__dirname, "dist", "wet-boew"),
         },
         {
-          from: path.resolve(__dirname, "src", "traditional_territory", "images"),
+          from: path.resolve(__dirname, "src", "index.html"),
+          to: path.resolve(__dirname, "dist", "index.html"),
+        },
+        {
+          from: path.resolve(
+            __dirname,
+            "src",
+            "traditional_territory",
+            "images"
+          ),
           to: path.resolve(__dirname, "dist", "images"),
         },
       ],
@@ -120,10 +129,14 @@ module.exports = {
   },
 
   devServer: {
-    // publicPath: path.join(__dirname, "dist"),
-    publicPath: "/dist/",
-    watchContentBase: true,
+    hot: true,
     compress: true,
+    client: {
+      overlay: {
+        errors: true,
+        warnings: false,
+      },
+    },
   },
 
   optimization: {
