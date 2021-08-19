@@ -10,6 +10,7 @@
   "main": "index.js",
   "scripts": {
     "start": "node server.js",
+    "images": "node src/data_management/convert_images.mjs",
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "set NODE_OPTIONS=--max_old_space_size=8192 && webpack",
     "heroku-postbuild": "webpack",
@@ -46,7 +47,10 @@
     "@babel/runtime": "^7.15.3",
     "compression": "^1.7.4",
     "express": "^4.17.1",
+    "imagemin": "^8.0.1",
+    "imagemin-pngquant": "^9.0.2",
     "leaflet": "^1.7.1",
-    "mapshaper": "^0.5.66"
+    "mapshaper": "^0.5.66",
+    "pdf2pic": "^2.1.4"
   }
 }
