@@ -14,14 +14,32 @@ def processTerritoryInfo():
                        engine="openpyxl")
 
     df = df[~df['Lat'].isnull()].reset_index(drop=True)
-    df["Community Website"] = df["Community Website"].fillna("")
+    df = df.fillna("")
     for col in df:
         if "Unnamed" in col:
             del df[col]
-    df = df.to_dict(orient="records")
+
+    land = {}
+
+    def addInfo(row):
+        return {"community": row["Community"],
+                "leadership": row["Leadership"],
+                "contactPerson": row["Contact person"],
+                "contactInfo": row["Contact Information"],
+                "protocol": row["Protocol"],
+                "about": row["About Us"],
+                "web": row["Community Website"]}
+
+    for i, row in df.iterrows():
+        if row["mapFile"] in land:
+            land[row["mapFile"]]["info"].append(addInfo(row))
+        else:
+            land[row["mapFile"]] = {"loc": [row["Lat"], row["Long"]],
+                                    "info": [addInfo(row)]}
+    # df = df.to_dict(orient="records")
     with open('../traditional_territory/centrality.json', 'w') as fp:
-        json.dump(df, fp)
-    return df
+        json.dump(land, fp)
+    return land
 
 
 if __name__ == "__main__":
