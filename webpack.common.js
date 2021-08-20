@@ -48,7 +48,7 @@ const webpackOutputs = (function () {
 
 module.exports = {
   // mode: "development",
-  mode: "production",
+  // mode: "production",
   entry: webpackOutputs.entryJs(),
   output: {
     path: path.resolve(__dirname, "dist"),
@@ -128,20 +128,9 @@ module.exports = {
     extensions: ["*", ".js"],
   },
 
-  devServer: {
-    hot: true,
-    compress: true,
-    client: {
-      overlay: {
-        errors: true,
-        warnings: false,
-      },
-    },
-  },
-
   optimization: {
     minimize: true,
-    minimizer: [`...`, new CssMinimizerPlugin()],
+    // minimizer: [`...`, new CssMinimizerPlugin()],
     usedExports: true,
     // runtimeChunk: true,
     runtimeChunk: {

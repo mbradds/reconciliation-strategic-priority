@@ -53,7 +53,11 @@ def import_geodata(path, d_type, crs_target):
         data = data.to_crs(crs_target)
         data.crs = crs_target
     else:
-        data = pd.read_csv(path, encoding="UTF-16", skiprows=(1))
+        data = pd.read_csv(path,
+                           encoding="latin-1",
+                           skiprows=0,
+                           engine="python",
+                           error_bad_lines=False)
 
     if d_type == 'poly1':
         data = data.dissolve(by="NAME1").reset_index()
@@ -151,9 +155,10 @@ def import_geodata(path, d_type, crs_target):
         data['Company'] = data['Company'].replace({"Westcoast Energy Inc., carrying on business as Spectra Energy Transmission": "Westcoast Energy Inc."})
         data = gpd.GeoDataFrame(data, geometry=gpd.points_from_xy(data.Longitude,
                                                                   data.Latitude))
-        data = data.rename(columns={'Approximate Volume Released (m³)': 'Approximate Volume Released'})
+        data = data.rename(columns={'Approximate Volume Released (m³)': 'Approximate Volume Released',
+                                    'Approximate Volume Released (m3)': 'Approximate Volume Released'})
         data.crs = crs_geo
-        data.to_file("./raw_data/incidents_geo/incidents.shp")
+        # data.to_file("./raw_data/incidents_geo/incidents.shp")
         data = data.to_crs(crs_proj)
         data.crs = crs_proj
 

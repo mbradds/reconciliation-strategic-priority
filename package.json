@@ -12,9 +12,9 @@
     "start": "node server.js",
     "images": "node src/data_management/convert_images.mjs",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "set NODE_OPTIONS=--max_old_space_size=8192 && webpack",
-    "heroku-postbuild": "webpack",
-    "dev": "set NODE_OPTIONS=--max_old_space_size=8192 && webpack serve",
+    "build": "set NODE_OPTIONS=--max_old_space_size=8192 && webpack --config webpack.prod.js",
+    "heroku-postbuild": "webpack --config webpack.prod.js",
+    "dev": "set NODE_OPTIONS=--max_old_space_size=8192 && webpack serve --config webpack.dev.js",
     "maps": "sh ./src/data_management/maps_min.sh",
     "get-data": "sh ./src/data_management/get_data.sh"
   },
@@ -33,7 +33,7 @@
     "eslint": "^7.32.0",
     "eslint-config-airbnb-base": "^14.2.1",
     "eslint-config-prettier": "^8.3.0",
-    "eslint-plugin-import": "^2.24.0",
+    "eslint-plugin-import": "^2.24.1",
     "file-loader": "^6.2.0",
     "html-webpack-plugin": "^5.3.2",
     "mini-css-extract-plugin": "^2.2.0",
@@ -41,7 +41,8 @@
     "webpack": "^5.51.1",
     "webpack-bundle-analyzer": "^4.4.2",
     "webpack-cli": "^4.8.0",
-    "webpack-dev-server": "^4.0.0"
+    "webpack-dev-server": "^4.0.0",
+    "webpack-merge": "^5.8.0"
   },
   "dependencies": {
     "@babel/runtime": "^7.15.3",

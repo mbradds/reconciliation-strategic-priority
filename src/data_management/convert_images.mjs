@@ -1,8 +1,8 @@
 import { fromPath } from "pdf2pic";
 import imagemin from "imagemin";
 import imageminPngquant from "imagemin-pngquant";
-import { default as path } from "path";
-import { default as fs } from "fs";
+import path from "path";
+import fs from "fs";
 
 const stageLocation =
   "./src/data_management/raw_data/traditional_territory/stage_maps";
@@ -20,11 +20,11 @@ const options = {
 function deleteDirContents(dir) {
   fs.readdir(dir, (err, files) => {
     if (err) throw err;
-    for (const file of files) {
-      fs.unlink(path.join(dir, file), (err) => {
-        if (err) throw err;
+    files.forEach((file) => {
+      fs.unlink(path.join(dir, file), (err2) => {
+        if (err2) throw err2;
       });
-    }
+    });
   });
 }
 
@@ -34,7 +34,7 @@ async function stageMaps(dir) {
   return files.map((file) => {
     const absolutePath = path.join(dir, file);
     let saveFilename = file.split("/").slice(-1)[0];
-    saveFilename = saveFilename.split(".")[0];
+    [saveFilename] = saveFilename.split(".");
     options.saveFilename = saveFilename;
     const storeAsImage = fromPath(absolutePath, options);
     const pageToConvertAsImage = 1;
@@ -63,9 +63,8 @@ async function processMaps() {
     "./src/data_management/raw_data/traditional_territory/input_maps"
   );
 
-  await Promise.all(maps)
+  await Promise.all(maps);
   simplifyMaps();
 }
 
 processMaps();
-
