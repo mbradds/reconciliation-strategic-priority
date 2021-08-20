@@ -14,6 +14,7 @@ def processTerritoryInfo():
                        engine="openpyxl")
 
     df = df[~df['Lat'].isnull()].reset_index(drop=True)
+    df["mapFile"] = [x.strip() for x in df["mapFile"]]
     df = df.fillna("")
     for col in df:
         if "Unnamed" in col:
