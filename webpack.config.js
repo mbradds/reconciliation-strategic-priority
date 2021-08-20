@@ -52,7 +52,7 @@ module.exports = {
   entry: webpackOutputs.entryJs(),
   output: {
     path: path.resolve(__dirname, "dist"),
-    // publicPath: "/dist/",
+    publicPath: "/",
     filename: "js/[name].[contenthash].js",
   },
 

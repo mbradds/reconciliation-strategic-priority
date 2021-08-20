@@ -14,6 +14,10 @@ def processTerritoryInfo():
                        engine="openpyxl")
 
     df = df[~df['Lat'].isnull()].reset_index(drop=True)
+    df["Community Website"] = df["Community Website"].fillna("")
+    for col in df:
+        if "Unnamed" in col:
+            del df[col]
     df = df.to_dict(orient="records")
     with open('../traditional_territory/centrality.json', 'w') as fp:
         json.dump(df, fp)
