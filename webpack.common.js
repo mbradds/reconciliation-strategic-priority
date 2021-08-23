@@ -1,10 +1,12 @@
-const path = require("path");
-const HtmlWebpackPlugin = require("html-webpack-plugin");
-const CopyWebpackPlugin = require("copy-webpack-plugin");
-const MiniCssExtractPlugin = require("mini-css-extract-plugin");
-const CssMinimizerPlugin = require("css-minimizer-webpack-plugin");
-const { CleanWebpackPlugin } = require("clean-webpack-plugin");
-// const {BundleAnalyzerPlugin} = require("webpack-bundle-analyzer");
+import path from "path";
+import HtmlWebpackPlugin from "html-webpack-plugin";
+import CopyWebpackPlugin from "copy-webpack-plugin";
+import MiniCssExtractPlugin from "mini-css-extract-plugin";
+import { CleanWebpackPlugin } from "clean-webpack-plugin";
+import { fileURLToPath } from "url";
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 const webpackOutputs = (function () {
   const filenames = [
@@ -46,9 +48,7 @@ const webpackOutputs = (function () {
   };
 })();
 
-module.exports = {
-  // mode: "development",
-  // mode: "production",
+export default {
   entry: webpackOutputs.entryJs(),
   output: {
     path: path.resolve(__dirname, "dist"),
@@ -103,6 +103,7 @@ module.exports = {
         test: /\.css$/i,
         exclude: /node_modules/,
         use: [MiniCssExtractPlugin.loader, "css-loader"],
+        sideEffects: true,
       },
       {
         test: /\.css$/,

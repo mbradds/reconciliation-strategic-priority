@@ -2,6 +2,7 @@
   "name": "reconciliation-strategic-priority",
   "version": "1.0.1",
   "sideEffects": false,
+  "type": "module",
   "engines": {
     "node": "14.x",
     "npm": "7.x"
@@ -10,7 +11,7 @@
   "main": "index.js",
   "scripts": {
     "start": "node server.js",
-    "images": "node src/data_management/convert_images.mjs",
+    "images": "node src/data_management/convert_images.js",
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "set NODE_OPTIONS=--max_old_space_size=8192 && webpack --config webpack.prod.js",
     "heroku-postbuild": "webpack --config webpack.prod.js",
@@ -51,7 +52,7 @@
     "imagemin": "^8.0.1",
     "imagemin-pngquant": "^9.0.2",
     "leaflet": "^1.7.1",
-    "mapshaper": "^0.5.66",
+    "mapshaper": "^0.5.67",
     "pdf2pic": "^2.1.4"
   }
 }
