@@ -46,7 +46,7 @@ async function stageMaps(dir) {
 }
 
 function simplifyMaps() {
-  console.log("running simplify...");
+  console.log("Simplifying traditional territory map images...");
   deleteDirContents(completeLocation);
   return imagemin([`${stageLocation}/*.{jpg,png}`], {
     destination: completeLocation,

@@ -1,4 +1,4 @@
-import landFeature from "../company_data_min/TransCanadaPipeLinesLimited.json";
+import landFeature from "../company_data/TransCanadaPipeLinesLimited/poly1_min.json";
 import landInfo from "../company_data/TransCanadaPipeLinesLimited/landInfo.json";
 import poly2Length from "../company_data/TransCanadaPipeLinesLimited/poly2.json";
 import incidentFeature from "../company_data/TransCanadaPipeLinesLimited/events.json";

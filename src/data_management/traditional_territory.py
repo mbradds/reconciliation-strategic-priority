@@ -44,4 +44,6 @@ def processTerritoryInfo():
 
 
 if __name__ == "__main__":
+    print("updating tranditional territory metadata...")
     df = processTerritoryInfo()
+    print("done!")

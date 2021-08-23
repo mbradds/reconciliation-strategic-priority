@@ -40,6 +40,8 @@ def import_tmx(crs_target=crs_proj):
     tmx = data.copy()
     tmx = tmx.to_crs(crs_geo)
     tmx.crs = crs_geo
+    if not os.path.isdir("../company_data/TransMountainPipelineULC"):
+        os.mkdir("../company_data/TransMountainPipelineULC")
     tmx.to_file("../company_data/TransMountainPipelineULC/tmx.json", driver="GeoJSON")
 
     return data
@@ -170,7 +172,7 @@ def import_files(crs_target):
     data_paths = {'poly1': './raw_data/AL_TA_CA_SHP_eng/AL_TA_CA_2_129_eng.shp',
                   'pipe': './raw_data/pipeline/pipeline.shp',
                   'poly2': './raw_data/Traite_Pre_1975_Treaty_SHP/Traite_Pre_1975_Treaty_SHP.shp',
-                  'incidents': './raw_data/incident-data.csv'}
+                  'incidents': './raw_data/cer_data/incident-data.csv'}
     # pool = mp.Pool(processes=len(data_paths))
     # results = [pool.apply_async(import_geodata, args=(path, d_type, crs_target, )) for d_type, path in data_paths.items()]
     # out = [p.get() for p in results]

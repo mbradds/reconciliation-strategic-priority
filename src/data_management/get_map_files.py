@@ -22,7 +22,7 @@ def getMap(zipLink, folder):
 
 
 def getCsv(link, fileName):
-    savePath = os.path.join(script_dir, "raw_data", fileName)
+    savePath = os.path.join(script_dir, "raw_data", "cer_data", fileName)
     df = pd.read_csv(link,
                      skiprows=0,
                      encoding="latin-1",
