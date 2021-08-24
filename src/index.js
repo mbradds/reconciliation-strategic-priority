@@ -13,6 +13,23 @@ export function landDashboard(
   meta,
   line = false
 ) {
+  function leafletBaseMap(config) {
+    const map = new L.map(config.div, {
+      zoomDelta: config.zoomDelta,
+      minZoom: 5,
+      maxZoom: 16,
+      zoomSnap: 0.25,
+      // padding: [200, 200],
+    }).setView(config.initZoomTo, config.initZoomLevel);
+    L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png?{foo}", {
+      foo: "bar",
+      attribution:
+        '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+    }).addTo(map);
+    // map.setMinZoom(config.minZoom);
+    return map;
+  }
+
   function setLeafletHeight(scale = 0.7) {
     const clientSize = Math.floor(window.innerHeight * scale);
     const leafletDiv = document.getElementById("map");
@@ -29,8 +46,9 @@ export function landDashboard(
   };
 
   function setTitle() {
-    const mapTitle = document.getElementById("leaflet-map-title");
-    mapTitle.innerText = `Map - ${meta.company} & First Nations Reserves`;
+    document.getElementById(
+      "leaflet-map-title"
+    ).innerText = `Map - ${meta.company} & First Nations Reserves`;
   }
 
   function setupHeight() {
@@ -46,7 +64,6 @@ export function landDashboard(
           totalFeatures += 1;
         });
         const lengthInfo = lengthUnits(meta.totalLength);
-
         const htmlLiOver = `Approximately ${addStyle(lengthInfo[0])} ${
           lengthInfo[1]
         } of regulated pipeline passes directly through ${addStyle(
@@ -72,13 +89,17 @@ export function landDashboard(
         document.getElementById("incident-meta-point-off").innerHTML =
           htmlLiIncOff;
 
-        const div = document.getElementById("click-fn-info");
-        const dbHeight = document.getElementById("map-panel").clientHeight;
-        const resetBtnHeight =
-          document.getElementById("reset-map").clientHeight;
-        const otherHeight = 15 + resetBtnHeight;
+        let dbHeight = document.getElementById("map-panel").clientHeight;
+        if (!dbHeight || dbHeight === 0) {
+          // set dashboard to 700 pixels if I cant access client screen size
+          dbHeight = 700;
+        }
+        const otherHeight =
+          15 + document.getElementById("reset-map").clientHeight;
         const clickDivHeight = `${(dbHeight - otherHeight).toFixed(0)}`;
-        div.setAttribute("style", `height:${clickDivHeight}px`);
+        document
+          .getElementById("click-fn-info")
+          .setAttribute("style", `height:${clickDivHeight}px`);
       },
       false
     );
@@ -87,7 +108,6 @@ export function landDashboard(
   function addpoly2Length(treaties) {
     const treatyDiv = document.getElementById("treaty-length");
     let treatyHtml = '<table class="table">';
-    // treatyHtml += ` <caption>CER pipeline within Pre 1975 Historic Treaty land</caption>`;
     treatyHtml += `<thead><tr><th scope="col" class="col-sm-6">Treaty Name</th><th scope="col" class="col-sm-6">Operating Km</th></tr></thead>`;
     treatyHtml += `<tbody>`;
     treaties.forEach((land) => {
@@ -97,23 +117,6 @@ export function landDashboard(
     });
     treatyHtml += "</tbody></table>";
     treatyDiv.innerHTML = treatyHtml;
-  }
-
-  function leafletBaseMap(config) {
-    const map = new L.map(config.div, {
-      zoomDelta: config.zoomDelta,
-      minZoom: 5,
-      maxZoom: 16,
-      zoomSnap: 0.25,
-      // padding: [200, 200],
-    }).setView(config.initZoomTo, config.initZoomLevel);
-    L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png?{foo}", {
-      foo: "bar",
-      attribution:
-        '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
-    }).addTo(map);
-    // map.setMinZoom(config.minZoom);
-    return map;
   }
 
   function removeIncidents(map) {

@@ -15,19 +15,26 @@ export function addTraditionalTerritory(map, mapHeight) {
 
   function popUpTable(landInfo) {
     let tableHtml = "";
+    let disclaimer = `<div id="image-disclaimer" class="alert alert-warning">
+    <p>These maps have been prepared using the Canada Energy Regulator
+      internal Indigenous Engagement site information. These maps
+      provide general information regarding each Nation including the
+      general area of traditional territories. However, these maps do
+      not represent the exact dimensions for the traditional territory
+      of each Nation.</p></div>`;
+    tableHtml += disclaimer;
     landInfo.forEach((land) => {
-      let table = `<table class="table"><caption><h3>${land.community} Information</h3></caption>`;
-      table += `<tbody>`;
+      let table = `<table class="table"><caption><h3>${land.community} Information</h3></caption><tbody>`;
       table += `<tr><td>Leadership</td><td><strong>${land.leadership}</strong></td></tr>`;
       table += `<tr><td>Contact person</td><td><strong>${land.contactPerson}</strong></td></tr>`;
       table += `<tr><td>Contact Information</td><td><strong>${land.contactInfo}</strong></td></tr>`;
       table += `<tr><td>Protocol</td><td><strong>${land.protocol}</strong></td></tr>`;
+      table += `<tr><td>Project Spreads</td><td><strong>${land.spread}</strong></td></tr>`;
       table += `<tr><td>About Us</td><td><strong>${land.about}</strong></td></tr>`;
       table += `<tr><td colspan="2"><a href="${land.web}" target="_blank">Community Website</a></td></tr>`;
       table += `</tbody></table>`;
       tableHtml += table;
     });
-
     return tableHtml;
   }
 
@@ -53,7 +60,5 @@ export function addTraditionalTerritory(map, mapHeight) {
     });
     return L.featureGroup(landCircles).addTo(map);
   }
-  const territoryLayer = addCircles();
-
-  return territoryLayer;
+  return addCircles();
 }

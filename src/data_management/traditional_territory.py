@@ -29,6 +29,7 @@ def processTerritoryInfo():
                 "contactInfo": row["Contact Information"],
                 "protocol": row["Protocol"],
                 "about": row["About Us"],
+                "spread": row["Project Spreads"],
                 "web": row["Community Website"]}
 
     for i, row in df.iterrows():

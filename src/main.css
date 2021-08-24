@@ -57,6 +57,17 @@
   overflow-y: hidden;
   overflow-x: hidden;
 }
+/* #image-disclaimer .alert > :first-child::before {
+  position: absolute !important;
+} */
+#image-disclaimer {
+  margin-bottom: 0px;
+  margin-right: 10px;
+}
+#image-disclaimer p {
+  margin: 1px;
+  font-size: 14px;
+}
 
 .legend {
   padding: 6px 8px;
