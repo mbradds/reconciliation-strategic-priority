@@ -33,8 +33,6 @@ export function landDashboard(
     mapTitle.innerText = `Map - ${meta.company} & First Nations Reserves`;
   }
 
-  setTitle();
-
   function setupHeight() {
     // dynamically size leaflet container
     const addStyle = (val) => `<strong>${val}</strong>`;
@@ -119,6 +117,7 @@ export function landDashboard(
   }
 
   function removeIncidents(map) {
+    map.legend.removeItem();
     map.eachLayer((layer) => {
       if (Object.prototype.hasOwnProperty.call(layer.options, "type")) {
         layer.remove();
@@ -163,6 +162,7 @@ export function landDashboard(
 
     const proximityCount = { on: 0, close: 0 };
     if (incidents) {
+      map.legend.addItem();
       const points = incidents.map((p) => {
         if (p.distance === 0) {
           proximityCount.on += 1;
@@ -209,14 +209,11 @@ export function landDashboard(
           feature.properties.NAME1
         );
         const total = lengthUnits(totalLength);
-        let popHtml = '<div class="col-md-12">';
-
-        popHtml += `<h3 class="center-header">${feature.properties.NAME1}</h3>`;
+        let popHtml = `<div class="col-md-12"><h3 class="center-header">${feature.properties.NAME1}</h3>`;
 
         // first table: pipeline overlaps
         popHtml += `<table class="table" style="margin-bottom:0px">`;
-        popHtml += `<caption>Pipeline Overlaps</caption>`;
-        popHtml += `<tbody>`;
+        popHtml += `<caption>Pipeline Overlaps</caption><tbody>`;
         layerInfo.overlaps.forEach((overlap) => {
           const l = lengthUnits(overlap.length);
           popHtml += `<tr><td>${overlap.plname} (${overlap.status})</td><td><b>${l[0]}${l[1]}<b></td></tr>`;
@@ -224,13 +221,11 @@ export function landDashboard(
         if (layerInfo.overlaps.length > 1) {
           popHtml += `<tr><td>Total: </td><td><b>${total[0]}${total[1]}<b></td></tr>`;
         }
-        popHtml += `</tbody>`;
-        popHtml += "</table>";
+        popHtml += `</tbody></table>`;
 
         // second table: incident overlaps
         popHtml += `<table class="table" style="margin-bottom:0px">`;
-        popHtml += `<caption>Incident Overlaps</caption>`;
-        popHtml += "</table>";
+        popHtml += `<caption>Incident Overlaps</caption></table>`;
 
         popHtml += `<div style="margin-bottom: 15px" class="${alertClass(
           proximityCount.on,
@@ -259,8 +254,7 @@ export function landDashboard(
     table += `<caption><b>${layer.NAME1}</b></caption>`;
     table += `<tr><td>Land Type:&nbsp</td> <td><b>${layerInfo.meta.altype}</td></tr>`;
     table += `<tr><td>Total overlap:&nbsp</td> <td><b>${length[0]} ${length[1]}</td></tr>`;
-    table += "</table>";
-    table += `<i class="center-footer">Click to view details</i>`;
+    table += `</table><i class="center-footer">Click to view details</i>`;
     return table;
   }
 
@@ -284,6 +278,31 @@ export function landDashboard(
         padding: padd,
       });
     }
+  }
+
+  function mapLegend(map, territoryLayer) {
+    let legend = `<h4><span class="region-click-text" style="height: 10px;">&nbsp;&nbsp;&nbsp;</span>&nbsp;&nbsp;First Nation Reserve</h4>`;
+    if (territoryLayer) {
+      legend += `<h4 style='color:${cerPalette.Aubergine};'>&#9473;&#9473; TMX</h4>`;
+      legend += `<h4 style='color:${cerPalette["Cool Grey"]};'>&#11044; Traditional Territory</h4>`;
+    }
+    const info = L.control();
+    info.onAdd = function () {
+      this._div = L.DomUtil.create("div", "legend");
+      this._div.innerHTML = legend;
+      map.legend = this;
+      return this._div;
+    };
+    info.addItem = function () {
+      this._div.innerHTML += `<h4 class="legend-temp" style='color:${cerPalette.hcRed};'>&#11044; Incident</h4>`;
+    };
+    info.removeItem = function () {
+      this._div.getElementsByClassName("legend-temp").forEach((toHide) => {
+        toHide.remove();
+      });
+    };
+    info.addTo(map);
+    return info;
   }
 
   function loadMap(mapHeight) {
@@ -321,20 +340,11 @@ export function landDashboard(
     }
 
     let territoryLayer = false;
-    let legend = `<h4><span id="region-click-text" style="height: 10px;">&nbsp;&nbsp;&nbsp;</span>&nbsp;&nbsp;First Nation Reserve</h4>`;
     if (meta.company === "Trans Mountain Pipeline ULC") {
       territoryLayer = addTraditionalTerritory(map, mapHeight);
-      legend += `<h4 style='color:${cerPalette.Aubergine};'>&#9473;&#9473; TMX</h4>`;
-      legend += `<h4 style='color:${cerPalette["Cool Grey"]};'>&#11044; Traditional Territory</h4>`;
     }
-    const info = L.control();
-    info.onAdd = function () {
-      this._div = L.DomUtil.create("div", "info");
-      this._div.innerHTML = legend;
-      return this._div;
-    };
-    info.addTo(map);
 
+    mapLegend(map, territoryLayer);
     resetZoom(map, geoLayer, territoryLayer);
 
     document.getElementById("reset-map").addEventListener("click", () => {
@@ -342,13 +352,14 @@ export function landDashboard(
       removeIncidents(map);
       map.closePopup();
       document.getElementById("intersection-details").innerHTML =
-        '<div class="alert alert-info"><p>Click on a <span id="region-click-text">region</span> to view extra info</p></div>';
+        '<div class="alert alert-info"><p>Click on a <span class="region-click-text">region</span> to view extra info</p></div>';
     });
 
     return map;
   }
 
   function loadNonMap() {
+    setTitle();
     addpoly2Length(poly2Length);
     equalizeHeight("eq1", "eq2");
     setupHeight();
