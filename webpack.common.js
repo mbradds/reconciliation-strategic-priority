@@ -108,7 +108,11 @@ export default {
       {
         test: /\.css$/,
         include: /node_modules/,
-        use: [{ loader: "style-loader" }, { loader: "css-loader" }],
+        use: [
+          { loader: "style-loader" },
+          { loader: "css-loader", options: { url: false } },
+        ],
+        sideEffects: true,
       },
       {
         test: /\.png$/,
@@ -131,9 +135,7 @@ export default {
 
   optimization: {
     minimize: true,
-    // minimizer: [`...`, new CssMinimizerPlugin()],
     usedExports: true,
-    // runtimeChunk: true,
     runtimeChunk: {
       name: "shared/runtime.js",
     },
