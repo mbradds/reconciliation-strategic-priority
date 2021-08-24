@@ -343,39 +343,45 @@ def eventProximity(gdf, poly1, company):
     poly1 = poly1.to_crs(crs_proj)
     poly1.crs = crs_proj
 
-    # for company in companies.values():
     folder_name = company.replace(' ', '').replace('.', '')
     pnt = gdf[gdf['Company'] == company].copy().reset_index(drop=True)
     poly_company = poly1[poly1['OPERATOR'] == company].copy().reset_index(drop=True)
     if not pnt.empty:
+        pnt["Approximate Volume Released"] = pd.to_numeric(pnt["Approximate Volume Released"], errors="coerce")
+        pnt["Approximate Volume Released"] = [round(x, 2) for x in pnt["Approximate Volume Released"]]
+        pnt = pnt.where(pd.notnull(pnt), None)
         close = {}
         total = {"on": 0, "15km": 0}
-        for p, incident_id, iType, iStatus, iVol, iSub, lat, long in zip(pnt.geometry,
-                                                                         pnt['Incident Number'],
-                                                                         pnt['Incident Types'],
-                                                                         pnt['Status'],
-                                                                         pnt['Approximate Volume Released'],
-                                                                         pnt['Substance'],
-                                                                         pnt['Latitude'],
-                                                                         pnt['Longitude']):
+        for p, eid, iType, iStatus, iVol, iSub, lat, long, what, why in zip(pnt.geometry,
+                                                                            pnt['Incident Number'],
+                                                                            pnt['Incident Types'],
+                                                                            pnt['Status'],
+                                                                            pnt['Approximate Volume Released'],
+                                                                            pnt['Substance'],
+                                                                            pnt['Latitude'],
+                                                                            pnt['Longitude'],
+                                                                            pnt['What Happened'],
+                                                                            pnt['Why It Happened']):
 
             for land, land_id in zip(poly_company.geometry,
                                      poly_company['NAME1']):
                 proximity = land.distance(p)
                 if proximity <= 15000:
                     if proximity == 0:
-                        total["on"] = total["on"]+1
+                        total["on"] = total["on"] + 1
                     else:
-                        total["15km"] = total["15km"]+1
+                        total["15km"] = total["15km"] + 1
 
                     row = {"distance": int(round(proximity, 0)),
-                           "incidentId": incident_id,
+                           "id": eid,
                            "landId": land_id,
                            "type": iType,
                            "status": iStatus,
                            "vol": iVol,
                            "sub": iSub,
-                           "loc": [lat, long]}
+                           "what": what,
+                           "why": why,
+                           "loc": [round(lat, 5), round(long, 5)]}
                     if land_id in close:
                         close[land_id].append(row)
                     else:

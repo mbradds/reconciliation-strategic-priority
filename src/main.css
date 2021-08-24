@@ -2,13 +2,15 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  /* height: 550px; */
 }
 
-#fn-tooltip tr {
-  border-bottom: 1pt solid #dcdcdc;
-  width: 300px;
+.map-tooltip tr {
+  border-bottom: 2px solid #dcdcdc;
   overflow: visible;
+}
+.map-tooltip td {
+  padding-bottom: 1px;
+  padding-top: 1px;
 }
 
 .fn-panel {

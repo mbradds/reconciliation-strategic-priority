@@ -129,6 +129,24 @@ export function landDashboard(
     return total + num.length;
   }
 
+  function eventTooltip(event) {
+    let toolText = `<table class="map-tooltip">`;
+    toolText += `<caption><b>${event.id}</b></caption>`;
+    toolText += `<tr><td>Status:&nbsp</td><td><b>${event.status}</td></tr>`;
+    toolText += `<tr><td>Incident Type:&nbsp</td><td><b>${event.type}</td></tr>`;
+    toolText += `<tr><td>Substance:&nbsp</td><td><b>${event.sub}</td></tr>`;
+    toolText += `<tr><td>What Happened:&nbsp</td><td><b>${event.what}</td></tr>`;
+    toolText += `<tr><td>Why It Happened:&nbsp</td><td><b>${event.why}</td></tr>`;
+    toolText += `<tr><td>Approximate volume released:&nbsp</td><td><b>${
+      event.vol === null ? "Not provided" : `${event.vol} (m3)`
+    }</td></tr>`;
+    if (event.distance > 0) {
+      const lengthInfo = lengthUnits(event.distance);
+      toolText += `<tr><td>Approximate distance from ${event.landId}:&nbsp</td><td><b>${lengthInfo[0]}&nbsp${lengthInfo[1]}</td></tr>`;
+    }
+    return toolText;
+  }
+
   function addIncidents(map, name) {
     removeIncidents(map);
     const incidents = incidentFeature[name];
@@ -140,7 +158,7 @@ export function landDashboard(
         radius: r,
         weight: 1,
         type: "incident",
-      }).bindTooltip(`<strong>${eventInfo.incidentId}</strong>`);
+      }).bindTooltip(eventTooltip(eventInfo));
 
     const proximityCount = { on: 0, close: 0 };
     if (incidents) {
@@ -236,7 +254,7 @@ export function landDashboard(
     const totalLength = layerInfo.overlaps.reduce(getSum, 0);
     const length = lengthUnits(totalLength);
 
-    let table = `<table id="fn-tooltip">`;
+    let table = `<table class="map-tooltip">`;
     table += `<caption><b>${layer.NAME1}</b></caption>`;
     table += `<tr><td>Land Type:&nbsp</td> <td><b>${layerInfo.meta.altype}</td></tr>`;
     table += `<tr><td>Total overlap:&nbsp</td> <td><b>${length[0]} ${length[1]}</td></tr>`;
