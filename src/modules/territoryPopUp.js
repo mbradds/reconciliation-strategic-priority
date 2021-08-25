@@ -1,6 +1,6 @@
 import * as L from "leaflet";
-import centralityEst from "./centrality.json";
-import { cerPalette } from "../util.js";
+import centralityEst from "../traditional_territory/centrality.json";
+import { cerPalette } from "./util.js";
 
 export function addTraditionalTerritory(map, mapHeight) {
   const imageExtension = ".1.png";

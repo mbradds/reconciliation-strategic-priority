@@ -24,7 +24,10 @@ const webpackOutputs = (function () {
   function entryJs() {
     const paths = {};
     filenames.forEach((name) => {
-      paths[name] = `./src/entry_points/${name}.js`;
+      paths[`js/iamc/${name}`] = `./src/entry_points/iamc/${name}.js`;
+      paths[
+        `js/pipeline-profiles/${name}`
+      ] = `./src/entry_points/pipeline-profiles/${name}.js`;
     });
     return paths;
   }
@@ -36,13 +39,13 @@ const webpackOutputs = (function () {
         new HtmlWebpackPlugin({
           filename: `html/${name}.html`,
           template: "src/components/iamc.html",
-          chunks: [`${name}`],
+          chunks: [`js/iamc/${name}`],
           minify: { collapseWhitespace: true },
         }),
         new HtmlWebpackPlugin({
           filename: `html/pipeline-profiles/${name}.html`,
-          template: "src/components/pipeline-profile.html",
-          chunks: [],
+          template: "src/components/pipeline-profiles.html",
+          chunks: [`js/pipeline-profiles/${name}`],
           minify: { collapseWhitespace: true },
         }),
       ];
@@ -62,7 +65,7 @@ export default {
   output: {
     path: path.resolve(__dirname, "dist"),
     publicPath: "/",
-    filename: "js/[name].[contenthash].js",
+    filename: "[name].[contenthash].js",
   },
 
   plugins: [
@@ -154,7 +157,7 @@ export default {
         defaultVendors: {
           enforce: true,
           test: /node_modules/,
-          filename: "js/shared/vendor.[contenthash].js",
+          filename: "js/vendor/vendor.[contenthash].js",
           reuseExistingChunk: true,
         },
       },

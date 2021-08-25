@@ -1,9 +1,9 @@
 import "core-js/modules/es.promise.js";
 import * as L from "leaflet";
 import { equalizeHeight, cerPalette } from "./util.js";
-import { addTraditionalTerritory } from "./traditional_territory/territoryPopUp.js";
+import { addTraditionalTerritory } from "./territoryPopUp.js";
 import "leaflet/dist/leaflet.css";
-import "./main.css";
+import "../main.css";
 
 export function landDashboard(
   landFeature,
