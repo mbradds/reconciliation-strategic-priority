@@ -13,9 +13,9 @@
     "start": "node server.js",
     "images": "node src/data_management/automation/convert_images.js",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "set NODE_OPTIONS=--max_old_space_size=8192 && webpack --config webpack.prod.js",
+    "build": "set NODE_OPTIONS=--max_old_space_size=12192 && webpack --config webpack.prod.js",
     "heroku-postbuild": "webpack --config webpack.prod.js",
-    "dev": "set NODE_OPTIONS=--max_old_space_size=8192 && webpack serve --config webpack.dev.js",
+    "dev": "set NODE_OPTIONS=--max_old_space_size=12192 && webpack serve --config webpack.dev.js",
     "maps": "sh ./src/data_management/automation/maps_min.sh",
     "get-data": "sh ./src/data_management/automation/get_data.sh",
     "traditional": "npm run images && sh ./src/data_management/automation/territory_metadata.sh"
