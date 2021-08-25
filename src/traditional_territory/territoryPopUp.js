@@ -5,7 +5,7 @@ import { cerPalette } from "../util.js";
 export function addTraditionalTerritory(map, mapHeight) {
   const imageExtension = ".1.png";
   function circleTooltip(landInfo) {
-    const communityNames = landInfo.map((land) => land.community).join(" & ");
+    const communityNames = landInfo.map((land) => land.community).join("<br>");
     const plural = landInfo.length > 1 ? "territories" : "territory";
     let table = `<h3 class="center-header" style="margin-bottom: 5px"><b>${communityNames}</b></h3>`;
     table += `<p class="center-footer">Circle represents approximate centrality of the traditional ${plural}</p>`;
@@ -16,6 +16,7 @@ export function addTraditionalTerritory(map, mapHeight) {
   function popUpTable(landInfo) {
     let tableHtml = "";
     let disclaimer = `<div id="image-disclaimer" class="alert alert-warning">
+    <h3>&nbsp; Traditional Territory Map Disclaimer</h3>
     <p>These maps have been prepared using the Canada Energy Regulator
       internal Indigenous Engagement site information. These maps
       provide general information regarding each Nation including the

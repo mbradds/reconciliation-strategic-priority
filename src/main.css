@@ -57,10 +57,12 @@
   overflow-y: hidden;
   overflow-x: hidden;
 }
-/* #image-disclaimer .alert > :first-child::before {
-  position: absolute !important;
-} */
+
+#image-disclaimer.alert > :first-child:before {
+  position: relative !important;
+}
 #image-disclaimer {
+  margin-top: 15px;
   margin-bottom: 0px;
   margin-right: 10px;
 }

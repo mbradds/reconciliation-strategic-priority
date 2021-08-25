@@ -38,7 +38,7 @@ def processTerritoryInfo():
         else:
             land[row["mapFile"]] = {"loc": [row["Lat"], row["Long"]],
                                     "info": [addInfo(row)]}
-    # df = df.to_dict(orient="records")
+
     with open('../traditional_territory/centrality.json', 'w') as fp:
         json.dump(land, fp)
     return land
