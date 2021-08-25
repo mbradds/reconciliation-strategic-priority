@@ -89,8 +89,7 @@ export function setUpHeight() {
     .setAttribute("style", `height:${clickDivHeight}px`);
 }
 
-export function addpoly2Length(treaties) {
-  const treatyDiv = document.getElementById("treaty-length");
+export function addpoly2Length(treaties, company) {
   let treatyHtml = '<table class="table">';
   treatyHtml += `<thead><tr><th scope="col" class="col-sm-6">Treaty Name</th><th scope="col" class="col-sm-6">Operating Km</th></tr></thead>`;
   treatyHtml += `<tbody>`;
@@ -100,7 +99,11 @@ export function addpoly2Length(treaties) {
     ).toFixed(0)} km</td></tr>`;
   });
   treatyHtml += "</tbody></table>";
-  treatyDiv.innerHTML = treatyHtml;
+  document.getElementById("treaty-length").innerHTML = treatyHtml;
+  // add title
+  document.getElementById(
+    "treaty-length-title"
+  ).innerText = `${company} & Historic Treaty Land`;
 }
 
 function removeIncidents(map) {
@@ -118,13 +121,30 @@ function removeIncidents(map) {
  * @returns
  */
 function eventTooltip(event) {
+  const listify = (str) => {
+    if (str.includes(",")) {
+      let listHtml = `<ul>`;
+      str.split(",").forEach((li) => {
+        listHtml += `<li>${li}</li>`;
+      });
+      listHtml += `</ul>`;
+      return listHtml;
+    } else {
+      return str;
+    }
+  };
+
   let toolText = `<table class="map-tooltip">`;
   toolText += `<caption><b>${event.id}</b></caption>`;
   toolText += `<tr><td>Status:&nbsp</td><td><b>${event.status}</td></tr>`;
   toolText += `<tr><td>Incident Type:&nbsp</td><td><b>${event.type}</td></tr>`;
   toolText += `<tr><td>Substance:&nbsp</td><td><b>${event.sub}</td></tr>`;
-  toolText += `<tr><td>What Happened:&nbsp</td><td><b>${event.what}</td></tr>`;
-  toolText += `<tr><td>Why It Happened:&nbsp</td><td><b>${event.why}</td></tr>`;
+  toolText += `<tr><td>What Happened:&nbsp</td><td><b>${listify(
+    event.what
+  )}</td></tr>`;
+  toolText += `<tr><td>Why It Happened:&nbsp</td><td><b>${listify(
+    event.why
+  )}</td></tr>`;
   toolText += `<tr><td>Approximate volume released:&nbsp</td><td><b>${
     event.vol === null ? "Not provided" : `${event.vol} (m3)`
   }</td></tr>`;

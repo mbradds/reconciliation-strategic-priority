@@ -112,7 +112,7 @@ export function landDashboard(
 
   function loadNonMap() {
     setTitle(meta.company);
-    addpoly2Length(poly2Length);
+    addpoly2Length(poly2Length, meta.company);
     equalizeHeight("eq1", "eq2");
     dashboardTotals();
     setUpHeight();

@@ -1,6 +1,19 @@
 import "core-js/modules/es.promise.js";
 import * as L from "leaflet";
-import { addpoly2Length } from "./util.js";
+import {
+  cerPalette,
+  leafletBaseMap,
+  setLeafletHeight,
+  lengthUnits,
+  setTitle,
+  setUpHeight,
+  addpoly2Length,
+  onEachFeature,
+  mapLegend,
+  resetZoom,
+  reserveTooltip,
+  resetListener,
+} from "./util.js";
 import "leaflet/dist/leaflet.css";
 import "../main.css";
 import "../cer.css";
@@ -10,7 +23,8 @@ export function profile(
   landInfo,
   poly2Length,
   incidentFeature,
-  meta
+  meta,
+  line = false
 ) {
   function iamc() {
     const flag = (info) => {
@@ -41,26 +55,90 @@ export function profile(
   }
 
   function dynamicText(meta) {
-    console.log(meta);
-    const text = `<p>Dynamic content here</p>`;
+    const addStyle = (val) =>
+      `<span class="bg-primary"><strong>&nbsp;${val}&nbsp;</strong></span>`;
+    let text = ``;
+    let totalFeatures = 0;
+    landFeature.features.forEach(() => {
+      totalFeatures += 1;
+    });
+    const lengthInfo = lengthUnits(meta.totalLength);
+    text += `<p>On this system, approximately ${addStyle(lengthInfo[0])} ${
+      lengthInfo[1]
+    } of regulated pipeline passes directly through ${addStyle(
+      totalFeatures
+    )} First Nations Reserves. `;
+
+    const incidentMeta = incidentFeature.meta;
+
+    text += `There have been ${addStyle(
+      incidentMeta.on
+    )} reported system incidents directly on First Nations Reserves. There have been ${addStyle(
+      incidentMeta["15km"]
+    )} reported system incidents within 15 km of First Nations Reserves. Take a look at the map below for more information about these overlaps.</p>`;
+
     document.getElementById("indigenous-dynamic-text").innerHTML = text;
   }
 
+  function loadMap(mapHeight) {
+    const map = leafletBaseMap({
+      div: "map",
+      zoomDelta: 0.25,
+      initZoomLevel: 4,
+      initZoomTo: [55, -119],
+    });
+
+    const reserveStyle = {
+      fillColor: cerPalette["Night Sky"],
+      color: cerPalette.Sun,
+      weight: 20,
+      opacity: 0.5,
+      fillOpacity: 1,
+    };
+
+    const geoLayer = L.geoJSON(landFeature, {
+      style: reserveStyle,
+      landInfo: landInfo,
+      incidentFeature: incidentFeature,
+      onEachFeature,
+    })
+      .bindTooltip((layer) =>
+        reserveTooltip(layer.feature.properties, landInfo)
+      )
+      .addTo(map);
+
+    if (line) {
+      L.geoJSON(line, {
+        style: {
+          fillColor: cerPalette.Aubergine,
+          color: cerPalette.Aubergine,
+          className: "no-hover",
+          fillOpacity: 1,
+        },
+      }).addTo(map);
+    }
+
+    const territoryLayer = false;
+    mapLegend(map, territoryLayer);
+    resetZoom(map, geoLayer, territoryLayer);
+    resetListener(map, geoLayer, territoryLayer);
+    return map;
+  }
+
   function loadNonMap() {
-    // setTitle(meta.company);
-    addpoly2Length(poly2Length);
+    setTitle(meta.company);
+    addpoly2Length(poly2Length, meta.company);
     iamc();
     dynamicText(meta);
-    // dashboardTotals();
-    // setUpHeight();
+    setUpHeight();
   }
 
   function main() {
     async function buildPage() {
-      // const mapHeight = setLeafletHeight(0.75);
+      const mapHeight = setLeafletHeight(0.65);
       loadNonMap();
-      // const map = await loadMap(mapHeight);
-      // return map;
+      const map = await loadMap(mapHeight);
+      return map;
     }
 
     buildPage().then(() => {
