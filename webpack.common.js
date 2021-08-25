@@ -30,15 +30,24 @@ const webpackOutputs = (function () {
   }
 
   function outputHtml() {
-    const html = filenames.map(
-      (name) =>
+    const html = [];
+    filenames.forEach((name) => {
+      const htmls = [
         new HtmlWebpackPlugin({
           filename: `html/${name}.html`,
-          template: "src/template.html",
+          template: "src/components/iamc.html",
           chunks: [`${name}`],
           minify: { collapseWhitespace: true },
-        })
-    );
+        }),
+        new HtmlWebpackPlugin({
+          filename: `html/pipeline-profiles/${name}.html`,
+          template: "src/components/pipeline-profile.html",
+          chunks: [],
+          minify: { collapseWhitespace: true },
+        }),
+      ];
+      html.push(...htmls);
+    });
     return html;
   }
 
