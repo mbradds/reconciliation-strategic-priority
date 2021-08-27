@@ -6,3 +6,9 @@ body {
   font-size: 16px !important;
   line-height: 1.4375 !important;
 }
+#intersection-details caption {
+  font-size: 0.9em;
+}
+#intersection-details td {
+  font-size: 16px !important;
+}

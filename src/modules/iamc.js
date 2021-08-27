@@ -14,6 +14,7 @@ import {
   resetZoom,
   reserveTooltip,
   resetListener,
+  plural,
 } from "./util.js";
 import { addTraditionalTerritory } from "./territoryPopUp.js";
 import "leaflet/dist/leaflet.css";
@@ -41,21 +42,27 @@ export function landDashboard(
       lengthInfo[1]
     } of regulated pipeline passes directly through ${addStyle(
       totalFeatures
-    )} First Nations Reserves.`;
+    )} First Nations ${plural(totalFeatures, "reserve", true)}.`;
     document.getElementById("overlap-meta-point").innerHTML = htmlLiOver;
 
     const incidentMeta = incidentFeature.meta;
     const htmlLiIncOn = `<div class="${flagClass(
       incidentMeta.on
-    )}"><p>There have been ${addStyle(
-      incidentMeta.on
-    )} reported system incidents directly on First Nations Reserves.</p></div>`;
+    )}"><p>There has been ${addStyle(incidentMeta.on)} reported system ${plural(
+      incidentMeta.on,
+      "incident",
+      false
+    )} directly on First Nations Reserves.</p></div>`;
 
     const htmlLiIncOff = `<div class="${flagClass(
       incidentMeta["15km"]
-    )}"><p>There have been ${addStyle(
+    )}"><p>There has been ${addStyle(
       incidentMeta["15km"]
-    )} reported system incidents within 15 km of First Nations Reserves.</p></div>`;
+    )} reported system ${plural(
+      incidentMeta["15km"],
+      "incident",
+      false
+    )} within 15 km of First Nations Reserves.</p></div>`;
 
     document.getElementById("incident-meta-point-on").innerHTML = htmlLiIncOn;
     document.getElementById("incident-meta-point-off").innerHTML = htmlLiIncOff;

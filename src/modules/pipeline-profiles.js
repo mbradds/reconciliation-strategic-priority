@@ -13,6 +13,7 @@ import {
   resetZoom,
   reserveTooltip,
   resetListener,
+  plural,
 } from "./util.js";
 import "leaflet/dist/leaflet.css";
 import "../main.css";
@@ -67,20 +68,28 @@ export function profile(
       lengthInfo[1]
     } of regulated pipeline passes directly through ${addStyle(
       totalFeatures
-    )} First Nations Reserves. `;
+    )} First Nations ${plural(totalFeatures, "reserve", true)}. `;
 
     const incidentMeta = incidentFeature.meta;
 
-    text += `There have been ${addStyle(
+    text += `There has been ${addStyle(
       incidentMeta.on
-    )} reported system incidents directly on First Nations Reserves. There have been ${addStyle(
+    )} reported system ${plural(
+      incidentMeta.on,
+      "incident",
+      false
+    )} directly on First Nations Reserves. There has been ${addStyle(
       incidentMeta["15km"]
-    )} reported system incidents within 15 km of First Nations Reserves. Take a look at the map below for more information about these overlaps.</p>`;
+    )} reported system ${plural(
+      incidentMeta["15km"],
+      "incident",
+      false
+    )} within 15 km of First Nations Reserves. Take a look at the map below for more information about these overlaps.</p>`;
 
     document.getElementById("indigenous-dynamic-text").innerHTML = text;
   }
 
-  function loadMap(mapHeight) {
+  function loadMap() {
     const map = leafletBaseMap({
       div: "map",
       zoomDelta: 0.25,
@@ -100,6 +109,7 @@ export function profile(
       style: reserveStyle,
       landInfo: landInfo,
       incidentFeature: incidentFeature,
+      pipelineProfile: true,
       onEachFeature,
     })
       .bindTooltip((layer) =>
@@ -135,7 +145,7 @@ export function profile(
 
   function main() {
     async function buildPage() {
-      const mapHeight = setLeafletHeight(0.65);
+      const mapHeight = setLeafletHeight(0.7);
       loadNonMap();
       const map = await loadMap(mapHeight);
       return map;

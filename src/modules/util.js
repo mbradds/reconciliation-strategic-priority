@@ -183,7 +183,7 @@ export function addIncidents(map, name, incidentFeature) {
         cerPalette["Cool Grey"], // border
         cerPalette.hcRed, // fill
         1,
-        1000,
+        600,
         p
       );
     });
@@ -210,6 +210,11 @@ export function onEachFeature(feature, layer) {
   const landInfo = this.landInfo;
   const incidentFeature = this.incidentFeature;
 
+  const popStyle = { h: 3 };
+  if (this.pipelineProfile) {
+    popStyle.h = 5;
+  }
+
   layer.on({
     click(e) {
       const layerInfo = landInfo[feature.properties.NAME1];
@@ -225,7 +230,7 @@ export function onEachFeature(feature, layer) {
         incidentFeature
       );
       const total = lengthUnits(totalLength);
-      let popHtml = `<div class="col-md-12"><h3 class="center-header">${feature.properties.NAME1}</h3>`;
+      let popHtml = `<h${popStyle.h} class="center-header">${feature.properties.NAME1}</h${popStyle.h}>`;
 
       // first table: pipeline overlaps
       popHtml += `<table class="table" style="margin-bottom:0px">`;
@@ -246,14 +251,19 @@ export function onEachFeature(feature, layer) {
       popHtml += `<div style="margin-bottom: 15px" class="${alertClass(
         proximityCount.on,
         "on"
-      )} col-md-12"><p>${
-        proximityCount.on
-      } incidents directly within</p></div>`;
+      )} col-md-12"><p>${proximityCount.on} ${plural(
+        proximityCount.on,
+        "incident",
+        false
+      )} directly within</p></div>`;
       popHtml += `<div class="${alertClass(
         proximityCount.close,
         "close"
-      )} col-md-12"><p>${proximityCount.close} incidents within 15km</p></div>`;
-      popHtml += "</div>";
+      )} col-md-12"><p>${proximityCount.close} ${plural(
+        proximityCount.close,
+        "incident",
+        false
+      )} within 15km</p></div>`;
       document.getElementById("intersection-details").innerHTML = popHtml;
     },
   });
@@ -327,4 +337,21 @@ export function resetListener(map, geoLayer, territoryLayer) {
     document.getElementById("intersection-details").innerHTML =
       '<div class="alert alert-info"><p>Click on a <span class="region-click-text">region</span> to view extra info</p></div>';
   });
+}
+
+export function plural(val, type, cap = false) {
+  function capitalize(s, cap) {
+    if (cap) {
+      return s[0].toUpperCase() + s.slice(1);
+    } else {
+      return s;
+    }
+  }
+  if (type === "incident" || type === "incidents") {
+    return capitalize(val > 1 || val === 0 ? "incidents" : "incident", cap);
+  } else if (type === "reserve" || type === "reserves") {
+    return capitalize(val > 1 ? "reserves" : "reserve", cap);
+  } else {
+    return type;
+  }
 }
