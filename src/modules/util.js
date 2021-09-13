@@ -129,9 +129,8 @@ function eventTooltip(event) {
       });
       listHtml += `</ul>`;
       return listHtml;
-    } else {
-      return str;
     }
+    return str;
   };
 
   let toolText = `<table class="map-tooltip">`;
@@ -196,6 +195,22 @@ function getSum(total, num) {
   return total + num.length;
 }
 
+export function plural(val, type, cap = false) {
+  function capitalize(s, c) {
+    if (c) {
+      return s[0].toUpperCase() + s.slice(1);
+    }
+    return s;
+  }
+  if (type === "incident" || type === "incidents") {
+    return capitalize(val > 1 || val === 0 ? "incidents" : "incident", cap);
+  }
+  if (type === "reserve" || type === "reserves") {
+    return capitalize(val > 1 ? "reserves" : "reserve", cap);
+  }
+  return type;
+}
+
 export function onEachFeature(feature, layer) {
   const alertClass = (val, type) => {
     if (type === "on" && val > 0) {
@@ -207,8 +222,8 @@ export function onEachFeature(feature, layer) {
     return "alert alert-success";
   };
 
-  const landInfo = this.landInfo;
-  const incidentFeature = this.incidentFeature;
+  const { landInfo } = this;
+  const { incidentFeature } = this;
 
   const popStyle = { h: 3 };
   if (this.pipelineProfile) {
@@ -269,8 +284,14 @@ export function onEachFeature(feature, layer) {
   });
 }
 
-export function mapLegend(map, territoryLayer) {
-  let legend = `<h4><span class="region-click-text" style="height: 10px;">&nbsp;&nbsp;&nbsp;</span>&nbsp;&nbsp;First Nation Reserve</h4>`;
+export function mapLegend(map, territoryLayer, metisLayer) {
+  const mapWithLegend = map;
+  let legend = `<h4><span class="region-click-text legend-first-nation" style="height: 10px;">&nbsp;&nbsp;&nbsp;</span>&nbsp;&nbsp;First Nation Reserve</h4>`;
+
+  if (metisLayer) {
+    legend += `<h4><span class="region-click-text legend-metis" style="height: 10px;">&nbsp;&nbsp;&nbsp;</span>&nbsp;&nbsp;Métis Settlement</h4>`;
+  }
+
   if (territoryLayer) {
     legend += `<h4 style='color:${cerPalette.Aubergine};'>&#9473;&#9473; TMX</h4>`;
     legend += `<h4 style='color:${cerPalette["Cool Grey"]};'>&#11044; Traditional Territory</h4>`;
@@ -279,7 +300,7 @@ export function mapLegend(map, territoryLayer) {
   info.onAdd = function () {
     this._div = L.DomUtil.create("div", "legend");
     this._div.innerHTML = legend;
-    map.legend = this;
+    mapWithLegend.legend = this;
     return this._div;
   };
   info.addItem = function () {
@@ -290,16 +311,20 @@ export function mapLegend(map, territoryLayer) {
       toHide.remove();
     });
   };
-  info.addTo(map);
+  info.addTo(mapWithLegend);
   return info;
 }
 
-export function resetZoom(map, geoLayer, territoryLayer, fly = false) {
+export function resetZoom(map, geoLayer, otherLayers, fly = false) {
   let padd = [25, 25];
   let fullBounds = geoLayer.getBounds();
-  if (territoryLayer) {
-    fullBounds = fullBounds.extend(territoryLayer.getBounds());
-  }
+
+  otherLayers.forEach((layer) => {
+    if (layer) {
+      fullBounds = fullBounds.extend(layer.getBounds());
+    }
+  });
+
   if (Object.keys(geoLayer._layers).length === 1) {
     padd = [270, 270];
   }
@@ -329,29 +354,12 @@ export function reserveTooltip(layer, landInfo) {
   return table;
 }
 
-export function resetListener(map, geoLayer, territoryLayer) {
+export function resetListener(map, geoLayer, otherLayers) {
   document.getElementById("reset-map").addEventListener("click", () => {
-    resetZoom(map, geoLayer, territoryLayer, true);
+    resetZoom(map, geoLayer, otherLayers, true);
     removeIncidents(map);
     map.closePopup();
     document.getElementById("intersection-details").innerHTML =
-      '<div class="alert alert-info"><p>Click on a <span class="region-click-text">region</span> to view extra info</p></div>';
+      '<div class="alert alert-info"><p>Click on a <span class="region-click-text legend-first-nation">region</span> to view extra info</p></div>';
   });
-}
-
-export function plural(val, type, cap = false) {
-  function capitalize(s, cap) {
-    if (cap) {
-      return s[0].toUpperCase() + s.slice(1);
-    } else {
-      return s;
-    }
-  }
-  if (type === "incident" || type === "incidents") {
-    return capitalize(val > 1 || val === 0 ? "incidents" : "incident", cap);
-  } else if (type === "reserve" || type === "reserves") {
-    return capitalize(val > 1 ? "reserves" : "reserve", cap);
-  } else {
-    return type;
-  }
 }

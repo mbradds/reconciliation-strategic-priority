@@ -17,6 +17,7 @@ import {
   plural,
 } from "./util.js";
 import { addTraditionalTerritory } from "./territoryPopUp.js";
+import { addMetisSettlements } from "./metisSettlements.js";
 import "leaflet/dist/leaflet.css";
 import "../main.css";
 
@@ -86,8 +87,8 @@ export function landDashboard(
 
     const geoLayer = L.geoJSON(landFeature, {
       style: reserveStyle,
-      landInfo: landInfo,
-      incidentFeature: incidentFeature,
+      landInfo,
+      incidentFeature,
       onEachFeature,
     })
       .bindTooltip((layer) =>
@@ -106,14 +107,15 @@ export function landDashboard(
       }).addTo(map);
     }
 
-    let territoryLayer = false;
+    let [territoryLayer, metisLayer] = [false, false];
     if (meta.company === "Trans Mountain Pipeline ULC") {
       territoryLayer = addTraditionalTerritory(map, mapHeight);
+      metisLayer = addMetisSettlements(map);
     }
 
-    mapLegend(map, territoryLayer);
-    resetZoom(map, geoLayer, territoryLayer);
-    resetListener(map, geoLayer, territoryLayer);
+    mapLegend(map, territoryLayer, metisLayer);
+    resetZoom(map, geoLayer, [territoryLayer]);
+    resetListener(map, geoLayer, [territoryLayer]);
     return map;
   }
 

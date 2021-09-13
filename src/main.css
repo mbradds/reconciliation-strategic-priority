@@ -29,13 +29,20 @@
 .region-click-text {
   vertical-align: middle;
   display: inline-block;
-  box-shadow: 0 0 10px 5px #ffbe4b;
   color: #fff;
-  background-color: #054169;
   opacity: 0.8;
   padding: 0.01em 0.15em 0.01em 0.25em;
   margin-right: 0.05em;
   border-radius: 0.2em;
+  box-shadow: 0 0 10px 5px #ffbe4b;
+}
+
+.legend-first-nation {
+  background-color: #054169;
+}
+
+.legend-metis {
+  background-color: #559b37;
 }
 
 .center-header {
