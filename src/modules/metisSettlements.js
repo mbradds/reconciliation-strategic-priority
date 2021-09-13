@@ -1,5 +1,5 @@
 import * as esri from "esri-leaflet";
-import { cerPalette } from "./util.js";
+import { cerPalette, metisTooltip } from "./util.js";
 
 export function addMetisSettlements(map) {
   const metisStyle = {
@@ -14,9 +14,17 @@ export function addMetisSettlements(map) {
     .featureLayer({
       url: "https://maps.alberta.ca/genesis/rest/services/First_Nations_Land/Latest/MapServer/5",
       style: metisStyle,
+      //   onEachFeature(feature, layer) {
+      //     layer.on({
+      //       click(e) {
+      //         console.log(e);
+      //       },
+      //     });
+      //   },
       // simplifyFactor: 0.5,
       // precision: 5,
     })
+    .bindTooltip((layer) => metisTooltip(layer))
     .addTo(map);
 
   esriLayer.once("load", () => {

@@ -354,6 +354,14 @@ export function reserveTooltip(layer, landInfo) {
   return table;
 }
 
+export function metisTooltip(layer) {
+  let table = `<table class="map-tooltip">`;
+  table += `<caption><b>${layer.feature.properties.METIS_NAME}</b></caption>`;
+  table += `<tr><td>Land Type:&nbsp</td> <td><b>Metis Settlement</td></tr>`;
+  table += `<tr><td>Metis Code:&nbsp</td> <td><b>${layer.feature.properties.METIS_CODE}</td></tr>`;
+  return table;
+}
+
 export function resetListener(map, geoLayer, otherLayers) {
   document.getElementById("reset-map").addEventListener("click", () => {
     resetZoom(map, geoLayer, otherLayers, true);
