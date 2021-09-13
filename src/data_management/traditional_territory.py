@@ -12,10 +12,20 @@ def processTerritoryInfo():
                        sheet_name="BC First Nations",
                        skiprows=1,
                        engine="openpyxl")
-
+    
+    sources = pd.read_excel(os.path.join(script_dir,
+                                         "raw_data",
+                                         "traditional_territory",
+                                         "TMX_IAMC_Indigenous_Community_Profiles.xlsx"),
+                            sheet_name="image sources",
+                            skiprows=0,
+                            engine="openpyxl")
+    
     df = df[~df['Lat'].isnull()].reset_index(drop=True)
     df["mapFile"] = [x.strip() for x in df["mapFile"]]
+    df = pd.merge(df, sources, how="left", left_on="Community", right_on="Community")
     df = df.fillna("")
+    
     for col in df:
         if "Unnamed" in col:
             del df[col]
@@ -30,7 +40,9 @@ def processTerritoryInfo():
                 "protocol": row["Protocol"],
                 "about": row["About Us"],
                 "spread": row["Project Spreads"],
-                "web": row["Community Website"]}
+                "web": row["Community Website"],
+                "srcTxt": row["Source"],
+                "srcLnk": row["Link"]}
 
     for i, row in df.iterrows():
         if row["mapFile"] in land:

@@ -14,8 +14,8 @@ export function addTraditionalTerritory(map, mapHeight) {
   }
 
   function popUpTable(landInfo) {
-    let tableHtml = "";
-    let disclaimer = `<div id="image-disclaimer" class="alert alert-warning">
+    let tableHtml = `<p>Image source:&nbsp;<a href="${landInfo[0].srcLnk}" target="_blank">${landInfo[0].srcTxt}</a></p>`;
+    tableHtml += `<div id="image-disclaimer" class="alert alert-warning">
     <h3>&nbsp; Traditional Territory Map Disclaimer</h3>
     <p>These maps have been prepared using the Canada Energy Regulator
       internal Indigenous Engagement site information. These maps
@@ -23,7 +23,6 @@ export function addTraditionalTerritory(map, mapHeight) {
       general area of traditional territories. However, these maps do
       not represent the exact dimensions for the traditional territory
       of each Nation.</p></div>`;
-    tableHtml += disclaimer;
     landInfo.forEach((land) => {
       let table = `<table class="table"><caption><h3>${land.community} Information</h3></caption><tbody>`;
       table += `<tr><td>Leadership</td><td><strong>${land.leadership}</strong></td></tr>`;
