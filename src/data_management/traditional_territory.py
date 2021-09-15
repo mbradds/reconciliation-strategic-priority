@@ -42,7 +42,8 @@ def processTerritoryInfo():
                 "spread": row["Project Spreads"],
                 "web": row["Community Website"],
                 "srcTxt": row["Source"],
-                "srcLnk": row["Link"]}
+                "srcLnk": row["Link"],
+                "pronounce": row["Pronounciation"]}
 
     for i, row in df.iterrows():
         if row["mapFile"] in land:

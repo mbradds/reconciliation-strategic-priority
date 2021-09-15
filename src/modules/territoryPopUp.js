@@ -4,7 +4,13 @@ import { featureStyles } from "./util.js";
 
 export function addTraditionalTerritory(map, mapHeight, user) {
   function circleTooltip(landInfo) {
-    const communityNames = landInfo.map((land) => land.community).join("<br>");
+    const communityNames = landInfo
+      .map((land) =>
+        land.pronounce === ""
+          ? land.community
+          : `${land.community}&nbsp;(<span class="glyphicon glyphicon-volume-up" aria-hidden="true"></span> <i>${land.pronounce}</i>)`
+      )
+      .join("<br>");
     const plural = landInfo.length > 1 ? "territories" : "territory";
     let table = `<h3 class="center-header" style="margin-bottom: 5px"><b>${communityNames}</b></h3>`;
     table += `<p class="center-footer">Circle represents approximate centrality of the traditional ${plural}</p>`;
@@ -15,7 +21,7 @@ export function addTraditionalTerritory(map, mapHeight, user) {
   function popUpTable(landInfo) {
     let tableHtml = `<p>Image source:&nbsp;<a href="${landInfo[0].srcLnk}" target="_blank">${landInfo[0].srcTxt}</a></p>`;
     tableHtml += `<div id="image-disclaimer" class="alert alert-warning">
-    <h3>&nbsp; Traditional Territory Map Disclaimer</h3>
+    <h2>&nbsp; Traditional Territory Map Disclaimer</h2>
     <p>These maps have been prepared using the Canada Energy Regulator
       internal Indigenous Engagement site information. These maps
       provide general information regarding each Nation including the
@@ -23,7 +29,11 @@ export function addTraditionalTerritory(map, mapHeight, user) {
       not represent the exact dimensions for the traditional territory
       of each Nation.</p></div>`;
     landInfo.forEach((land) => {
-      let table = `<table class="table"><caption><h3>${land.community} Information</h3></caption><tbody>`;
+      let table = `<table class="table"><tbody>`;
+      table += `<h2 class="center-header">${land.community}</h2>`;
+      if (land.pronounce !== "") {
+        table += `<h3 class="center-header"><i>Pronounced: ${land.pronounce}</i></h3>`;
+      }
       table += `<tr><td>Leadership</td><td><strong>${land.leadership}</strong></td></tr>`;
       table += `<tr><td>Contact person</td><td><strong>${land.contactPerson}</strong></td></tr>`;
       table += `<tr><td>Contact Information</td><td><strong>${land.contactInfo}</strong></td></tr>`;
