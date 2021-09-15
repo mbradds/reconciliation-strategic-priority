@@ -14,6 +14,8 @@ import {
   reserveTooltip,
   resetListener,
   plural,
+  featureStyles,
+  clickExtraInfo,
 } from "./util.js";
 import "leaflet/dist/leaflet.css";
 import "../main.css";
@@ -96,16 +98,8 @@ export function profile(
       initZoomTo: [55, -119],
     });
 
-    const reserveStyle = {
-      fillColor: cerPalette["Night Sky"],
-      color: cerPalette.Sun,
-      weight: 20,
-      opacity: 0.5,
-      fillOpacity: 1,
-    };
-
     const geoLayer = L.geoJSON(landFeature, {
-      style: reserveStyle,
+      style: featureStyles.reserveOverlap,
       landInfo,
       incidentFeature,
       pipelineProfile: true,
@@ -136,6 +130,7 @@ export function profile(
 
   function loadNonMap() {
     setTitle(meta.company);
+    clickExtraInfo();
     addpoly2Length(poly2Length, meta.company);
     showIamc();
     dynamicText(meta);

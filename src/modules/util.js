@@ -16,6 +16,43 @@ export const cerPalette = {
   hcLightBlue: "#91e8e1",
 };
 
+export const featureStyles = {
+  territory: {
+    color: cerPalette["Night Sky"],
+    fillColor: cerPalette["Dim Grey"],
+    weight: 85,
+    opacity: 0.1,
+    fillOpacity: 1,
+  },
+  incident: {
+    color: cerPalette["Cool Grey"],
+    fillColor: cerPalette.hcRed,
+    weight: 1,
+    fillOpacity: 1,
+    radius: 600,
+  },
+  tmx: {
+    fillColor: cerPalette.Aubergine,
+    color: cerPalette.Aubergine,
+    className: "no-hover",
+    fillOpacity: 1,
+  },
+  reserveOverlap: {
+    fillColor: cerPalette["Night Sky"],
+    color: cerPalette.Sun,
+    weight: 20,
+    opacity: 0.5,
+    fillOpacity: 1,
+  },
+  metis: {
+    fillColor: cerPalette.Forest,
+    color: cerPalette.Flame,
+    weight: 10,
+    opacity: 0.5,
+    fillOpacity: 1,
+  },
+};
+
 /**
  * Overrides the wet4 equal height if it doesnt work.
  * @param {string} divId1 - HTML id of div to compare to second parameter
@@ -157,13 +194,13 @@ function eventTooltip(event) {
 export function addIncidents(map, name, incidentFeature) {
   removeIncidents(map);
   const incidents = incidentFeature[name];
-  const addCircle = (x, y, color, fillColor, fillOpacity, r, eventInfo) =>
+  const addCircle = (x, y, eventInfo) =>
     L.circle([x, y], {
-      color,
-      fillColor,
-      fillOpacity,
-      radius: r,
-      weight: 1,
+      color: featureStyles.incident.color,
+      fillColor: featureStyles.incident.fillColor,
+      fillOpacity: featureStyles.incident.fillOpacity,
+      radius: featureStyles.incident.radius,
+      weight: featureStyles.incident.weight,
       type: "incident",
     }).bindTooltip(eventTooltip(eventInfo));
 
@@ -176,15 +213,7 @@ export function addIncidents(map, name, incidentFeature) {
       } else {
         proximityCount.close += 1;
       }
-      return addCircle(
-        p.loc[0],
-        p.loc[1],
-        cerPalette["Cool Grey"], // border
-        cerPalette.hcRed, // fill
-        1,
-        600,
-        p
-      );
+      return addCircle(p.loc[0], p.loc[1], p);
     });
     L.featureGroup(points).addTo(map);
   }
@@ -286,15 +315,19 @@ export function onEachFeature(feature, layer) {
 
 export function mapLegend(map, territoryLayer, metisLayer) {
   const mapWithLegend = map;
-  let legend = `<h4><span class="region-click-text legend-first-nation" style="height: 10px;">&nbsp;&nbsp;&nbsp;</span>&nbsp;&nbsp;First Nation Reserve</h4>`;
+  let legend = `<h4><span class="region-click-text" 
+  style="height: 10px; background-color: ${featureStyles.reserveOverlap.fillColor}">
+  &nbsp;&nbsp;&nbsp;</span>&nbsp;&nbsp;First Nation Reserve</h4>`;
 
   if (metisLayer) {
-    legend += `<h4><span class="region-click-text legend-metis" style="height: 10px;">&nbsp;&nbsp;&nbsp;</span>&nbsp;&nbsp;Métis Settlement</h4>`;
+    legend += `<h4><span class="region-click-text"
+    style="height: 10px; background-color: ${featureStyles.metis.fillColor}"">
+    &nbsp;&nbsp;&nbsp;</span>&nbsp;&nbsp;Métis Settlement</h4>`;
   }
 
   if (territoryLayer) {
-    legend += `<h4 style='color:${cerPalette.Aubergine};'>&#9473;&#9473; TMX</h4>`;
-    legend += `<h4 style='color:${cerPalette["Cool Grey"]};'>&#11044; Traditional Territory</h4>`;
+    legend += `<h4 style='color:${featureStyles.tmx.fillColor};'>&#9473;&#9473; TMX</h4>`;
+    legend += `<h4 style='color:${featureStyles.territory.fillColor};'>&#11044; Traditional Territory</h4>`;
   }
   const info = L.control();
   info.onAdd = function () {
@@ -362,12 +395,17 @@ export function metisTooltip(layer) {
   return table;
 }
 
+export function clickExtraInfo() {
+  document.getElementById(
+    "intersection-details"
+  ).innerHTML = `<div class="alert alert-info"><p>Click on a <span class="region-click-text" style="background-color: ${featureStyles.reserveOverlap.fillColor};">region</span> to view extra info</p></div>`;
+}
+
 export function resetListener(map, geoLayer, otherLayers) {
   document.getElementById("reset-map").addEventListener("click", () => {
     resetZoom(map, geoLayer, otherLayers, true);
     removeIncidents(map);
     map.closePopup();
-    document.getElementById("intersection-details").innerHTML =
-      '<div class="alert alert-info"><p>Click on a <span class="region-click-text legend-first-nation">region</span> to view extra info</p></div>';
+    clickExtraInfo();
   });
 }

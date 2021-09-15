@@ -1,19 +1,11 @@
 import * as esri from "esri-leaflet";
-import { cerPalette, metisTooltip } from "./util.js";
+import { metisTooltip, featureStyles } from "./util.js";
 
 export function addMetisSettlements(map) {
-  const metisStyle = {
-    fillColor: cerPalette.Forest,
-    color: cerPalette.Flame,
-    weight: 10,
-    opacity: 0.5,
-    fillOpacity: 1,
-  };
-
   const esriLayer = esri
     .featureLayer({
       url: "https://maps.alberta.ca/genesis/rest/services/First_Nations_Land/Latest/MapServer/5",
-      style: metisStyle,
+      style: featureStyles.metis,
       //   onEachFeature(feature, layer) {
       //     layer.on({
       //       click(e) {

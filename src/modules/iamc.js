@@ -2,7 +2,6 @@ import "core-js/modules/es.promise.js";
 import * as L from "leaflet";
 import {
   equalizeHeight,
-  cerPalette,
   leafletBaseMap,
   setLeafletHeight,
   lengthUnits,
@@ -15,6 +14,8 @@ import {
   reserveTooltip,
   resetListener,
   plural,
+  featureStyles,
+  clickExtraInfo,
 } from "./util.js";
 import { addTraditionalTerritory } from "./territoryPopUp.js";
 import { addMetisSettlements } from "./metisSettlements.js";
@@ -77,16 +78,8 @@ export function landDashboard(
       initZoomTo: [55, -119],
     });
 
-    const reserveStyle = {
-      fillColor: cerPalette["Night Sky"],
-      color: cerPalette.Sun,
-      weight: 20,
-      opacity: 0.5,
-      fillOpacity: 1,
-    };
-
     const geoLayer = L.geoJSON(landFeature, {
-      style: reserveStyle,
+      style: featureStyles.reserveOverlap,
       landInfo,
       incidentFeature,
       onEachFeature,
@@ -98,12 +91,7 @@ export function landDashboard(
 
     if (line) {
       L.geoJSON(line, {
-        style: {
-          fillColor: cerPalette.Aubergine,
-          color: cerPalette.Aubergine,
-          className: "no-hover",
-          fillOpacity: 1,
-        },
+        style: featureStyles.tmx,
       }).addTo(map);
     }
 
@@ -120,6 +108,7 @@ export function landDashboard(
   }
 
   function loadNonMap() {
+    clickExtraInfo();
     setTitle(meta.company);
     addpoly2Length(poly2Length, meta.company);
     equalizeHeight("eq1", "eq2");

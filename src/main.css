@@ -37,14 +37,6 @@
   box-shadow: 0 0 10px 5px #ffbe4b;
 }
 
-.legend-first-nation {
-  background-color: #054169;
-}
-
-.legend-metis {
-  background-color: #559b37;
-}
-
 .center-header {
   display: flex;
   justify-content: center;
