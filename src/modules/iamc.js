@@ -70,7 +70,7 @@ export function landDashboard(
     document.getElementById("incident-meta-point-off").innerHTML = htmlLiIncOff;
   }
 
-  function loadMap(mapHeight) {
+  function loadMap(mapHeight, user) {
     const map = leafletBaseMap({
       div: "map",
       zoomDelta: 0.25,
@@ -97,7 +97,7 @@ export function landDashboard(
 
     let [territoryLayer, metisLayer] = [false, false];
     if (meta.company === "Trans Mountain Pipeline ULC") {
-      territoryLayer = addTraditionalTerritory(map, mapHeight);
+      territoryLayer = addTraditionalTerritory(map, mapHeight, user);
       metisLayer = addMetisSettlements(map);
     }
 
@@ -111,16 +111,19 @@ export function landDashboard(
     clickExtraInfo();
     setTitle(meta.company);
     addpoly2Length(poly2Length, meta.company);
-    equalizeHeight("eq1", "eq2");
     dashboardTotals();
-    setUpHeight();
+    const user = setUpHeight();
+    if (user[0] !== "xs") {
+      equalizeHeight("eq1", "eq2");
+    }
+    return user;
   }
 
   function main() {
     async function buildPage() {
       const mapHeight = setLeafletHeight(0.75);
-      loadNonMap();
-      const map = await loadMap(mapHeight);
+      const user = loadNonMap();
+      const map = await loadMap(mapHeight, user);
       return map;
     }
 

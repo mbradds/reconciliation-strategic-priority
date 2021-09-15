@@ -115,15 +115,39 @@ export function setTitle(company) {
 
 export function setUpHeight() {
   let dbHeight = document.getElementById("map-panel").clientHeight;
+  const userWidth = window.screen.width;
+  let userClass = "xs";
+  if (userWidth < 768) {
+    userClass = "xs";
+  } else if (userWidth >= 1200) {
+    userClass = "lg";
+  } else if (userWidth >= 992) {
+    userClass = "md";
+  } else if (userWidth >= 768) {
+    userClass = "sm";
+  }
+
   if (!dbHeight || dbHeight === 0) {
     // set dashboard to 700 pixels if I cant access client screen size
     dbHeight = 700;
   }
-  const otherHeight = 15 + document.getElementById("reset-map").clientHeight;
-  const clickDivHeight = `${(dbHeight - otherHeight).toFixed(0)}`;
-  document
-    .getElementById("click-fn-info")
-    .setAttribute("style", `height:${clickDivHeight}px`);
+
+  const clickDivHeight = `${(dbHeight - (15 + 44)).toFixed(0)}`;
+
+  let resetId = ["reset-large", "mrgn-tp-md"];
+  if (userClass !== "xs" && userClass !== "sm") {
+    document
+      .getElementById("click-fn-info")
+      .setAttribute("style", `height:${clickDivHeight}px`);
+  } else {
+    resetId = ["reset-small", "mrgn-bttm-md mrgn-tp-md"];
+  }
+
+  document.getElementById(
+    resetId[0]
+  ).innerHTML = `<button type="button" id="reset-map" class="btn btn-primary btn-block btn-lg ${resetId[1]}">Reset Map</button>`;
+
+  return [userClass, userWidth];
 }
 
 export function addpoly2Length(treaties, company) {

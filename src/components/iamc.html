@@ -21,12 +21,12 @@
         </div>
       </div>
       <div class="row">
-        <div class="col-md-6">
-          <section class="panel panel-default">
+        <div class="col-md-6 col-sm-6">
+          <section class="panel panel-default" id="eq1">
             <header class="panel-heading">
               <h5 class="panel-title">Introduction</h5>
             </header>
-            <div class="panel-body" id="eq1">
+            <div class="panel-body">
               <p>
                 A significant amount of CER regualted pipelines and facilities
                 reside within First Nations Reserves. Many of the CER's events,
@@ -51,12 +51,12 @@
             </div>
           </section>
         </div>
-        <div class="col-md-6">
-          <section class="panel panel-default">
+        <div class="col-md-6 col-sm-6">
+          <section class="panel panel-default" id="eq2">
             <header class="panel-heading">
               <h5 id="treaty-length-title" class="panel-title"></h5>
             </header>
-            <div class="panel-body" id="eq2">
+            <div class="panel-body">
               <div id="treaty-length"></div>
             </div>
           </section>
@@ -77,7 +77,7 @@
         <div class="col-md-4" id="incident-meta-point-off"></div>
       </div>
       <div class="row mrgn-tp-sm mrgn-bttm-md">
-        <div class="col-md-9">
+        <div class="col-md-9 col-sm-12">
           <section class="panel panel-default" id="map-panel">
             <header class="panel-heading">
               <h5 class="panel-title" id="leaflet-map-title"></h5>
@@ -87,32 +87,30 @@
             </div>
           </section>
         </div>
-        <div class="col-md-3">
+        <div class="col-md-3 col-sm-12">
+          <div id="reset-small"></div>
           <section class="panel panel-default fn-panel" id="click-fn-info">
             <header class="panel-heading">
-              <h5 class="panel-title">Intersection Details</h5>
+              <h5 class="panel-title">Overlap Details</h5>
             </header>
             <div class="panel-body">
               <div id="intersection-details">
                 <div class="alert alert-info">
                   <p>
-                    Click on a <span class="region-click-text legend-first-nation">region</span> to
-                    view extra info
+                    Click on a
+                    <span class="region-click-text legend-first-nation"
+                      >region</span
+                    >
+                    to view extra info
                   </p>
                 </div>
               </div>
             </div>
           </section>
-          <button
-            type="button"
-            id="reset-map"
-            class="btn btn-primary btn-block btn-lg"
-          >
-            Reset Map
-          </button>
+          <div id="reset-large"></div>
         </div>
       </div>
-      <div class="row">
+      <div class="row mrgn-tp-lg">
         <div class="col-md-12">
           <details>
             <summary><strong>Dashboard Instructions</strong></summary>

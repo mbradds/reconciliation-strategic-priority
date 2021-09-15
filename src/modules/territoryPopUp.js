@@ -2,8 +2,7 @@ import * as L from "leaflet";
 import centralityEst from "../traditional_territory/centrality.json";
 import { featureStyles } from "./util.js";
 
-export function addTraditionalTerritory(map, mapHeight) {
-  const imageExtension = ".1.png";
+export function addTraditionalTerritory(map, mapHeight, user) {
   function circleTooltip(landInfo) {
     const communityNames = landInfo.map((land) => land.community).join("<br>");
     const plural = landInfo.length > 1 ? "territories" : "territory";
@@ -39,8 +38,12 @@ export function addTraditionalTerritory(map, mapHeight) {
   }
 
   function addCircles() {
-    const popWidth = Math.floor(mapHeight * 0.8);
+    let popWidth = Math.floor(mapHeight * 0.8);
     const popHeight = Math.floor(popWidth * 0.9);
+    if (user[1] < popWidth) {
+      popWidth = user[1] - 85;
+    }
+
     const landCircles = Object.keys(centralityEst).map((landName) => {
       const land = centralityEst[landName];
       const landMarker = L.circleMarker(
@@ -49,10 +52,13 @@ export function addTraditionalTerritory(map, mapHeight) {
       );
       landMarker.bindTooltip(circleTooltip(land.info));
       landMarker.bindPopup(
-        `<div class="territory-popup"><img src="../images/${landName}${imageExtension}" height="${popHeight}px" width="${popWidth}px"/>${popUpTable(
+        `<div class="territory-popup"><img src="../images/${landName}.1.png" height="${popHeight}px" width="${popWidth}px" max-width="${popWidth}px"/>${popUpTable(
           land.info
         )}</div>`,
-        { maxHeight: `${popHeight}`, maxWidth: `${popWidth}` }
+        {
+          maxHeight: `${popHeight}`,
+          maxWidth: `${popWidth}`,
+        }
       );
       return landMarker;
     });

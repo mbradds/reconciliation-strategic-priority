@@ -57,6 +57,10 @@
   overflow-x: hidden;
 }
 
+#map-panel{
+  margin-bottom: 0px;
+}
+
 #image-disclaimer.alert > :first-child:before {
   position: relative !important;
 }
