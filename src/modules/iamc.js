@@ -1,7 +1,6 @@
 import "core-js/modules/es.promise.js";
 import * as L from "leaflet";
 import {
-  equalizeHeight,
   leafletBaseMap,
   setLeafletHeight,
   lengthUnits,
@@ -28,7 +27,8 @@ export function landDashboard(
   poly2Length,
   incidentFeature,
   meta,
-  line = false
+  line = false,
+  territory = false
 ) {
   function dashboardTotals() {
     const addStyle = (val) => `<strong>${val}</strong>`;
@@ -71,6 +71,7 @@ export function landDashboard(
   }
 
   function loadMap(mapHeight, user) {
+    const layerControl = { single: {}, multi: {} };
     const map = leafletBaseMap({
       div: "map",
       zoomDelta: 0.25,
@@ -89,21 +90,35 @@ export function landDashboard(
       )
       .addTo(map);
 
+    layerControl.multi["First Nations Reserves"] = geoLayer;
     if (line) {
       L.geoJSON(line, {
         style: featureStyles.tmx,
       }).addTo(map);
     }
 
+    let digitalTerritoryLayer;
+    if (territory) {
+      digitalTerritoryLayer = L.geoJSON(territory); // .addTo(map);
+      layerControl.single["Digital Traditional Territory"] =
+        digitalTerritoryLayer;
+    }
+
     let [territoryLayer, metisLayer] = [false, false];
     if (meta.company === "Trans Mountain Pipeline ULC") {
       territoryLayer = addTraditionalTerritory(map, mapHeight, user);
       metisLayer = addMetisSettlements(map);
+      layerControl.single["Traditional Territory center point"] =
+        territoryLayer;
+      layerControl.multi["Metis Settlements"] = metisLayer;
     }
 
     mapLegend(map, territoryLayer, metisLayer);
     resetZoom(map, geoLayer, [territoryLayer]);
     resetListener(map, geoLayer, [territoryLayer]);
+    L.control
+      .layers(layerControl.single, layerControl.multi, { position: "topleft" })
+      .addTo(map);
     return map;
   }
 
@@ -113,9 +128,6 @@ export function landDashboard(
     addpoly2Length(poly2Length, meta.company);
     dashboardTotals();
     const user = setUpHeight();
-    if (user[0] !== "xs") {
-      equalizeHeight("eq1", "eq2");
-    }
     return user;
   }
 

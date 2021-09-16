@@ -14,57 +14,10 @@
   </head>
   <body>
     <div class="container-fluid mrgn-bttm-sm">
-      <div class="row mrgn-bttm-md">
+      <div class="row mrgn-bttm-sm">
         <div class="col-md-12">
           <h1>IAMC Map Prototype</h1>
-          <p class="small">Updated August 2021</p>
-        </div>
-      </div>
-      <div class="row">
-        <div class="col-md-6 col-sm-6">
-          <section class="panel panel-default" id="eq1">
-            <header class="panel-heading">
-              <h5 class="panel-title">Introduction</h5>
-            </header>
-            <div class="panel-body">
-              <p>
-                A significant amount of CER regualted pipelines and facilities
-                reside within First Nations Reserves. Many of the CER's events,
-                including incident review, conditions complaince, inspections,
-                and complaince verification activities, among others rely on
-                involvement from First Nations groups as a key stakeholder.
-              </p>
-              <p>
-                This dashboard highlights the intersections and proximity of CER
-                regulated infrastructure and activities with First Nations
-                Reserves, as well as historic treaty lands.
-              </p>
-              <p>
-                Reconciliation with Canada's First Nations communities is one of
-                the CER's four strategic priorities. Learn more about how we
-                engage with Indigenous Peoples
-                <a
-                  href="https://www.cer-rec.gc.ca/en/consultation-engagement/indigenous-engagement/index.html"
-                  >here</a
-                >.
-              </p>
-            </div>
-          </section>
-        </div>
-        <div class="col-md-6 col-sm-6">
-          <section class="panel panel-default" id="eq2">
-            <header class="panel-heading">
-              <h5 id="treaty-length-title" class="panel-title"></h5>
-            </header>
-            <div class="panel-body">
-              <div id="treaty-length"></div>
-            </div>
-          </section>
-        </div>
-      </div>
-      <div class="row">
-        <div class="col-md-12">
-          <h2>Map Dashboard</h2>
+          <p class="small">Updated September 2021</p>
         </div>
       </div>
       <div class="row">
@@ -76,7 +29,7 @@
         <div class="col-md-4" id="incident-meta-point-on"></div>
         <div class="col-md-4" id="incident-meta-point-off"></div>
       </div>
-      <div class="row mrgn-tp-sm mrgn-bttm-md">
+      <div class="row mrgn-bttm-md">
         <div class="col-md-9 col-sm-12">
           <section class="panel panel-default" id="map-panel">
             <header class="panel-heading">
@@ -110,7 +63,7 @@
           <div id="reset-large"></div>
         </div>
       </div>
-      <div class="row mrgn-tp-lg">
+      <div class="row mrgn-tp-md">
         <div class="col-md-12">
           <details>
             <summary><strong>Dashboard Instructions</strong></summary>
@@ -140,32 +93,12 @@
               </li>
             </ul>
           </details>
-        </div>
-      </div>
-      <div class="row">
-        <div class="col-md-12">
-          <section class="panel panel-info mrgn-tp-lg">
-            <header class="panel-heading">
-              <h5 class="panel-title">Opportunities/Ideas list</h5>
-            </header>
-            <div class="panel-body">
-              <ul class="lst-spcd">
-                <li>
-                  Add other CER events to the map, such as compliance
-                  verification activities, inspections and contaminated sites.
-                </li>
-                <li>Add other land types to the map.</li>
-                <li>Add more details about each incident.</li>
-                <li>
-                  Build this into a new section on the CER's pipeline profiles.
-                </li>
-                <li>
-                  Please send any suggestions or ideas to:
-                  grant.moss@cer-rec.gc.ca
-                </li>
-              </ul>
-            </div>
-          </section>
+          <details>
+            <summary>
+              <strong id="treaty-length-title"></strong>
+            </summary>
+            <div id="treaty-length"></div>
+          </details>
         </div>
       </div>
     </div>

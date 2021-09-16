@@ -88,6 +88,16 @@ export default {
         {
           from: path.resolve(
             __dirname,
+            "node_modules",
+            "leaflet",
+            "dist",
+            "images"
+          ),
+          to: path.resolve(__dirname, "dist", "html", "images"),
+        },
+        {
+          from: path.resolve(
+            __dirname,
             "src",
             "traditional_territory",
             "images"
@@ -128,6 +138,7 @@ export default {
       },
       {
         test: /\.png$/,
+        exclude: /node_modules/,
         use: {
           loader: "file-loader",
           options: {
@@ -138,6 +149,19 @@ export default {
         },
         type: "javascript/auto",
       },
+      // {
+      //   test: /\.png$/,
+      //   include: /node_modules/,
+      //   use: {
+      //     loader: "file-loader",
+      //     options: {
+      //       publicPath: "../../images",
+      //       outputPath: "images",
+      //       name: "[name].png",
+      //     },
+      //   },
+      //   type: "javascript/auto",
+      // },
     ],
   },
 
