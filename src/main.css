@@ -50,10 +50,6 @@ body {
   overflow: auto;
 }
 
-#reserve-popup {
-  overflow: auto;
-}
-
 .text-val {
   font-weight: bold;
   font-style: normal;
@@ -79,7 +75,7 @@ body {
   justify-content: center;
   align-items: center;
   margin-top: 5px;
-  margin-bottom: 20px;
+  margin-bottom: 15px;
 }
 
 .center-footer {
@@ -92,6 +88,19 @@ body {
 .territory-popup {
   overflow-y: hidden;
   overflow-x: hidden;
+}
+
+.iamc-popup tr {
+  font-size: 14px;
+}
+
+.iamc-popup p {
+  font-size: 14px;
+  margin-bottom: 0px !important;
+}
+
+#reserve-popup {
+  overflow: auto;
 }
 
 #image-disclaimer.alert > :first-child:before {

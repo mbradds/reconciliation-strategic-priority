@@ -275,9 +275,6 @@ export function reservePopUp(reserve) {
 
   const { landInfo } = reserve.defaultOptions;
   const { incidentFeature } = reserve.defaultOptions;
-
-  const popStyle = { h: 3 };
-
   const layerInfo = landInfo[reserve.feature.properties.NAME1];
   const totalLength = layerInfo.overlaps.reduce(getSum, 0);
 
@@ -287,11 +284,12 @@ export function reservePopUp(reserve) {
     incidentFeature
   );
   const total = lengthUnits(totalLength);
-  let popHtml = `<div id="reserve-popup"><h${popStyle.h} class="center-header">${reserve.feature.properties.NAME1}</h${popStyle.h}>`;
+  let popHtml = `<div class="iamc-popup" id="reserve-popup"><h2 class="center-header">${reserve.feature.properties.NAME1}</h2>`;
 
   // first table: pipeline overlaps
   popHtml += `<table class="table" style="margin-bottom:0px">`;
-  popHtml += `<caption>Pipeline Overlaps</caption><tbody>`;
+  popHtml += `<h3 class="center-header">Pipeline Overlaps</h3><tbody>`;
+
   layerInfo.overlaps.forEach((overlap) => {
     const l = lengthUnits(overlap.length);
     popHtml += `<tr><td>${overlap.plname} (${overlap.status})</td><td><b>${l[0]}${l[1]}<b></td></tr>`;
@@ -299,12 +297,7 @@ export function reservePopUp(reserve) {
   if (layerInfo.overlaps.length > 1) {
     popHtml += `<tr><td>Total: </td><td><b>${total[0]}${total[1]}<b></td></tr>`;
   }
-  popHtml += `</tbody></table>`;
-
-  // second table: incident overlaps
-  popHtml += `<table class="table" style="margin-bottom:0px">`;
-  popHtml += `<caption>Incident Overlaps</caption></table>`;
-
+  popHtml += `</tbody></table><h3 class="center-header">Incident Overlaps</h3>`;
   popHtml += `<div style="margin-bottom: 15px" class="${alertClass(
     proximityCount.on,
     "on"

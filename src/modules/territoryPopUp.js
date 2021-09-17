@@ -62,7 +62,7 @@ export function addTraditionalTerritory(map, mapHeight, user) {
       );
       landMarker.bindTooltip(circleTooltip(land.info));
       landMarker.bindPopup(
-        `<div class="territory-popup"><img src="../images/${landName}.1.png" height="${popHeight}px" width="${popWidth}px" max-width="${popWidth}px"/>${popUpTable(
+        `<div class="territory-popup iamc-popup"><img src="../images/${landName}.1.png" height="${popHeight}px" width="${popWidth}px" max-width="${popWidth}px"/>${popUpTable(
           land.info
         )}</div>`,
         {
