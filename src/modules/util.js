@@ -113,7 +113,7 @@ export function setTitle(company) {
   ).innerText = `Map - ${company} & First Nations Reserves`;
 }
 
-export function setUpHeight() {
+export function setUpHeight(pipelineProfile = false) {
   let dbHeight = document.getElementById("map-panel").clientHeight;
   const userWidth = window.screen.width;
   let userClass = "xs";
@@ -132,20 +132,20 @@ export function setUpHeight() {
     dbHeight = 700;
   }
 
-  const clickDivHeight = `${(dbHeight - (15 + 44)).toFixed(0)}`;
-
-  let resetId = ["reset-large", "mrgn-tp-md"];
-  if (userClass !== "xs" && userClass !== "sm") {
-    document
-      .getElementById("click-fn-info")
-      .setAttribute("style", `height:${clickDivHeight}px`);
-  } else {
-    resetId = ["reset-small", "mrgn-bttm-md mrgn-tp-md"];
+  if (pipelineProfile) {
+    const clickDivHeight = `${(dbHeight - (15 + 44)).toFixed(0)}`;
+    let resetId = ["reset-large", "mrgn-tp-md"];
+    if (userClass !== "xs" && userClass !== "sm") {
+      document
+        .getElementById("click-fn-info")
+        .setAttribute("style", `height:${clickDivHeight}px`);
+    } else {
+      resetId = ["reset-small", "mrgn-bttm-md mrgn-tp-md"];
+    }
+    document.getElementById(
+      resetId[0]
+    ).innerHTML = `<button type="button" id="reset-map" class="btn btn-primary btn-block btn-lg ${resetId[1]}">Reset Map</button>`;
   }
-
-  document.getElementById(
-    resetId[0]
-  ).innerHTML = `<button type="button" id="reset-map" class="btn btn-primary btn-block btn-lg ${resetId[1]}">Reset Map</button>`;
 
   return [userClass, userWidth];
 }
@@ -262,6 +262,68 @@ export function plural(val, type, cap = false) {
     return capitalize(val > 1 ? "reserves" : "reserve", cap);
   }
   return type;
+}
+
+export function reservePopUp(reserve) {
+  const alertClass = (val, type) => {
+    if (type === "on" && val > 0) {
+      return "alert alert-danger";
+    }
+    if (type === "close" && val > 0) {
+      return "alert alert-warning";
+    }
+    return "alert alert-success";
+  };
+
+  const { landInfo } = reserve.defaultOptions;
+  const { incidentFeature } = reserve.defaultOptions;
+
+  const popStyle = { h: 3 };
+
+  const layerInfo = landInfo[reserve.feature.properties.NAME1];
+  const totalLength = layerInfo.overlaps.reduce(getSum, 0);
+
+  const proximityCount = addIncidents(
+    reserve._map,
+    reserve.feature.properties.NAME1,
+    incidentFeature
+  );
+  const total = lengthUnits(totalLength);
+  let popHtml = `<div id="reserve-popup"><h${popStyle.h} class="center-header">${reserve.feature.properties.NAME1}</h${popStyle.h}>`;
+
+  // first table: pipeline overlaps
+  popHtml += `<table class="table" style="margin-bottom:0px">`;
+  popHtml += `<caption>Pipeline Overlaps</caption><tbody>`;
+  layerInfo.overlaps.forEach((overlap) => {
+    const l = lengthUnits(overlap.length);
+    popHtml += `<tr><td>${overlap.plname} (${overlap.status})</td><td><b>${l[0]}${l[1]}<b></td></tr>`;
+  });
+  if (layerInfo.overlaps.length > 1) {
+    popHtml += `<tr><td>Total: </td><td><b>${total[0]}${total[1]}<b></td></tr>`;
+  }
+  popHtml += `</tbody></table>`;
+
+  // second table: incident overlaps
+  popHtml += `<table class="table" style="margin-bottom:0px">`;
+  popHtml += `<caption>Incident Overlaps</caption></table>`;
+
+  popHtml += `<div style="margin-bottom: 15px" class="${alertClass(
+    proximityCount.on,
+    "on"
+  )} col-md-12"><p>${proximityCount.on} ${plural(
+    proximityCount.on,
+    "incident",
+    false
+  )} directly within</p></div>`;
+  popHtml += `<div class="${alertClass(
+    proximityCount.close,
+    "close"
+  )} col-md-12"><p>${proximityCount.close} ${plural(
+    proximityCount.close,
+    "incident",
+    false
+  )} within 15km</p></div></div>`;
+  return popHtml;
 }
 
 export function onEachFeature(feature, layer) {
@@ -425,11 +487,18 @@ export function clickExtraInfo() {
   ).innerHTML = `<div class="alert alert-info"><p>Click on a <span class="region-click-text" style="background-color: ${featureStyles.reserveOverlap.fillColor};">region</span> to view extra info</p></div>`;
 }
 
-export function resetListener(map, geoLayer, otherLayers) {
+export function resetListener(
+  map,
+  geoLayer,
+  otherLayers,
+  pipelineProfile = false
+) {
   document.getElementById("reset-map").addEventListener("click", () => {
     resetZoom(map, geoLayer, otherLayers, true);
     removeIncidents(map);
     map.closePopup();
-    clickExtraInfo();
+    if (pipelineProfile) {
+      clickExtraInfo();
+    }
   });
 }

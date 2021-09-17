@@ -17,6 +17,10 @@
   overflow: auto;
 }
 
+#reserve-popup {
+  overflow: auto;
+}
+
 .text-val {
   font-weight: bold;
   font-style: normal;
@@ -55,10 +59,6 @@
 .territory-popup {
   overflow-y: hidden;
   overflow-x: hidden;
-}
-
-.leaflet-popup-content {
-  margin-right: 5px !important;
 }
 
 #map-panel {

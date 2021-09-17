@@ -124,7 +124,7 @@ export function profile(
     const territoryLayer = false;
     mapLegend(map, territoryLayer);
     resetZoom(map, geoLayer, [territoryLayer]);
-    resetListener(map, geoLayer, [territoryLayer]);
+    resetListener(map, geoLayer, [territoryLayer], true);
     return map;
   }
 
@@ -134,7 +134,7 @@ export function profile(
     addpoly2Length(poly2Length, meta.company);
     showIamc();
     dynamicText(meta);
-    setUpHeight();
+    setUpHeight(true);
   }
 
   function main() {

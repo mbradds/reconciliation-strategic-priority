@@ -7,14 +7,13 @@ import {
   setTitle,
   setUpHeight,
   addpoly2Length,
-  onEachFeature,
+  reservePopUp,
   mapLegend,
   resetZoom,
   reserveTooltip,
   resetListener,
   plural,
   featureStyles,
-  clickExtraInfo,
 } from "./util.js";
 import { addTraditionalTerritory } from "./territoryPopUp.js";
 import { addMetisSettlements } from "./metisSettlements.js";
@@ -70,6 +69,16 @@ export function landDashboard(
     document.getElementById("incident-meta-point-off").innerHTML = htmlLiIncOff;
   }
 
+  function addResetBtn(map) {
+    const info = L.control({ position: "bottomleft" });
+    info.onAdd = function () {
+      this._div = L.DomUtil.create("div");
+      this._div.innerHTML = `<button type="button" id="reset-map" class="btn btn-primary btn-block btn-lg">Reset Map</button>`;
+      return this._div;
+    };
+    info.addTo(map);
+  }
+
   function loadMap(mapHeight, user) {
     const layerControl = { single: {}, multi: {} };
     const map = leafletBaseMap({
@@ -79,15 +88,17 @@ export function landDashboard(
       initZoomTo: [55, -119],
     });
 
+    addResetBtn(map);
+
     const geoLayer = L.geoJSON(landFeature, {
       style: featureStyles.reserveOverlap,
       landInfo,
       incidentFeature,
-      onEachFeature,
     })
       .bindTooltip((layer) =>
         reserveTooltip(layer.feature.properties, landInfo)
       )
+      .bindPopup((layer) => reservePopUp(layer))
       .addTo(map);
 
     layerControl.multi["First Nations Reserves"] = geoLayer;
@@ -123,7 +134,6 @@ export function landDashboard(
   }
 
   function loadNonMap() {
-    clickExtraInfo();
     setTitle(meta.company);
     addpoly2Length(poly2Length, meta.company);
     dashboardTotals();

@@ -30,17 +30,30 @@
         <div class="col-md-4" id="incident-meta-point-off"></div>
       </div>
       <div class="row mrgn-bttm-md">
-        <div class="col-md-9 col-sm-12">
+        <div class="col-md-12 col-sm-12">
           <section class="panel panel-default" id="map-panel">
             <header class="panel-heading">
-              <h5 class="panel-title" id="leaflet-map-title"></h5>
+              <h5
+                class="panel-title"
+                id="leaflet-map-title"
+                style="display: inline !important"
+              ></h5>
+              <div id="full-screen-btn" class="pull-right">
+                <button
+                  type="button"
+                  class="btn btn-primary btn-xs"
+                  onclick="openFullscreen();"
+                >
+                  Enter Fullscreen
+                </button>
+              </div>
             </header>
             <div class="panel-body" id="map">
               <div class="loader"></div>
             </div>
           </section>
         </div>
-        <div class="col-md-3 col-sm-12">
+        <!-- <div class="col-md-3 col-sm-12">
           <div id="reset-small"></div>
           <section class="panel panel-default fn-panel" id="click-fn-info">
             <header class="panel-heading">
@@ -61,7 +74,7 @@
             </div>
           </section>
           <div id="reset-large"></div>
-        </div>
+        </div> -->
       </div>
       <div class="row mrgn-tp-md">
         <div class="col-md-12">
@@ -104,5 +117,21 @@
     </div>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.js"></script>
     <script src="../GCWeb/wet-boew/js/wet-boew.min.js"></script>
+    <script>
+      function openFullscreen() {
+        var elem = document.getElementById("map-panel");
+        elem.style.width = "100%";
+        elem.style.height = "100%";
+        if (elem.requestFullscreen) {
+          elem.requestFullscreen();
+        } else if (elem.webkitRequestFullscreen) {
+          /* Safari */
+          elem.webkitRequestFullscreen();
+        } else if (elem.msRequestFullscreen) {
+          /* IE11 */
+          elem.msRequestFullscreen();
+        }
+      }
+    </script>
   </body>
 </html>
