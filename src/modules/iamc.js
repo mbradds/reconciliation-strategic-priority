@@ -2,7 +2,6 @@ import "core-js/modules/es.promise.js";
 import * as L from "leaflet";
 import {
   leafletBaseMap,
-  setLeafletHeight,
   lengthUnits,
   setTitle,
   setUpHeight,
@@ -110,7 +109,7 @@ export function landDashboard(
 
     let digitalTerritoryLayer;
     if (territory) {
-      digitalTerritoryLayer = L.geoJSON(territory); // .addTo(map);
+      digitalTerritoryLayer = L.geoJSON(territory);
       layerControl.single["Digital Traditional Territory"] =
         digitalTerritoryLayer;
     }
@@ -143,7 +142,7 @@ export function landDashboard(
 
   function main() {
     async function buildPage() {
-      const mapHeight = setLeafletHeight(0.75);
+      const mapHeight = document.getElementById("map").clientHeight;
       const user = loadNonMap();
       const map = await loadMap(mapHeight, user);
       return map;

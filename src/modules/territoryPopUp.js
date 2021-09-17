@@ -48,7 +48,7 @@ export function addTraditionalTerritory(map, mapHeight, user) {
   }
 
   function addCircles() {
-    let popWidth = Math.floor(mapHeight * 0.8);
+    let popWidth = Math.floor(mapHeight * 0.9);
     const popHeight = Math.floor(popWidth * 0.9);
     if (user[1] < popWidth) {
       popWidth = user[1] - 85;

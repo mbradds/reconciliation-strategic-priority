@@ -108,9 +108,7 @@ export function lengthUnits(val) {
 }
 
 export function setTitle(company) {
-  document.getElementById(
-    "leaflet-map-title"
-  ).innerText = `Map - ${company} & First Nations Reserves`;
+  document.getElementById("leaflet-map-title").innerText = `Map - ${company}`;
 }
 
 export function setUpHeight(pipelineProfile = false) {

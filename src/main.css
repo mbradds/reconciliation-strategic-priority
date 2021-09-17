@@ -1,7 +1,40 @@
+html,
+body {
+  height: 100%;
+}
+
 #map {
   display: flex;
   justify-content: center;
   align-items: center;
+  height: 100%;
+  width: 100%;
+}
+
+.container-fluid {
+  height: 100%;
+}
+
+.map-row {
+  height: 80%;
+}
+
+#map-panel {
+  margin-bottom: 0px;
+  height: 100%;
+}
+
+#map-panel-body {
+  height: 94%;
+  padding: 0px !important;
+}
+
+#full-screen-btn {
+  margin: 0;
+  position: relative;
+  top: 50%;
+  -ms-transform: translateY(-50%);
+  transform: translateY(-50%);
 }
 
 .map-tooltip tr {
@@ -59,10 +92,6 @@
 .territory-popup {
   overflow-y: hidden;
   overflow-x: hidden;
-}
-
-#map-panel {
-  margin-bottom: 0px;
 }
 
 #image-disclaimer.alert > :first-child:before {
