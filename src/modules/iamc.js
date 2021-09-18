@@ -14,7 +14,10 @@ import {
   plural,
   featureStyles,
 } from "./util.js";
-import { addTraditionalTerritory } from "./territoryPopUp.js";
+import {
+  addTraditionalTerritory,
+  addDigitalTerritory,
+} from "./territoryPopUp.js";
 import { addMetisSettlements } from "./metisSettlements.js";
 import "leaflet/dist/leaflet.css";
 import "../main.css";
@@ -107,20 +110,34 @@ export function landDashboard(
       }).addTo(map);
     }
 
-    let digitalTerritoryLayer;
-    if (territory) {
-      digitalTerritoryLayer = L.geoJSON(territory);
-      layerControl.single["Digital Traditional Territory"] =
-        digitalTerritoryLayer;
+    let popWidth = Math.floor(mapHeight * 0.9);
+    const popHeight = Math.floor(popWidth * 0.9);
+    if (user[1] < popWidth) {
+      popWidth = user[1] - 85;
     }
 
-    let [territoryLayer, metisLayer] = [false, false];
+    let [territoryLayer, metisLayer, digitalMatch] = [false, false];
     if (meta.company === "Trans Mountain Pipeline ULC") {
-      territoryLayer = addTraditionalTerritory(map, mapHeight, user);
+      [territoryLayer, digitalMatch] = addTraditionalTerritory(
+        map,
+        popHeight,
+        popWidth
+      );
       metisLayer = addMetisSettlements(map);
       layerControl.single["Traditional Territory center point"] =
         territoryLayer;
       layerControl.multi["Metis Settlements"] = metisLayer;
+    }
+
+    if (territory) {
+      const digitalTerritoryLayer = addDigitalTerritory(
+        territory,
+        digitalMatch,
+        popHeight,
+        popWidth
+      );
+      layerControl.single["Digital Traditional Territory"] =
+        digitalTerritoryLayer;
     }
 
     mapLegend(map, territoryLayer, metisLayer);

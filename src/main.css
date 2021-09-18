@@ -29,12 +29,15 @@ body {
   padding: 0px !important;
 }
 
-#full-screen-btn {
+.center-vert {
   margin: 0;
-  position: relative;
   top: 50%;
+  position: absolute;
   -ms-transform: translateY(-50%);
   transform: translateY(-50%);
+}
+#full-screen-btn {
+  position: relative !important;
 }
 
 .map-tooltip tr {

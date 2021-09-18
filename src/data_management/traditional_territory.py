@@ -8,9 +8,10 @@ script_dir = os.path.dirname(__file__)
 
 def getNativeLandDotCa():
     df = gpd.read_file("./raw_data/traditional_territory/indigenousTerritories.json")
-    df = df[df["Slug"] == "secwepemc-secwepemcul-ewc"].copy().reset_index()
+    matched = ["secwepemc-secwepemcul-ewc", "semiahmoo"]
+    df = df[df["Slug"].isin(matched)].copy().reset_index(drop=True)
 
-    for delete in ["id", "FrenchName", "Slug", "FrenchDescription"]:
+    for delete in ["id", "FrenchName", "FrenchDescription"]:
         del df[delete]
 
     df = df.to_crs(crs_geo)
@@ -56,9 +57,11 @@ def processTerritoryInfo():
                 "about": row["About Us"],
                 "spread": row["Project Spreads"],
                 "web": row["Community Website"],
+                "map": row["mapFile"],
                 "srcTxt": row["Source"],
                 "srcLnk": row["Link"],
-                "pronounce": row["Pronounciation"]}
+                "pronounce": row["Pronounciation"],
+                "dId": row["Digital id"]}
 
     for i, row in df.iterrows():
         if row["mapFile"] in land:
@@ -69,7 +72,7 @@ def processTerritoryInfo():
 
     with open('../traditional_territory/centrality.json', 'w') as fp:
         json.dump(land, fp)
-    return land
+    return df
 
 
 if __name__ == "__main__":
