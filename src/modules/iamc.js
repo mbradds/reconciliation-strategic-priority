@@ -13,6 +13,7 @@ import {
   resetListener,
   plural,
   featureStyles,
+  findUser,
 } from "./util.js";
 import {
   addTraditionalTerritory,
@@ -75,10 +76,32 @@ export function landDashboard(
     const info = L.control({ position: "bottomleft" });
     info.onAdd = function () {
       this._div = L.DomUtil.create("div");
-      this._div.innerHTML = `<button type="button" id="reset-map" class="btn btn-primary btn-block btn-lg">Reset Map</button>`;
+      this._div.innerHTML = `<button type="button" id="find-me" class="btn btn-primary btn-block btn-lg">Find Me</button><button type="button" id="reset-map" class="btn btn-primary btn-block btn-lg">Reset Map</button>`;
       return this._div;
     };
     info.addTo(map);
+  }
+
+  function onLand(map) {
+    const nearbyStuff = (mapWithUser) => {
+      mapWithUser.panTo(mapWithUser.user);
+    };
+
+    document.getElementById("find-me").addEventListener("click", () => {
+      if (!map.user) {
+        findUser(map)
+          .then(() => {
+            // check polygons for user
+            nearbyStuff(map);
+          })
+          .catch(() => {
+            console.log("location error");
+          });
+      } else {
+        // check polygons for user
+        nearbyStuff(map);
+      }
+    });
   }
 
   function loadMap(mapHeight, user) {
@@ -91,7 +114,6 @@ export function landDashboard(
     });
 
     addResetBtn(map);
-
     const geoLayer = L.geoJSON(landFeature, {
       style: featureStyles.reserveOverlap,
       landInfo,
@@ -139,6 +161,8 @@ export function landDashboard(
       layerControl.single["Digital Traditional Territory"] =
         digitalTerritoryLayer;
     }
+
+    onLand(map);
 
     mapLegend(map, territoryLayer, metisLayer);
     resetZoom(map, geoLayer, [territoryLayer]);

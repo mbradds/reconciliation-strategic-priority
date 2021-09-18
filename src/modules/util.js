@@ -1,3 +1,5 @@
+import * as L from "leaflet";
+
 export const cerPalette = {
   "Night Sky": "#054169",
   Sun: "#FFBE4B",
@@ -428,7 +430,6 @@ export function mapLegend(map, territoryLayer, metisLayer) {
 export function resetZoom(map, geoLayer, otherLayers, fly = false) {
   let padd = [25, 25];
   let fullBounds = geoLayer.getBounds();
-
   otherLayers.forEach((layer) => {
     if (layer) {
       fullBounds = fullBounds.extend(layer.getBounds());
@@ -491,5 +492,36 @@ export function resetListener(
     if (pipelineProfile) {
       clickExtraInfo();
     }
+  });
+}
+
+export async function findUser(map) {
+  const mapWithLocation = map;
+  // const zoomToUser = () => {
+  //   map.fitBounds(fullBounds, {
+  //     padding: padd,
+  //   });
+  // }
+  return new Promise((resolve, reject) => {
+    map
+      .locate({
+        watch: false,
+      })
+      .on("locationfound", (e) => {
+        const marker = L.marker([e.latitude, e.longitude], {
+          draggable: true,
+        }).bindPopup("Click and drag to move locations");
+        marker.on("drag", (d) => {
+          mapWithLocation.user = d.target.getLatLng();
+        });
+        marker.id = "userLocation";
+        map.addLayer(marker);
+        mapWithLocation.user = marker._latlng;
+        resolve(marker);
+      })
+      .on("locationerror", (err) => {
+        console.log("locationerror in findUser method");
+        reject(err);
+      });
   });
 }
