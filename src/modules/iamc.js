@@ -1,5 +1,6 @@
 import "core-js/modules/es.promise.js";
 import * as L from "leaflet";
+import pointInPolygon from "point-in-polygon";
 import {
   leafletBaseMap,
   lengthUnits,
@@ -82,8 +83,17 @@ export function landDashboard(
     info.addTo(map);
   }
 
-  function onLand(map) {
+  function onLand(map, polygons) {
     const nearbyStuff = (mapWithUser) => {
+      Object.values(polygons._layers).forEach((polygon) => {
+        const inside = pointInPolygon(
+          [mapWithUser.user.lng, mapWithUser.user.lat],
+          polygon.feature.geometry.coordinates[0]
+        );
+        if (inside) {
+          console.log(`You are inside ${polygon.feature.properties.Name}`);
+        }
+      });
       mapWithUser.panTo(mapWithUser.user);
     };
 
@@ -138,7 +148,12 @@ export function landDashboard(
       popWidth = user[1] - 85;
     }
 
-    let [territoryLayer, metisLayer, digitalMatch] = [false, false];
+    let [territoryLayer, metisLayer, digitalMatch, digitalTerritoryLayer] = [
+      false,
+      false,
+      false,
+      false,
+    ];
     if (meta.company === "Trans Mountain Pipeline ULC") {
       [territoryLayer, digitalMatch] = addTraditionalTerritory(
         map,
@@ -152,7 +167,7 @@ export function landDashboard(
     }
 
     if (territory) {
-      const digitalTerritoryLayer = addDigitalTerritory(
+      digitalTerritoryLayer = addDigitalTerritory(
         territory,
         digitalMatch,
         popHeight,
@@ -162,8 +177,7 @@ export function landDashboard(
         digitalTerritoryLayer;
     }
 
-    onLand(map);
-
+    onLand(map, digitalTerritoryLayer);
     mapLegend(map, territoryLayer, metisLayer);
     resetZoom(map, geoLayer, [territoryLayer]);
     resetListener(map, geoLayer, [territoryLayer]);

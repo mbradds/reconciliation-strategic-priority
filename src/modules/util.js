@@ -497,11 +497,6 @@ export function resetListener(
 
 export async function findUser(map) {
   const mapWithLocation = map;
-  // const zoomToUser = () => {
-  //   map.fitBounds(fullBounds, {
-  //     padding: padd,
-  //   });
-  // }
   return new Promise((resolve, reject) => {
     map
       .locate({

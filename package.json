@@ -55,6 +55,7 @@
     "imagemin-pngquant": "^9.0.2",
     "leaflet": "^1.7.1",
     "mapshaper": "^0.5.68",
-    "pdf2pic": "^2.1.4"
+    "pdf2pic": "^2.1.4",
+    "point-in-polygon": "^1.1.0"
   }
 }
