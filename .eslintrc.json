@@ -12,6 +12,7 @@
     "no-nested-ternary": "off",
     "no-underscore-dangle": "warn",
     "new-cap": "warn",
+    "no-param-reassign": ["error", { "props": false }],
     "import/extensions": [
       "error",
       {

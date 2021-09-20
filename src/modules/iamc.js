@@ -21,6 +21,8 @@ import {
   addDigitalTerritory,
 } from "./territoryPopUp.js";
 import { addMetisSettlements } from "./metisSettlements.js";
+import territoryPolygons from "../traditional_territory/indigenousTerritoriesCa.json";
+
 import "leaflet/dist/leaflet.css";
 import "../main.css";
 
@@ -85,17 +87,73 @@ export function landDashboard(
 
   function onLand(map, polygons) {
     const nearbyStuff = (mapWithUser) => {
+      const youAreOn = [];
       Object.values(polygons._layers).forEach((polygon) => {
         const inside = pointInPolygon(
           [mapWithUser.user.lng, mapWithUser.user.lat],
           polygon.feature.geometry.coordinates[0]
         );
         if (inside) {
-          console.log(`You are inside ${polygon.feature.properties.Name}`);
+          youAreOn.push(polygon.feature.properties);
+        }
+      });
+      territoryPolygons.features.forEach((polygon) => {
+        const inside = pointInPolygon(
+          [mapWithUser.user.lng, mapWithUser.user.lat],
+          polygon.geometry.coordinates[0]
+        );
+        if (inside) {
+          youAreOn.push(polygon.properties);
         }
       });
       mapWithUser.panTo(mapWithUser.user);
+      let youAreOnTable = "<ul>";
+      youAreOn.forEach((land) => {
+        youAreOnTable += `<li><a href="${land.description}" target="_blank">${land.Name}</a></li>`;
+      });
+      youAreOnTable += "</ul>";
+      mapWithUser.youAreOn.updateHtml(
+        `<section class="panel panel-warning">
+        <header class="panel-heading">
+         <h5 class="panel-title" style="display: inline !important;">You are on ${youAreOn.length} Traditional Territories</h5>
+         <div style="position: relative !important;" class="pull-right">
+         <button
+           type="button"
+           class="btn btn-primary btn-xs"
+           id="close-you-are-on"
+         >
+         Close
+         </button>
+       </div>
+        </header>
+        <div class="panel-body">
+         ${youAreOnTable}
+         <p style="margin-bottom:0px;">Move the blue marker to a new area and click <i>Find Me</i> again to view other locations.</p>
+        </div>
+      </section>`
+      );
+      document
+        .getElementById("close-you-are-on")
+        .addEventListener("click", () => {
+          map.youAreOn.removeHtml();
+        });
     };
+
+    // div for displaying territories you are on
+    const info = L.control({ position: "bottomright" });
+    info.onAdd = function () {
+      this._div = L.DomUtil.create("div");
+      this._div.innerHTML = ``;
+      return this._div;
+    };
+    info.updateHtml = function (html) {
+      this._div.innerHTML = html;
+    };
+    info.removeHtml = function () {
+      this._div.innerHTML = "";
+    };
+    info.addTo(map);
+    map.youAreOn = info;
 
     document.getElementById("find-me").addEventListener("click", () => {
       if (!map.user) {

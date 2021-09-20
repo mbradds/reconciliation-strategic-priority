@@ -393,7 +393,6 @@ export function onEachFeature(feature, layer) {
 }
 
 export function mapLegend(map, territoryLayer, metisLayer) {
-  const mapWithLegend = map;
   let legend = `<h4><span class="region-click-text" 
   style="height: 10px; background-color: ${featureStyles.reserveOverlap.fillColor}">
   &nbsp;&nbsp;&nbsp;</span>&nbsp;&nbsp;First Nation Reserve</h4>`;
@@ -412,7 +411,7 @@ export function mapLegend(map, territoryLayer, metisLayer) {
   info.onAdd = function () {
     this._div = L.DomUtil.create("div", "legend");
     this._div.innerHTML = legend;
-    mapWithLegend.legend = this;
+    map.legend = this;
     return this._div;
   };
   info.addItem = function () {
@@ -423,7 +422,7 @@ export function mapLegend(map, territoryLayer, metisLayer) {
       toHide.remove();
     });
   };
-  info.addTo(mapWithLegend);
+  info.addTo(map);
   return info;
 }
 
@@ -491,12 +490,13 @@ export function resetListener(
     map.closePopup();
     if (pipelineProfile) {
       clickExtraInfo();
+    } else {
+      map.youAreOn.removeHtml();
     }
   });
 }
 
 export async function findUser(map) {
-  const mapWithLocation = map;
   return new Promise((resolve, reject) => {
     map
       .locate({
@@ -507,11 +507,11 @@ export async function findUser(map) {
           draggable: true,
         }).bindPopup("Click and drag to move locations");
         marker.on("drag", (d) => {
-          mapWithLocation.user = d.target.getLatLng();
+          map.user = d.target.getLatLng();
         });
         marker.id = "userLocation";
         map.addLayer(marker);
-        mapWithLocation.user = marker._latlng;
+        map.user = marker._latlng;
         resolve(marker);
       })
       .on("locationerror", (err) => {
