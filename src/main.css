@@ -1,5 +1,6 @@
 html,
-body {
+body,
+.container-fluid {
   height: 100%;
 }
 
@@ -9,10 +10,6 @@ body {
   align-items: center;
   height: 100%;
   width: 100%;
-}
-
-.container-fluid {
-  height: 100%;
 }
 
 .map-row {
@@ -29,6 +26,10 @@ body {
   padding: 0px !important;
 }
 
+#map-panel-heading {
+  height: 6%;
+}
+
 .center-vert {
   margin: 0;
   top: 50%;
@@ -36,8 +37,13 @@ body {
   -ms-transform: translateY(-50%);
   transform: translateY(-50%);
 }
-#full-screen-btn {
+
+.header-btn {
   position: relative !important;
+}
+
+.header-text {
+  display: inline !important;
 }
 
 .map-tooltip tr {

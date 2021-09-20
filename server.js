@@ -19,7 +19,7 @@ function shouldCompress(req, res) {
 }
 
 function cachePolicy(req, res, next) {
-  const periodShort = 60 * 60 * 8; // 2 hours
+  // const periodShort = 60 * 60 * 8; // 2 hours
   const periodLong = 31536000; // 1 year
 
   const noContentHash = /GCWeb|wet-boew/;
@@ -28,7 +28,7 @@ function cachePolicy(req, res, next) {
     if (req.url.match(contentHash)) {
       res.set("Cache-control", `public, max-age=${periodLong}`);
     } else if (req.url.match(noContentHash)) {
-      res.set("Cache-control", `public, max-age=${periodShort}`);
+      res.set("Cache-control", `public, max-age=${periodLong}`);
     } else {
       res.set("Cache-control", `no-store`);
     }

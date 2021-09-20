@@ -78,10 +78,6 @@ export default {
           to: path.resolve(__dirname, "dist", "GCWeb"),
         },
         {
-          from: path.resolve(__dirname, "src", "wet-boew"),
-          to: path.resolve(__dirname, "dist", "wet-boew"),
-        },
-        {
           from: path.resolve(__dirname, "src", "index.html"),
           to: path.resolve(__dirname, "dist", "index.html"),
         },

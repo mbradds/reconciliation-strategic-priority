@@ -88,15 +88,19 @@ export function landDashboard(
   function onLand(map, polygons) {
     const nearbyStuff = (mapWithUser) => {
       const youAreOn = [];
-      Object.values(polygons._layers).forEach((polygon) => {
-        const inside = pointInPolygon(
-          [mapWithUser.user.lng, mapWithUser.user.lat],
-          polygon.feature.geometry.coordinates[0]
-        );
-        if (inside) {
-          youAreOn.push(polygon.feature.properties);
-        }
-      });
+      // look for user inside matched (on map) polygons
+      if (polygons) {
+        Object.values(polygons._layers).forEach((polygon) => {
+          const inside = pointInPolygon(
+            [mapWithUser.user.lng, mapWithUser.user.lat],
+            polygon.feature.geometry.coordinates[0]
+          );
+          if (inside) {
+            youAreOn.push(polygon.feature.properties);
+          }
+        });
+      }
+      // look for user in unmatched (hidden) polygons
       territoryPolygons.features.forEach((polygon) => {
         const inside = pointInPolygon(
           [mapWithUser.user.lng, mapWithUser.user.lat],
@@ -115,8 +119,8 @@ export function landDashboard(
       mapWithUser.youAreOn.updateHtml(
         `<section class="panel panel-warning">
         <header class="panel-heading">
-         <h5 class="panel-title" style="display: inline !important;">You are on ${youAreOn.length} Traditional Territories</h5>
-         <div style="position: relative !important;" class="pull-right">
+         <h5 class="panel-title header-text">You are on ${youAreOn.length} Traditional Territories</h5>
+         <div class="pull-right header-btn">
          <button
            type="button"
            class="btn btn-primary btn-xs"
@@ -220,10 +224,12 @@ export function landDashboard(
         popHeight,
         popWidth
       );
-      metisLayer = addMetisSettlements(map);
       layerControl.single["Traditional Territory center point"] =
         territoryLayer;
-      layerControl.multi["Metis Settlements"] = metisLayer;
+      metisLayer = addMetisSettlements(map);
+      if (metisLayer) {
+        layerControl.multi["Metis Settlements"] = metisLayer;
+      }
     }
 
     if (territory) {
