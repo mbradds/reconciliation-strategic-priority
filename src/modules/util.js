@@ -80,17 +80,15 @@ export function equalizeHeight(divId1, divId2) {
 export function leafletBaseMap(config) {
   const map = new L.map(config.div, {
     zoomDelta: config.zoomDelta,
-    minZoom: 5,
-    maxZoom: 16,
-    zoomSnap: 0.25,
-    // padding: [200, 200],
+    maxZoom: 17,
+    minZoom: 4,
+    zoomSnap: 0.5,
   }).setView(config.initZoomTo, config.initZoomLevel);
   L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png?{foo}", {
     foo: "bar",
     attribution:
       '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
   }).addTo(map);
-  // map.setMinZoom(config.minZoom);
   return map;
 }
 
@@ -515,7 +513,6 @@ export async function findUser(map) {
         resolve(marker);
       })
       .on("locationerror", (err) => {
-        console.log("locationerror in findUser method");
         reject(err);
       });
   });

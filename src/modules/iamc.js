@@ -163,7 +163,9 @@ export function landDashboard(
             nearbyStuff(map);
           })
           .catch(() => {
-            console.log("location error");
+            map.youAreOn.updateHtml(
+              `<div class="alert alert-danger"><h3 style="margin-bottom:0;">Cant access your location. Try enabling location services and refresh the page.</h3></div>`
+            );
           });
       } else {
         // check polygons for user
