@@ -35,7 +35,8 @@ def getCanadaTerritories():
                "qayqayt",
                "katzie",
                "kwikwetlem",
-               "tsleil-waututh-səl̓ilwətaɂɬ"]
+               "tsleil-waututh-səl̓ilwətaɂɬ",
+               "kwantlen"]
     onMap = within[within["Slug"].isin(matched)].copy().reset_index(drop=True)
     onMap = onMap.drop_duplicates(subset=["Slug"])
     within = within[~within["Slug"].isin(matched)].copy().reset_index(drop=True)
