@@ -86,10 +86,20 @@ export function addDigitalTerritory(
   popHeight,
   popWidth
 ) {
-  const digitalTerritoryLayer = L.geoJSON(territory)
+  const digitalTerritoryLayer = L.geoJSON(territory, {
+    style(feature) {
+      return { color: feature.properties.color };
+    },
+  })
     .bindTooltip(
-      (layer) =>
-        `${layer.feature.properties.Name}<br><i><span class="center-footer">Click to view info</span><i>`
+      (layer) => {
+        let table = `<table class="map-tooltip">`;
+        table += `<caption><b>${layer.feature.properties.Name}</b></caption>`;
+        table += `<tr><td>Land Type:&nbsp</td> <td><b>Traditional Territory</td></tr>`;
+        table += `</table><i class="center-footer">Click to view details</i>`;
+        return table;
+      },
+      { sticky: true }
     )
     .bindPopup(
       (layer) => {
@@ -102,5 +112,8 @@ export function addDigitalTerritory(
       },
       { maxHeight: `${popHeight}`, maxWidth: `${popWidth}` }
     );
+  digitalTerritoryLayer.on("add", () => {
+    digitalTerritoryLayer.bringToBack();
+  });
   return digitalTerritoryLayer;
 }

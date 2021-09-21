@@ -6,18 +6,18 @@ import json
 script_dir = os.path.dirname(__file__)
 
 
-def getNativeLandDotCa():
-    df = gpd.read_file("./raw_data/traditional_territory/indigenousTerritories.json")
-    matched = ["secwepemc-secwepemcul-ewc", "semiahmoo"]
-    df = df[df["Slug"].isin(matched)].copy().reset_index(drop=True)
+# def getNativeLandDotCa():
+#     df = gpd.read_file("./raw_data/traditional_territory/indigenousTerritories.json")
+#     matched = ["secwepemc-secwepemcul-ewc", "semiahmoo"]
+#     df = df[df["Slug"].isin(matched)].copy().reset_index(drop=True)
 
-    for delete in ["id", "FrenchName", "FrenchDescription"]:
-        del df[delete]
+#     for delete in ["id", "FrenchName", "FrenchDescription"]:
+#         del df[delete]
 
-    df = df.to_crs(crs_geo)
-    df.crs = crs_geo
-    df.to_file("../company_data/TransMountainPipelineULC/territory.json", driver="GeoJSON")
-    return df
+#     df = df.to_crs(crs_geo)
+#     df.crs = crs_geo
+#     df.to_file("../company_data/TransMountainPipelineULC/territory.json", driver="GeoJSON")
+#     return df
 
 
 def processTerritoryInfo():
@@ -78,5 +78,5 @@ def processTerritoryInfo():
 if __name__ == "__main__":
     print("updating tranditional territory metadata...")
     df = processTerritoryInfo()
-    df = getNativeLandDotCa()
+    # df = getNativeLandDotCa()
     print("done!")
