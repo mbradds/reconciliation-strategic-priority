@@ -41,7 +41,7 @@ export function profile(
       terrLinks += `</ul></div>`;
       return terrLinks;
     };
-    terrTables += listColumn(terr.slice(0, Math.floor(terrTotal / 2)));
+    terrTables += listColumn(terr.slice(0, Math.ceil(terrTotal / 2)));
     terrTables += listColumn(terr.slice(Math.ceil(terr.length / 2)));
     document.getElementById(
       "territory-panel"
