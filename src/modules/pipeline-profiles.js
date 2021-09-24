@@ -26,9 +26,28 @@ export function profile(
   landInfo,
   poly2Length,
   incidentFeature,
+  terr,
   meta,
   line = false
 ) {
+  function addTraditionalTerritory() {
+    const terrTotal = terr.length;
+    let terrTables = ``;
+    const listColumn = (terrSlice) => {
+      let terrLinks = `<div class="col-md-6"> <ul>`;
+      terrSlice.forEach((t) => {
+        terrLinks += `<li><a href="${t.description}" target="_blank">${t.Name}</a></li>`;
+      });
+      terrLinks += `</ul></div>`;
+      return terrLinks;
+    };
+    terrTables += listColumn(terr.slice(0, Math.floor(terrTotal / 2)));
+    terrTables += listColumn(terr.slice(Math.ceil(terr.length / 2)));
+    document.getElementById(
+      "territory-panel"
+    ).innerHTML = `<p>This pipeline system passes through an estimated ${terrTotal} Indigenous Traditional Territories:</p>${terrTables}`;
+  }
+
   function showIamc() {
     const flag = (info) => `<section class="alert alert-info">
       <h3>${info.project} Indigenous Advisory and Monitoring Committee (IAMC)</h3>
@@ -135,6 +154,7 @@ export function profile(
     showIamc();
     dynamicText(meta);
     setUpHeight(true);
+    addTraditionalTerritory();
   }
 
   function main() {

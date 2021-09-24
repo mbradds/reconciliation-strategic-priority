@@ -1,23 +1,7 @@
-from cer_gis import crs_geo
 import pandas as pd
-import geopandas as gpd
 import os
 import json
 script_dir = os.path.dirname(__file__)
-
-
-# def getNativeLandDotCa():
-#     df = gpd.read_file("./raw_data/traditional_territory/indigenousTerritories.json")
-#     matched = ["secwepemc-secwepemcul-ewc", "semiahmoo"]
-#     df = df[df["Slug"].isin(matched)].copy().reset_index(drop=True)
-
-#     for delete in ["id", "FrenchName", "FrenchDescription"]:
-#         del df[delete]
-
-#     df = df.to_crs(crs_geo)
-#     df.crs = crs_geo
-#     df.to_file("../company_data/TransMountainPipelineULC/territory.json", driver="GeoJSON")
-#     return df
 
 
 def processTerritoryInfo():

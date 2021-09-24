@@ -166,7 +166,6 @@ export default {
   },
 
   optimization: {
-    minimize: true,
     usedExports: true,
     runtimeChunk: {
       name: "shared/runtime.js",

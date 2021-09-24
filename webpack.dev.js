@@ -4,7 +4,6 @@ import common from "./webpack.common.js";
 
 export default merge(common, {
   mode: "development",
-
   devServer: {
     hot: true,
     compress: true,
