@@ -1,6 +1,6 @@
-import pandas as pd
 import os
 import json
+import pandas as pd
 script_dir = os.path.dirname(__file__)
 
 
@@ -22,7 +22,8 @@ def processTerritoryInfo():
                             engine="openpyxl")
 
     df = df[~df['Lat'].isnull()].reset_index(drop=True)
-    df["mapFile"] = [x.strip() for x in df["mapFile"]]
+    df = df[df["Show"] != "No"].reset_index(drop=True)
+    df["mapFile"] = [str(x).strip() for x in df["mapFile"]]
     df = pd.merge(df, sources, how="left", left_on="Community", right_on="Community")
     df = df.fillna("")
 
@@ -38,7 +39,7 @@ def processTerritoryInfo():
                 "contactPerson": row["Contact person"],
                 "contactInfo": row["Contact Information"],
                 "protocol": row["Protocol"],
-                "about": row["About Us"],
+                "about": row["History"],
                 "spread": row["Project Spreads"],
                 "web": row["Community Website"],
                 "map": row["mapFile"],
@@ -62,5 +63,4 @@ def processTerritoryInfo():
 if __name__ == "__main__":
     print("updating tranditional territory metadata...")
     df = processTerritoryInfo()
-    # df = getNativeLandDotCa()
     print("done!")

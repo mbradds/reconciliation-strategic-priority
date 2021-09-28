@@ -166,7 +166,7 @@ export function profile(
     }
 
     buildPage().then(() => {
-      document.getElementsByClassName("loader").forEach((div) => {
+      Array.from(document.getElementsByClassName("loader")).forEach((div) => {
         const divToHide = div;
         divToHide.style.display = "none";
       });

@@ -199,7 +199,6 @@ export function landDashboard(
       .bindPopup((layer) => reservePopUp(layer))
       .addTo(map);
 
-    layerControl.multi["First Nations Reserves"] = geoLayer;
     if (line) {
       L.geoJSON(line, {
         style: featureStyles.tmx,
@@ -224,13 +223,14 @@ export function landDashboard(
         popHeight,
         popWidth
       );
-      layerControl.single["Traditional Territory center point"] =
-        territoryLayer;
+      layerControl.multi["Traditional Territory"] = territoryLayer;
       metisLayer = addMetisSettlements(map);
       if (metisLayer) {
         layerControl.multi["Metis Settlements"] = metisLayer;
       }
     }
+
+    layerControl.multi["First Nations Reserves"] = geoLayer;
 
     if (territory) {
       digitalTerritoryLayer = addDigitalTerritory(
@@ -270,7 +270,7 @@ export function landDashboard(
     }
 
     buildPage().then(() => {
-      document.getElementsByClassName("loader").forEach((div) => {
+      Array.from(document.getElementsByClassName("loader")).forEach((div) => {
         const divToHide = div;
         divToHide.style.display = "none";
       });

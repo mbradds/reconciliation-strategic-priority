@@ -1,6 +1,6 @@
-from cer_gis import crs_geo
-import geopandas as gpd
 import os
+import geopandas as gpd
+from cer_gis import crs_geo
 script_dir = os.path.dirname(__file__)
 
 

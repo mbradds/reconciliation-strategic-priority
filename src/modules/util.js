@@ -416,9 +416,11 @@ export function mapLegend(map, territoryLayer, metisLayer) {
     this._div.innerHTML += `<h4 class="legend-temp" style='color:${cerPalette.hcRed};'>&#11044; Incident</h4>`;
   };
   info.removeItem = function () {
-    this._div.getElementsByClassName("legend-temp").forEach((toHide) => {
-      toHide.remove();
-    });
+    Array.from(this._div.getElementsByClassName("legend-temp")).forEach(
+      (toHide) => {
+        toHide.remove();
+      }
+    );
   };
   info.addTo(map);
   return info;

@@ -43,13 +43,13 @@
     "webpack": "^5.54.0",
     "webpack-bundle-analyzer": "^4.4.2",
     "webpack-cli": "^4.8.0",
-    "webpack-dev-server": "^4.2.1",
+    "webpack-dev-server": "^4.3.0",
     "webpack-merge": "^5.8.0"
   },
   "dependencies": {
     "@babel/runtime": "^7.15.4",
     "compression": "^1.7.4",
-    "core-js": "^3.18.0",
+    "core-js": "^3.18.1",
     "esri-leaflet": "^3.0.3",
     "express": "^4.17.1",
     "imagemin": "^8.0.1",
