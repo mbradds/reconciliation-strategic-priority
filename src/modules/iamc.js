@@ -21,6 +21,7 @@ import {
   addDigitalTerritory,
 } from "./territoryPopUp.js";
 import { addMetisSettlements } from "./metisSettlements.js";
+import { spread } from "./spreads.js";
 import territoryPolygons from "../traditional_territory/indigenousTerritoriesCa.json";
 
 import "leaflet/dist/leaflet.css";
@@ -228,6 +229,7 @@ export function landDashboard(
       if (metisLayer) {
         layerControl.multi["Metis Settlements"] = metisLayer;
       }
+      spread(map);
     }
 
     layerControl.multi["First Nations Reserves"] = geoLayer;

@@ -4,6 +4,22 @@ body,
   height: 100%;
 }
 
+#summary-row {
+  display: flex;
+  flex-flow: row wrap;
+}
+
+.summary-point {
+  display: flex;
+  flex-flow: column;
+}
+.summary-point .alert {
+  display: flex;
+  align-items: stretch;
+  flex-direction: column;
+  flex-grow: 1;
+}
+
 #map {
   display: flex;
   justify-content: center;

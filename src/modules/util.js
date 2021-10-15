@@ -53,6 +53,14 @@ export const featureStyles = {
     opacity: 0.5,
     fillOpacity: 1,
   },
+  spread: {
+    fillColor: cerPalette.Aubergine,
+    color: cerPalette.Aubergine,
+    weight: 1,
+    opacity: 0.3,
+    fillOpacity: 0.1,
+    radius: 10,
+  },
 };
 
 /**
