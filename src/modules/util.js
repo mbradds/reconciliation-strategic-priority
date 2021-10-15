@@ -434,31 +434,6 @@ export function mapLegend(map, territoryLayer, metisLayer) {
   return info;
 }
 
-export function resetZoom(map, geoLayer, otherLayers, fly = false) {
-  let padd = [25, 25];
-  let fullBounds = geoLayer.getBounds();
-  otherLayers.forEach((layer) => {
-    if (layer) {
-      fullBounds = fullBounds.extend(layer.getBounds());
-    }
-  });
-
-  if (Object.keys(geoLayer._layers).length === 1) {
-    padd = [270, 270];
-  }
-  if (fly) {
-    map.flyToBounds(fullBounds, {
-      duration: 0.25,
-      easeLinearity: 1,
-      padding: padd,
-    });
-  } else {
-    map.fitBounds(fullBounds, {
-      padding: padd,
-    });
-  }
-}
-
 export function reserveTooltip(layer, landInfo) {
   const layerInfo = landInfo[layer.NAME1];
   const totalLength = layerInfo.overlaps.reduce(getSum, 0);
@@ -486,16 +461,40 @@ export function clickExtraInfo() {
   ).innerHTML = `<div class="alert alert-info"><p>Click on a <span class="region-click-text" style="background-color: ${featureStyles.reserveOverlap.fillColor};">region</span> to view extra info</p></div>`;
 }
 
+export function resetZoom(map, geoLayer, territoryLayer, fly = false) {
+  let padd = [25, 25];
+  let fullBounds = geoLayer.getBounds();
+  if (territoryLayer) {
+    fullBounds = fullBounds.extend(territoryLayer.getBounds());
+  }
+
+  if (Object.keys(geoLayer._layers).length === 1) {
+    padd = [270, 270];
+  }
+  if (fly) {
+    map.flyToBounds(fullBounds, {
+      duration: 0.25,
+      easeLinearity: 1,
+      padding: padd,
+    });
+  } else {
+    map.fitBounds(fullBounds, {
+      padding: padd,
+    });
+  }
+}
+
 export function resetListener(
   map,
   geoLayer,
-  otherLayers,
+  territoryLayer,
   pipelineProfile = false
 ) {
   document.getElementById("reset-map").addEventListener("click", () => {
-    resetZoom(map, geoLayer, otherLayers, true);
+    resetZoom(map, geoLayer, territoryLayer, true);
     removeIncidents(map);
     map.closePopup();
+    territoryLayer.resetSpreads();
     if (pipelineProfile) {
       clickExtraInfo();
     } else {

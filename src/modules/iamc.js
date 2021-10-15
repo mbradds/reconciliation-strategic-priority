@@ -229,7 +229,7 @@ export function landDashboard(
       if (metisLayer) {
         layerControl.multi["Metis Settlements"] = metisLayer;
       }
-      spread(map);
+      spread(map, territoryLayer);
     }
 
     layerControl.multi["First Nations Reserves"] = geoLayer;
@@ -247,8 +247,8 @@ export function landDashboard(
 
     onLand(map, digitalTerritoryLayer);
     mapLegend(map, territoryLayer, metisLayer);
-    resetZoom(map, geoLayer, [territoryLayer]);
-    resetListener(map, geoLayer, [territoryLayer]);
+    resetZoom(map, geoLayer, territoryLayer);
+    resetListener(map, geoLayer, territoryLayer);
     L.control
       .layers(layerControl.single, layerControl.multi, { position: "topleft" })
       .addTo(map);

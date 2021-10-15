@@ -142,8 +142,8 @@ export function profile(
 
     const territoryLayer = false;
     mapLegend(map, territoryLayer);
-    resetZoom(map, geoLayer, [territoryLayer]);
-    resetListener(map, geoLayer, [territoryLayer], true);
+    resetZoom(map, geoLayer, territoryLayer);
+    resetListener(map, geoLayer, territoryLayer, true);
     return map;
   }
 

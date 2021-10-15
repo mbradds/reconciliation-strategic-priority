@@ -1,6 +1,6 @@
 import * as L from "leaflet";
 import centralityEst from "../traditional_territory/centrality.json";
-import { featureStyles } from "./util.js";
+import { cerPalette, featureStyles } from "./util.js";
 
 function popUpTable(landInfo) {
   let tableHtml = `<p>Image source:&nbsp;<a href="${landInfo[0].srcLnk}" target="_blank">${landInfo[0].srcTxt}</a></p>`;
@@ -59,10 +59,9 @@ export function addTraditionalTerritory(map, popHeight, popWidth) {
     const digitalMatch = {};
     const landCircles = Object.keys(centralityEst).map((landName) => {
       const land = centralityEst[landName];
-      const landMarker = L.circleMarker(
-        [land.loc[0], land.loc[1]],
-        featureStyles.territory
-      );
+      const params = featureStyles.territory;
+      params.spreadNums = land.info.map((l) => l.spreadNumber);
+      const landMarker = L.circleMarker([land.loc[0], land.loc[1]], params);
       landMarker.bindTooltip(circleTooltip(land.info, digitalMatch));
       landMarker.bindPopup(
         `<div class="territory-popup iamc-popup"><img src="../images/${landName}.1.png" height="${popHeight}px" width="${popWidth}px" max-width="${popWidth}px"/>${popUpTable(
@@ -75,7 +74,28 @@ export function addTraditionalTerritory(map, popHeight, popWidth) {
       );
       return landMarker;
     });
-    return [L.featureGroup(landCircles).addTo(map), digitalMatch];
+
+    const territoryCircleLayer = L.featureGroup(landCircles);
+
+    territoryCircleLayer.resetSpreads = function () {
+      Object.values(this._layers).forEach((circle) => {
+        circle.setStyle({ fillColor: featureStyles.territory.fillColor });
+      });
+    };
+    territoryCircleLayer.findSpreads = function (highlight) {
+      Object.values(this._layers).forEach((circle) => {
+        if (circle.options.spreadNums.includes(highlight)) {
+          circle.setStyle({
+            fillColor: cerPalette.Flame,
+          });
+        }
+      });
+    };
+
+    territoryCircleLayer.addTo(map);
+    // territoryCircleLayer.findSpreads(4);
+
+    return [territoryCircleLayer, digitalMatch];
   }
   return addCircles();
 }
