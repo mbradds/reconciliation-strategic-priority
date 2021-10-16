@@ -420,8 +420,12 @@ export function mapLegend(map, territoryLayer, metisLayer) {
     map.legend = this;
     return this._div;
   };
-  info.addItem = function () {
-    this._div.innerHTML += `<h4 class="legend-temp" style='color:${cerPalette.hcRed};'>&#11044; Incident</h4>`;
+  info.addItem = function (entry = "incidents", spread = undefined) {
+    if (entry === "incidents") {
+      this._div.innerHTML += `<h4 class="legend-temp" style='color:${featureStyles.incident.fillColor};'>&#11044; Incident</h4>`;
+    } else if (entry === "spread") {
+      this._div.innerHTML += `<h4 class="legend-temp" style='color:${cerPalette.Flame};'>&#11044; Spread ${spread} communities</h4>`;
+    }
   };
   info.removeItem = function () {
     Array.from(this._div.getElementsByClassName("legend-temp")).forEach(
@@ -494,11 +498,11 @@ export function resetListener(
     resetZoom(map, geoLayer, territoryLayer, true);
     removeIncidents(map);
     map.closePopup();
-    territoryLayer.resetSpreads();
     if (pipelineProfile) {
       clickExtraInfo();
     } else {
       map.youAreOn.removeHtml();
+      territoryLayer.resetSpreads();
     }
   });
 }

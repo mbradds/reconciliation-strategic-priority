@@ -83,18 +83,23 @@ export function addTraditionalTerritory(map, popHeight, popWidth) {
       });
     };
     territoryCircleLayer.findSpreads = function (highlight) {
+      map.legend.removeItem();
+      const zoomToLayer = [];
       Object.values(this._layers).forEach((circle) => {
         if (circle.options.spreadNums.includes(highlight)) {
           circle.setStyle({
             fillColor: cerPalette.Flame,
           });
+          zoomToLayer.push(circle);
         }
       });
+      if (zoomToLayer.length > 0) {
+        map.fitBounds(L.featureGroup(zoomToLayer).getBounds());
+        map.legend.addItem("spread", highlight);
+      }
     };
 
     territoryCircleLayer.addTo(map);
-    // territoryCircleLayer.findSpreads(4);
-
     return [territoryCircleLayer, digitalMatch];
   }
   return addCircles();

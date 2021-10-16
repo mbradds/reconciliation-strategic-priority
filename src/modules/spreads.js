@@ -24,7 +24,7 @@ export function spread(map, territoryLayer) {
         params.sprd.sub
           ? `${params.sprd.num} ${params.sprd.sub}`
           : params.sprd.num
-      })</strong>`
+      })</strong><br><i>Click to highlight relevant communities</i>`
     );
     return landMarker;
   });
