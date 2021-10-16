@@ -430,7 +430,7 @@ export function mapLegend(map, territoryLayer, metisLayer) {
   info.removeItem = function () {
     Array.from(this._div.getElementsByClassName("legend-temp")).forEach(
       (toHide) => {
-        toHide.remove();
+        toHide.parentNode.removeChild(toHide);
       }
     );
   };
