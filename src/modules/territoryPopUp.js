@@ -1,6 +1,6 @@
 import * as L from "leaflet";
 import centralityEst from "../traditional_territory/centrality.json";
-import { cerPalette, featureStyles } from "./util.js";
+import { featureStyles } from "./util.js";
 
 function popUpTable(landInfo) {
   let tableHtml = `<p>Image source:&nbsp;<a href="${landInfo[0].srcLnk}" target="_blank">${landInfo[0].srcTxt}</a></p>`;
@@ -78,17 +78,25 @@ export function addTraditionalTerritory(map, popHeight, popWidth) {
     const territoryCircleLayer = L.featureGroup(landCircles);
 
     territoryCircleLayer.resetSpreads = function () {
+      map.warningMsg.removeWarning();
       Object.values(this._layers).forEach((circle) => {
-        circle.setStyle({ fillColor: featureStyles.territory.fillColor });
+        circle.setStyle({
+          fillColor: featureStyles.territory.fillColor,
+          color: featureStyles.territory.color,
+          opacity: featureStyles.territory.opacity,
+        });
       });
     };
     territoryCircleLayer.findSpreads = function (highlight) {
       map.legend.removeItem();
+      map.warningMsg.removeWarning();
       const zoomToLayer = [];
       Object.values(this._layers).forEach((circle) => {
         if (circle.options.spreadNums.includes(highlight)) {
           circle.setStyle({
-            fillColor: cerPalette.Flame,
+            fillColor: featureStyles.community.fillColor,
+            color: featureStyles.community.color,
+            opacity: featureStyles.community.opacity,
           });
           zoomToLayer.push(circle);
         }
@@ -96,6 +104,10 @@ export function addTraditionalTerritory(map, popHeight, popWidth) {
       if (zoomToLayer.length > 0) {
         map.fitBounds(L.featureGroup(zoomToLayer).getBounds());
         map.legend.addItem("spread", highlight);
+      } else {
+        map.warningMsg.addWarning(
+          `There are no communities identified for Spread ${highlight}`
+        );
       }
     };
 

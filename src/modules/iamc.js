@@ -179,6 +179,23 @@ export function landDashboard(
     });
   }
 
+  function mapWarning(map) {
+    const info = L.control({ position: "bottomright" });
+    info.onAdd = function () {
+      this._div = L.DomUtil.create("div");
+      this._div.innerHTML = ``;
+      return this._div;
+    };
+    info.addWarning = function (text) {
+      this._div.innerHTML = `<div class="alert alert-danger"><span class="h3 mrgn-bttm-0">${text}</span></div>`;
+    };
+    info.removeWarning = function () {
+      this._div.innerHTML = "";
+    };
+    info.addTo(map);
+    map.warningMsg = info;
+  }
+
   function loadMap(mapHeight, user) {
     const layerControl = { single: {}, multi: {} };
     const map = leafletBaseMap({
@@ -188,6 +205,7 @@ export function landDashboard(
       initZoomTo: [55, -119],
     });
 
+    mapWarning(map);
     addResetBtn(map);
     const geoLayer = L.geoJSON(landFeature, {
       style: featureStyles.reserveOverlap,

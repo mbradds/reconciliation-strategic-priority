@@ -26,6 +26,11 @@ export const featureStyles = {
     opacity: 0.1,
     fillOpacity: 1,
   },
+  community: {
+    fillColor: cerPalette["Night Sky"],
+    color: cerPalette.Ocean,
+    opacity: 0.7,
+  },
   incident: {
     color: cerPalette["Cool Grey"],
     fillColor: cerPalette.hcRed,
@@ -401,7 +406,7 @@ export function onEachFeature(feature, layer) {
 export function mapLegend(map, territoryLayer, metisLayer) {
   let legend = `<h4><span class="region-click-text" 
   style="height: 10px; background-color: ${featureStyles.reserveOverlap.fillColor}">
-  &nbsp;&nbsp;&nbsp;</span>&nbsp;&nbsp;First Nation Reserve</h4>`;
+  &nbsp;&nbsp;&nbsp;</span>&nbsp;&nbsp;First Nations Reserve</h4>`;
 
   if (metisLayer) {
     legend += `<h4><span class="region-click-text"
@@ -424,7 +429,7 @@ export function mapLegend(map, territoryLayer, metisLayer) {
     if (entry === "incidents") {
       this._div.innerHTML += `<h4 class="legend-temp" style='color:${featureStyles.incident.fillColor};'>&#11044; Incident</h4>`;
     } else if (entry === "spread") {
-      this._div.innerHTML += `<h4 class="legend-temp" style='color:${cerPalette.Flame};'>&#11044; Spread ${spread} communities</h4>`;
+      this._div.innerHTML += `<h4 class="legend-temp" style='color:${featureStyles.community.color};'>&#11044; Spread ${spread} communities</h4>`;
     }
   };
   info.removeItem = function () {
