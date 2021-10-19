@@ -451,6 +451,9 @@ export function reserveTooltip(layer, landInfo) {
   let table = `<table class="map-tooltip">`;
   table += `<caption><b>${layer.NAME1}</b></caption>`;
   table += `<tr><td>Land Type:&nbsp</td> <td><b>${layerInfo.meta.altype}</td></tr>`;
+  if (layerInfo.meta.bandName) {
+    table += `<tr><td>Band name:&nbsp</td> <td><b>${layerInfo.meta.bandName}</td></tr>`;
+  }
   table += `<tr><td>Total overlap:&nbsp</td> <td><b>${length[0]} ${length[1]}</td></tr>`;
   table += `</table><i class="center-footer">Click to view details</i>`;
   return table;

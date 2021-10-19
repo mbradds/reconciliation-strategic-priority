@@ -78,18 +78,41 @@ def import_geodata(path, d_type, crs_target):
                         'CREDATE',
                         'REVDATE',
                         'NID',
-                        'ALCODE',
                         'JUR1',
                         'JUR2',
                         'JUR3',
                         'JUR4',
                         'WEBREF',
                         'ACCURACY']
-
+        
+        # add the band id to land id's
+        # bands source:
+        # https://open.canada.ca/data/en/dataset/b6567c5c-8339-4055-99fa-63f92114d9e4
+        
+        # band_names source:
+        # https://open.canada.ca/data/en/dataset/b6567c5c-8339-4055-99fa-63f92114d9e4
+        data["ALCODE"] = [x[1:] if x[0] == "0" else x for x in data["ALCODE"]]
+        bands = pd.read_csv("./raw_data/Relation_Premiere_Nation_reserve_Relation_First_Nation_Reserve_CSV.csv")
+        bands["ADMIN_LAND_ID"] = [str(x) for x in bands["ADMIN_LAND_ID"]] 
+        data = data.merge(bands, how="left", left_on=["ALCODE"], right_on=["ADMIN_LAND_ID"])
+        
+        # add the band names
+        band_names = pd.read_csv("./raw_data/Premiere_Nation_First_Nation.csv")
+        for delete in ["LONGITUDE", "LATITUDE", "COORD_SYS"]:
+            del band_names[delete]
+        
+        data = data.merge(band_names, how="left", left_on=["BAND_NUMBER"], right_on=["BAND_NUMBER"])
+        
         data["ALTYPE"] = data["ALTYPE"].replace({"Indian Reserve":
                                                  "First Nations Reserve"})
+            
         for remove in poly1_remove:
             del data[remove]
+    
+        del data["ALCODE"]
+        del data["ADMIN_LAND_ID"]
+        del data["BAND_NUMBER"]
+
     elif d_type == 'pipe':
         pipe_remove = ['MAT_TYPE',
                        'MAT_GRADE',
@@ -274,6 +297,7 @@ def output_poly1(pipe, overlap, company):
     if not overlap.empty:
         del pipe['geometry']
         del pipe['valid']
+        pipe = pipe.where(pipe.notnull(), None)
         overlap = overlap[['NAME1', 'geometry']].copy()
         overlap = overlap.drop_duplicates(subset='NAME1')
 
@@ -284,7 +308,8 @@ def output_poly1(pipe, overlap, company):
             p1 = pipe[pipe['NAME1'] == land].copy()
 
             landMeta = {"altype": list(p1["ALTYPE"])[0],
-                        "operator": list(p1["OPERATOR"])[0]}
+                        "operator": list(p1["OPERATOR"])[0],
+                        "bandName": list(p1["BAND_NAME"])[0]}
             currentLand = []
             for plname, status, altype, length in zip(p1['PLNAME'],
                                                       p1['STATUS'],
