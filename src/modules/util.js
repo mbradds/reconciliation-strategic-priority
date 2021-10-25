@@ -416,7 +416,7 @@ export function mapLegend(map, territoryLayer, metisLayer) {
 
   if (territoryLayer) {
     legend += `<h4 style='color:${featureStyles.tmx.fillColor};'>&#9473;&#9473; TMX</h4>`;
-    legend += `<h4 style='color:${featureStyles.territory.fillColor};'>&#11044; Traditional Territory</h4>`;
+    legend += `<h4 style='color:${featureStyles.territory.fillColor};'>&#11044; Community</h4>`;
   }
   const info = L.control();
   info.onAdd = function () {

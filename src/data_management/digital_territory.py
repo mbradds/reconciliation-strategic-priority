@@ -26,22 +26,22 @@ def getCanadaTerritories():
         del within[delete]
     within = within.reset_index(drop=True)
     print("saving data...")
-    matched = ["secwepemc-secwepemcul-ewc",
-               "semiahmoo",
-               "heiltsuk",
-               "ditidaht",
-               "pacheedaht",
-               "tsawwassen",
-               "qayqayt",
-               "katzie",
-               "kwikwetlem",
-               "tsleil-waututh-səl̓ilwətaɂɬ",
-               "kwantlen"]
-    onMap = within[within["Slug"].isin(matched)].copy().reset_index(drop=True)
-    onMap = onMap.drop_duplicates(subset=["Slug"])
-    within = within[~within["Slug"].isin(matched)].copy().reset_index(drop=True)
+    # matched = ["secwepemc-secwepemcul-ewc",
+    #            "semiahmoo",
+    #            "heiltsuk",
+    #            "ditidaht",
+    #            "pacheedaht",
+    #            "tsawwassen",
+    #            "qayqayt",
+    #            "katzie",
+    #            "kwikwetlem",
+    #            "tsleil-waututh-səl̓ilwətaɂɬ",
+    #            "kwantlen"]
+    # onMap = within[within["Slug"].isin(matched)].copy().reset_index(drop=True)
+    # onMap = onMap.drop_duplicates(subset=["Slug"])
+    # within = within[~within["Slug"].isin(matched)].copy().reset_index(drop=True)
     within.to_file("../traditional_territory/indigenousTerritoriesCa.json", driver="GeoJSON")
-    onMap.to_file("../company_data/TransMountainPipelineULC/territory.json", driver="GeoJSON")
+    # onMap.to_file("../company_data/TransMountainPipelineULC/territory.json", driver="GeoJSON")
     return within
 
 

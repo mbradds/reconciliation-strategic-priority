@@ -45,10 +45,10 @@ export function addTraditionalTerritory(map, popHeight, popWidth) {
           : `${land.community}&nbsp;(<span class="glyphicon glyphicon-volume-up" aria-hidden="true"></span> <i>${land.pronounce}</i>)`;
       })
       .join("<br>");
-    const plural = landInfo.length > 1 ? "territories" : "territory";
+    const plural = landInfo.length > 1 ? "communities" : "community";
     let table = `<h3 class="center-header" style="margin-bottom: 5px"><b>${communityNames}</b></h3>`;
-    table += `<p class="center-footer">Circle represents approximate centrality of the traditional ${plural}</p>`;
-    table += `<i class="center-footer">Click to view full Traditional Territory map &amp; info</i>`;
+    table += `<p class="center-footer">Circle represents approximate location of the ${plural}</p>`;
+    table += `<i class="center-footer">Click to view full community info and traditional territory map</i>`;
     if (digitalList.length > 0) {
       foundDigital[landInfo[0].dId] = digitalList;
     }

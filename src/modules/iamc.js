@@ -20,7 +20,6 @@ import {
   addTraditionalTerritory,
   addDigitalTerritory,
 } from "./territoryPopUp.js";
-import { addMetisSettlements } from "./metisSettlements.js";
 import { spread } from "./spreads.js";
 import territoryPolygons from "../traditional_territory/indigenousTerritoriesCa.json";
 
@@ -230,8 +229,7 @@ export function landDashboard(
       popWidth = user[1] - 85;
     }
 
-    let [territoryLayer, metisLayer, digitalMatch, digitalTerritoryLayer] = [
-      false,
+    let [territoryLayer, digitalMatch, digitalTerritoryLayer] = [
       false,
       false,
       false,
@@ -243,10 +241,10 @@ export function landDashboard(
         popWidth
       );
       layerControl.multi["Traditional Territory"] = territoryLayer;
-      metisLayer = addMetisSettlements(map);
-      if (metisLayer) {
-        layerControl.multi["Metis Settlements"] = metisLayer;
-      }
+      // metisLayer = addMetisSettlements(map);
+      // if (metisLayer) {
+      //   layerControl.multi["Metis Settlements"] = metisLayer;
+      // }
       spread(map, territoryLayer);
     }
 
@@ -264,7 +262,7 @@ export function landDashboard(
     }
 
     onLand(map, digitalTerritoryLayer);
-    mapLegend(map, territoryLayer, metisLayer);
+    mapLegend(map, territoryLayer);
     resetZoom(map, geoLayer, territoryLayer);
     resetListener(map, geoLayer, territoryLayer);
     L.control
