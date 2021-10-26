@@ -15,7 +15,7 @@ function popUpTable(landInfo) {
   landInfo.forEach((land) => {
     let table = `<table class="table"><tbody>`;
     table += `<h2 class="center-header">${land.community}</h2>`;
-    if (land.pronounce !== "") {
+    if (land.pronounce) {
       table += `<h3 class="center-header"><i>Pronounced: ${land.pronounce}</i></h3>`;
     }
     table += `<tr><td>Leadership</td><td><strong>${land.leadership}</strong></td></tr>`;
@@ -32,37 +32,28 @@ function popUpTable(landInfo) {
 }
 
 export function addTraditionalTerritory(map, popHeight, popWidth) {
-  function circleTooltip(landInfo, digitalInfo) {
-    const digitalList = [];
-    const foundDigital = digitalInfo;
+  function circleTooltip(landInfo) {
     const communityNames = landInfo
-      .map((land) => {
-        if (land.dId !== "") {
-          digitalList.push(land);
-        }
-        return land.pronounce === ""
+      .map((land) =>
+        !land.pronounce
           ? land.community
-          : `${land.community}&nbsp;(<span class="glyphicon glyphicon-volume-up" aria-hidden="true"></span> <i>${land.pronounce}</i>)`;
-      })
+          : `${land.community}&nbsp;(<span class="glyphicon glyphicon-volume-up" aria-hidden="true"></span> <i>${land.pronounce}</i>)`
+      )
       .join("<br>");
     const plural = landInfo.length > 1 ? "communities" : "community";
     let table = `<h3 class="center-header" style="margin-bottom: 5px"><b>${communityNames}</b></h3>`;
     table += `<p class="center-footer">Circle represents approximate location of the ${plural}</p>`;
     table += `<i class="center-footer">Click to view full community info and traditional territory map</i>`;
-    if (digitalList.length > 0) {
-      foundDigital[landInfo[0].dId] = digitalList;
-    }
     return table;
   }
 
   function addCircles() {
-    const digitalMatch = {};
     const landCircles = Object.keys(centralityEst).map((landName) => {
       const land = centralityEst[landName];
       const params = featureStyles.territory;
       params.spreadNums = land.info.map((l) => l.spreadNumber);
       const landMarker = L.circleMarker([land.loc[0], land.loc[1]], params);
-      landMarker.bindTooltip(circleTooltip(land.info, digitalMatch));
+      landMarker.bindTooltip(circleTooltip(land.info));
       landMarker.bindPopup(
         `<div class="territory-popup iamc-popup"><img src="../images/${landName}.1.png" height="${popHeight}px" width="${popWidth}px" max-width="${popWidth}px"/>${popUpTable(
           land.info
@@ -112,7 +103,7 @@ export function addTraditionalTerritory(map, popHeight, popWidth) {
     };
 
     territoryCircleLayer.addTo(map);
-    return [territoryCircleLayer, digitalMatch];
+    return territoryCircleLayer;
   }
   return addCircles();
 }

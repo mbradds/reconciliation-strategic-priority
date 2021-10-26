@@ -510,7 +510,9 @@ export function resetListener(
       clickExtraInfo();
     } else {
       map.youAreOn.removeHtml();
-      territoryLayer.resetSpreads();
+      if (territoryLayer) {
+        territoryLayer.resetSpreads();
+      }
     }
   });
 }

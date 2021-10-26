@@ -16,10 +16,7 @@ import {
   featureStyles,
   findUser,
 } from "./util.js";
-import {
-  addTraditionalTerritory,
-  addDigitalTerritory,
-} from "./territoryPopUp.js";
+import { addTraditionalTerritory } from "./territoryPopUp.js";
 import { spread } from "./spreads.js";
 import territoryPolygons from "../traditional_territory/indigenousTerritoriesCa.json";
 
@@ -32,8 +29,7 @@ export function landDashboard(
   poly2Length,
   incidentFeature,
   meta,
-  line = false,
-  territory = false
+  line = false
 ) {
   function dashboardTotals() {
     const addStyle = (val) => `<strong>${val}</strong>`;
@@ -229,17 +225,9 @@ export function landDashboard(
       popWidth = user[1] - 85;
     }
 
-    let [territoryLayer, digitalMatch, digitalTerritoryLayer] = [
-      false,
-      false,
-      false,
-    ];
+    let territoryLayer = false;
     if (meta.company === "Trans Mountain Pipeline ULC") {
-      [territoryLayer, digitalMatch] = addTraditionalTerritory(
-        map,
-        popHeight,
-        popWidth
-      );
+      territoryLayer = addTraditionalTerritory(map, popHeight, popWidth);
       layerControl.multi["Traditional Territory"] = territoryLayer;
       // metisLayer = addMetisSettlements(map);
       // if (metisLayer) {
@@ -250,18 +238,7 @@ export function landDashboard(
 
     layerControl.multi["First Nations Reserves"] = geoLayer;
 
-    if (territory) {
-      digitalTerritoryLayer = addDigitalTerritory(
-        territory,
-        digitalMatch,
-        popHeight,
-        popWidth
-      );
-      layerControl.single["Digital Traditional Territory"] =
-        digitalTerritoryLayer;
-    }
-
-    onLand(map, digitalTerritoryLayer);
+    onLand(map, false);
     mapLegend(map, territoryLayer);
     resetZoom(map, geoLayer, territoryLayer);
     resetListener(map, geoLayer, territoryLayer);

@@ -39,7 +39,8 @@ def processTerritoryInfo():
     df = df[df["Show"] != "No"].reset_index(drop=True)
     df["mapFile"] = [str(x).strip() for x in df["mapFile"]]
     df = pd.merge(df, sources, how="left", left_on="Community", right_on="Community")
-    df = df.fillna("")
+    df = df.where(df.notnull(), None)
+    # df = df.fillna("")
 
     for col in df:
         if "Unnamed" in col:
@@ -47,6 +48,7 @@ def processTerritoryInfo():
             
     # get spread number for each community
     spread_numbers = []
+    df["Project Spreads"] = [str(x) for x in df["Project Spreads"]]
     for project_spread in df["Project Spreads"]:
         project_spread = project_spread.lower()
         if "lower mainland" in project_spread:
@@ -122,6 +124,6 @@ def spreads():
 
 if __name__ == "__main__":
     print("updating tranditional territory metadata...")
-    # df = processTerritoryInfo()
-    df = spreads()
+    df_community = processTerritoryInfo()
+    df_spreads = spreads()
     print("done!")
