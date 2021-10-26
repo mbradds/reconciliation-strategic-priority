@@ -22,7 +22,7 @@ export const featureStyles = {
   territory: {
     color: cerPalette["Night Sky"],
     fillColor: cerPalette["Dim Grey"],
-    weight: 85,
+    weight: 50,
     opacity: 0.1,
     fillOpacity: 1,
   },

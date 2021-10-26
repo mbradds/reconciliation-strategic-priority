@@ -20,7 +20,7 @@ export function spread(map, territoryLayer) {
     params.sprd = getSpreadNumber(params.name);
     const landMarker = L.circleMarker([s.l[0], s.l[1]], params);
     landMarker.bindTooltip(
-      `<strong>KP ${params.name} (Spread ${
+      `<strong style="color: ${params.color}";>KP ${params.name} (Spread ${
         params.sprd.sub
           ? `${params.sprd.num} ${params.sprd.sub}`
           : params.sprd.num

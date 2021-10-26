@@ -94,7 +94,7 @@ def processTerritoryInfo():
                 "dId": row["Digital id"]}
 
     for i, row in df.iterrows():
-        if row["mapFile"] in land:
+        if row["mapFile"] in land and land[row["mapFile"]]["loc"][0] == row["Lat"] and land[row["mapFile"]]["loc"][1] == row["Long"]:
             land[row["mapFile"]]["info"].append(addInfo(row))
         else:
             land[row["mapFile"]] = {"loc": [row["Lat"], row["Long"]],
