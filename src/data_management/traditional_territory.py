@@ -90,8 +90,7 @@ def processTerritoryInfo():
                 "srcTxt": row["Source"],
                 "srcLnk": row["Link"],
                 "pronounce": row["Pronounciation"],
-                "spreadNumber": row["spreadNumber"],
-                "dId": row["Digital id"]}
+                "spreadNumber": row["spreadNumber"]}
 
     for i, row in df.iterrows():
         if row["mapFile"] in land and land[row["mapFile"]]["loc"][0] == row["Lat"] and land[row["mapFile"]]["loc"][1] == row["Long"]:

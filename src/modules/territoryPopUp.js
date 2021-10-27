@@ -3,7 +3,12 @@ import centralityEst from "../traditional_territory/centrality.json";
 import { featureStyles } from "./util.js";
 
 function popUpTable(landInfo) {
-  let tableHtml = `<p>Image source:&nbsp;<a href="${landInfo[0].srcLnk}" target="_blank">${landInfo[0].srcTxt}</a></p>`;
+  let tableHtml = "";
+  if (landInfo[0].srcLnk) {
+    tableHtml += `<p>Image source:&nbsp;<a href="${landInfo[0].srcLnk}" target="_blank">${landInfo[0].srcTxt}</a></p>`;
+  } else {
+    tableHtml += `<p>Image source:&nbsp;not available</p>`;
+  }
   tableHtml += `<div id="image-disclaimer" class="alert alert-warning">
   <h2>&nbsp; Traditional Territory Map Disclaimer</h2>
   <p>These maps have been prepared using the Canada Energy Regulator

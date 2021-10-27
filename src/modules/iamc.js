@@ -202,16 +202,6 @@ export function landDashboard(
 
     mapWarning(map);
     addResetBtn(map);
-    const geoLayer = L.geoJSON(landFeature, {
-      style: featureStyles.reserveOverlap,
-      landInfo,
-      incidentFeature,
-    })
-      .bindTooltip((layer) =>
-        reserveTooltip(layer.feature.properties, landInfo)
-      )
-      .bindPopup((layer) => reservePopUp(layer))
-      .addTo(map);
 
     if (line) {
       L.geoJSON(line, {
@@ -235,6 +225,17 @@ export function landDashboard(
       // }
       spread(map, territoryLayer);
     }
+
+    const geoLayer = L.geoJSON(landFeature, {
+      style: featureStyles.reserveOverlap,
+      landInfo,
+      incidentFeature,
+    })
+      .bindTooltip((layer) =>
+        reserveTooltip(layer.feature.properties, landInfo)
+      )
+      .bindPopup((layer) => reservePopUp(layer))
+      .addTo(map);
 
     layerControl.multi["First Nations Reserves"] = geoLayer;
 
