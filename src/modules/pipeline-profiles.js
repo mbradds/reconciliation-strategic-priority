@@ -30,6 +30,8 @@ export function profile(
   meta,
   line = false
 ) {
+  const addStyle = (val) =>
+    `<span class="bg-primary"><strong>&nbsp;${val}&nbsp;</strong></span>`;
   function addTraditionalTerritory() {
     const terrTotal = terr.length;
     let terrTables = ``;
@@ -44,8 +46,14 @@ export function profile(
     terrTables += listColumn(terr.slice(0, Math.ceil(terrTotal / 2)));
     terrTables += listColumn(terr.slice(Math.ceil(terr.length / 2)));
     document.getElementById(
-      "territory-panel"
-    ).innerHTML = `<p>This pipeline system passes through an estimated ${terrTotal} Indigenous Traditional Territories:</p>${terrTables}`;
+      "territory-intro"
+    ).innerHTML = `<p>In addition to the First Nations Reserves above, This pipeline system passes through an estimated ${addStyle(
+      terrTotal
+    )} Indigenous Traditional Territories, which are listed in alphabetical order below. This list may not be comprehensive, and will continue to be updated as new data and feedback is recieved.</p>`;
+    document.getElementById(
+      "territory-title"
+    ).innerText = `${meta.company} & Indigenous Traditional Territory`;
+    document.getElementById("territory-panel").innerHTML = `${terrTables}`;
   }
 
   function showIamc() {
@@ -77,8 +85,6 @@ export function profile(
   }
 
   function dynamicText(textData) {
-    const addStyle = (val) =>
-      `<span class="bg-primary"><strong>&nbsp;${val}&nbsp;</strong></span>`;
     let totalFeatures = 0;
     landFeature.features.forEach(() => {
       totalFeatures += 1;
@@ -148,7 +154,7 @@ export function profile(
   }
 
   function loadNonMap() {
-    setTitle(meta.company);
+    setTitle(meta.company, true);
     clickExtraInfo();
     addpoly2Length(poly2Length, meta.company);
     showIamc();

@@ -133,10 +133,11 @@
         </div>
       </div>
       <div class="row">
-        <div class="col-md-12 mrgn-tp-md">
+        <div class="col-md-12 mrgn-tp-lg">
+          <div id="territory-intro"></div>
           <section class="panel panel-default">
             <header class="panel-heading">
-              <h5 class="panel-title">Traditional Territory</h5>
+              <h5 class="panel-title" id="territory-title"></h5>
             </header>
             <div class="panel-body" id="territory-panel"></div>
             <footer class="panel-footer">
@@ -146,7 +147,16 @@
               >, CER calculations
             </footer>
           </section>
-          <div class="alert alert-warning">
+          <details>
+            <summary id="treaty-length-title"></summary>
+            <div id="treaty-length"></div>
+          </details>
+          <details class="mrgn-bttm-lg mrgn-tp-sm">
+            <summary>Source and Description</summary>
+            <p>Coming soon!</p>
+          </details>
+          <section class="alert alert-warning">
+            <h3>Data & Calculation Disclaimer</h3>
             <p class="small">
               The information (map, statistics, and distances) concerning the
               overlap between CER regulated pipelines, events, and Indigenous
@@ -158,15 +168,7 @@
               individuals, organizations, and communities impacted by this
               pipeline system.
             </p>
-          </div>
-          <details>
-            <summary id="treaty-length-title"></summary>
-            <div id="treaty-length"></div>
-          </details>
-          <details class="mrgn-bttm-xl mrgn-tp-sm">
-            <summary>Source and Description</summary>
-            <p>Coming soon!</p>
-          </details>
+          </section>
         </div>
       </div>
       <!-- end dashboard -->

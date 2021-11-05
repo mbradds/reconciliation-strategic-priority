@@ -120,8 +120,11 @@ export function lengthUnits(val) {
   return [val.toFixed(1), "m"];
 }
 
-export function setTitle(company) {
-  document.getElementById("leaflet-map-title").innerText = `Map - ${company}`;
+export function setTitle(company, pipelineProfiles = false) {
+  const titleText = pipelineProfiles
+    ? `Map - ${company} & First Nations Reserves`
+    : `Map - ${company}`;
+  document.getElementById("leaflet-map-title").innerText = titleText;
 }
 
 export function setUpHeight(pipelineProfile = false) {
