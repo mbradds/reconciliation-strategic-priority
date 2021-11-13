@@ -18,7 +18,7 @@ import {
 } from "./util.js";
 import { addTraditionalTerritory } from "./territoryPopUp.js";
 import { spread } from "./spreads.js";
-import territoryPolygons from "../traditional_territory/indigenousTerritoriesCa.json";
+import territoryPolygons from "../company_data/community_profiles/indigenousTerritoriesCa.json";
 
 import "leaflet/dist/leaflet.css";
 import "../main.css";

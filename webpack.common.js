@@ -95,7 +95,8 @@ export default {
           from: path.resolve(
             __dirname,
             "src",
-            "traditional_territory",
+            "company_data",
+            "community_profiles",
             "images"
           ),
           to: path.resolve(__dirname, "dist", "images"),

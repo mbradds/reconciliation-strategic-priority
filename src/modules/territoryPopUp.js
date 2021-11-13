@@ -1,5 +1,5 @@
 import * as L from "leaflet";
-import centralityEst from "../traditional_territory/centrality.json";
+import communityInfo from "../company_data/community_profiles/community_info.json";
 import { featureStyles } from "./util.js";
 
 function popUpTable(landInfo, hasImage) {
@@ -61,8 +61,8 @@ export function addTraditionalTerritory(map, popHeight, popWidth) {
   }
 
   function addCircles() {
-    const landCircles = Object.keys(centralityEst).map((landName) => {
-      const land = centralityEst[landName];
+    const landCircles = Object.keys(communityInfo).map((landName) => {
+      const land = communityInfo[landName];
       const params = featureStyles.territory;
       params.spreadNums = land.info.map((l) => l.spreadNumber);
       const landMarker = L.circleMarker([land.loc[0], land.loc[1]], params);

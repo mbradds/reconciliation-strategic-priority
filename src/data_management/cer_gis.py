@@ -1,10 +1,12 @@
 import geopandas as gpd
 import os
 import pandas as pd
+import numpy as np
 import json
 import time
 import multiprocessing as mp
-script_dir = os.path.dirname(__file__)
+from util import set_cwd_to_script
+set_cwd_to_script()
 crs_proj = 'EPSG:2960'
 crs_geo = 'EPSG:4269'
 
@@ -25,7 +27,7 @@ companies = {"ALLIANCE PIPELINE LTD. (A159)": "Alliance Pipeline Ltd.",
 
 
 def import_tmx(crs_target=crs_proj):
-    data = gpd.read_file(os.path.join(script_dir, "raw_data", "tmx/centreline.json"))
+    data = gpd.read_file(os.path.join(os.getcwd(), "raw_data", "tmx/centreline.json"))
     data = data.set_geometry('geometry')
     data = data.to_crs(crs_target)
     data.crs = crs_target
@@ -84,31 +86,31 @@ def import_geodata(path, d_type, crs_target):
                         'JUR4',
                         'WEBREF',
                         'ACCURACY']
-        
+
         # add the band id to land id's
         # bands source:
         # https://open.canada.ca/data/en/dataset/b6567c5c-8339-4055-99fa-63f92114d9e4
-        
+
         # band_names source:
         # https://open.canada.ca/data/en/dataset/b6567c5c-8339-4055-99fa-63f92114d9e4
         data["ALCODE"] = [x[1:] if x[0] == "0" else x for x in data["ALCODE"]]
-        bands = pd.read_csv("./raw_data/Relation_Premiere_Nation_reserve_Relation_First_Nation_Reserve_CSV.csv")
-        bands["ADMIN_LAND_ID"] = [str(x) for x in bands["ADMIN_LAND_ID"]] 
+        bands = pd.read_csv("./raw_data/Relation_Premiere_Nation_reserve_Relation_First_Nation_Reserve_CSV/Relation_Premiere_Nation_reserve_Relation_First_Nation_Reserve_CSV.csv")
+        bands["ADMIN_LAND_ID"] = [str(x) for x in bands["ADMIN_LAND_ID"]]
         data = data.merge(bands, how="left", left_on=["ALCODE"], right_on=["ADMIN_LAND_ID"])
-        
+
         # add the band names
-        band_names = pd.read_csv("./raw_data/Premiere_Nation_First_Nation.csv")
+        band_names = pd.read_csv("./raw_data/Premiere_Nation_First_Nation_CSV/Premiere_Nation_First_Nation.csv")
         for delete in ["LONGITUDE", "LATITUDE", "COORD_SYS"]:
             del band_names[delete]
-        
+
         data = data.merge(band_names, how="left", left_on=["BAND_NUMBER"], right_on=["BAND_NUMBER"])
-        
+
         data["ALTYPE"] = data["ALTYPE"].replace({"Indian Reserve":
                                                  "First Nations Reserve"})
-            
+
         for remove in poly1_remove:
             del data[remove]
-    
+
         del data["ALCODE"]
         del data["ADMIN_LAND_ID"]
         del data["BAND_NUMBER"]
@@ -218,8 +220,8 @@ def line_clip(pipe,
     if save:
         for savePath in [clip_location, poly1_on_pipe_location]:
             folder = savePath.split("/")[1:-1][0]
-            if not os.path.isdir(os.path.join(script_dir, folder)):
-                os.mkdir(os.path.join(script_dir, folder))
+            if not os.path.isdir(os.path.join(os.getcwd(), folder)):
+                os.mkdir(os.path.join(os.getcwd(), folder))
 
     if pipe.crs != land.crs:
         print('Warning: Different CRS: '+str(pipe.crs)+' '+str(land.crs))
@@ -237,8 +239,8 @@ def line_clip(pipe,
         del shp['index_right']
         # shp['geometry'] = [shape.buffer(0) if valid == False else shape for shape, valid in zip(shp['geometry'], shp['valid'])]
 
-    if os.path.isfile(script_dir+'/'+clip_location) and not forceclip:
-        pipe_clipped = gpd.read_file(script_dir+'/'+clip_location)
+    if os.path.isfile(os.getcwd()+'/'+clip_location) and not forceclip:
+        pipe_clipped = gpd.read_file(os.getcwd()+'/'+clip_location)
         print('clip already complete with crs: '+str(pipe_on_land.crs))
 
     else:
@@ -371,12 +373,14 @@ def eventProximity(gdf, poly1, company):
     poly1.crs = crs_proj
 
     folder_name = get_folder_name(company)
+    # gdf = gdf.where(gdf.notnull(), None)
     pnt = gdf[gdf['Company'] == company].copy().reset_index(drop=True)
     poly_company = poly1[poly1['OPERATOR'] == company].copy().reset_index(drop=True)
     if not pnt.empty:
         pnt["Approximate Volume Released"] = pd.to_numeric(pnt["Approximate Volume Released"], errors="coerce")
         pnt["Approximate Volume Released"] = [round(x, 2) for x in pnt["Approximate Volume Released"]]
-        pnt = pnt.where(pd.notnull(pnt), None)
+        # pnt = pnt.where(pd.notnull(pnt), None)
+        pnt["Approximate Volume Released"] = pnt["Approximate Volume Released"].replace({np.nan: None})
         close = {}
         total = {"on": 0, "15km": 0}
         for p, eid, iType, iStatus, iVol, iSub, lat, long, what, why in zip(pnt.geometry,

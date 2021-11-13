@@ -19,7 +19,9 @@
     "dev": "set NODE_OPTIONS=--max_old_space_size=15192 && webpack serve --config webpack.dev.js",
     "minify-maps": "sh ./scripts/maps_min.sh",
     "get-data": "conda run -n pipeline-profiles python src/data_management/get_map_files.py",
-    "traditional": "npm run images && conda run -n pipeline-profiles python src/data_management/traditional_territory.py"
+    "gis": "conda run -n pipeline-profiles python src/data_management/cer_gis.py",
+    "community-update": "npm run images && conda run -n pipeline-profiles python src/data_management/process_communities.py",
+    "traditional-territory-update": "conda run -n pipeline-profiles python src/data_management/digital_territory.py"
   },
   "author": "Grant Moss",
   "license": "MIT",
@@ -29,7 +31,7 @@
     "@babel/preset-env": "^7.16.0",
     "babel-loader": "^8.2.3",
     "clean-webpack-plugin": "^4.0.0",
-    "copy-webpack-plugin": "^9.0.1",
+    "copy-webpack-plugin": "^9.1.0",
     "css-loader": "^6.5.1",
     "css-minimizer-webpack-plugin": "^3.1.3",
     "eslint": "^8.2.0",
@@ -40,10 +42,10 @@
     "html-webpack-plugin": "^5.5.0",
     "mini-css-extract-plugin": "^2.4.4",
     "style-loader": "^3.3.1",
-    "webpack": "^5.63.0",
+    "webpack": "^5.64.0",
     "webpack-bundle-analyzer": "^4.5.0",
     "webpack-cli": "^4.9.1",
-    "webpack-dev-server": "^4.4.0",
+    "webpack-dev-server": "^4.5.0",
     "webpack-merge": "^5.8.0"
   },
   "dependencies": {

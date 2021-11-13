@@ -7,7 +7,7 @@ import fs from "fs";
 const stageLocation =
   "./src/data_management/raw_data/traditional_territory/stage_maps";
 
-const completeLocation = "./src/traditional_territory/images";
+const completeLocation = "./src/company_data/community_profiles/images";
 
 const options = {
   density: 100,
