@@ -10,24 +10,27 @@ const __dirname = path.dirname(__filename);
 
 const webpackOutputs = (function () {
   const filenames = [
-    "ngtl",
-    "trans_mountain",
-    "alliance",
-    "norman_wells",
-    "enbridge_mainline",
-    "keystone",
-    "tcpl",
-    "trans_northern",
-    "westcoast",
+    ["ngtl", true],
+    ["trans_mountain", true],
+    ["alliance", false],
+    ["norman_wells", false],
+    ["enbridge_mainline", true],
+    ["keystone", true],
+    ["tcpl", true],
+    ["trans_northern", false],
+    ["westcoast", true],
+    ["montreal", false],
   ];
 
   function entryJs() {
     const paths = {};
     filenames.forEach((name) => {
-      paths[`js/iamc/${name}`] = `./src/entry_points/iamc/${name}.js`;
+      if (name[1]) {
+        paths[`js/iamc/${name[0]}`] = `./src/entry_points/iamc/${name[0]}.js`;
+      }
       paths[
-        `js/pipeline-profiles/${name}`
-      ] = `./src/entry_points/pipeline-profiles/${name}.js`;
+        `js/pipeline-profiles/${name[0]}`
+      ] = `./src/entry_points/pipeline-profiles/${name[0]}.js`;
     });
     return paths;
   }
@@ -37,18 +40,22 @@ const webpackOutputs = (function () {
     filenames.forEach((name) => {
       const htmls = [
         new HtmlWebpackPlugin({
-          filename: `html/${name}.html`,
-          template: "src/components/iamc.html",
-          chunks: [`js/iamc/${name}`],
-          minify: { collapseWhitespace: true },
-        }),
-        new HtmlWebpackPlugin({
-          filename: `html/pipeline-profiles/${name}.html`,
+          filename: `html/pipeline-profiles/${name[0]}.html`,
           template: "src/components/pipeline-profiles.html",
-          chunks: [`js/pipeline-profiles/${name}`],
+          chunks: [`js/pipeline-profiles/${name[0]}`],
           minify: { collapseWhitespace: true },
         }),
       ];
+      if (name[1]) {
+        htmls.push(
+          new HtmlWebpackPlugin({
+            filename: `html/${name[0]}.html`,
+            template: "src/components/iamc.html",
+            chunks: [`js/iamc/${name[0]}`],
+            minify: { collapseWhitespace: true },
+          })
+        );
+      }
       html.push(...htmls);
     });
     return html;

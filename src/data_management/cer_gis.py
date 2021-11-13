@@ -11,19 +11,27 @@ crs_proj = 'EPSG:2960'
 crs_geo = 'EPSG:4269'
 
 
-companies = {"ALLIANCE PIPELINE LTD. (A159)": "Alliance Pipeline Ltd.",
-             "ENBRIDGE PIPELINES (NW) INC. (E102)": "Enbridge Norman Wells",
-             "ENBRIDGE PIPELINES INC. (E101)": "Enbridge Pipelines Inc.",
-             "FOOTHILLS PIPE LINES LTD. (F115)": "Foothills Pipe Lines Ltd.",
-             "KINDER MORGAN COCHIN ULC (K077)": "PKM Cochin ULC",
-             "MARITIMES & NORTHEAST PIPELINE MANAGEMENT LTD. (M124)": "Maritimes & Northeast Pipeline Management Ltd.",
-             "NOVA GAS TRANSMISSION LTD. (N081)": "NOVA Gas Transmission Ltd.",
-             "TRANS MOUNTAIN PIPELINE ULC (T260)": "Trans Mountain Pipeline ULC",
-             "TRANS QUÉBEC AND MARITIMES PIPELINE INC. (T201)": "Trans Quebec and Maritimes Pipeline Inc.",
-             "TRANS-NORTHERN PIPELINES INC. (T217)": "Trans-Northern Pipelines Inc.",
-             "TRANSCANADA KEYSTONE PIPELINE GP LTD. (T241)": "TransCanada Keystone Pipeline GP Ltd.",
-             "TRANSCANADA PIPELINES LIMITED (T211)": "TransCanada PipeLines Limited",
-             "WESTCOAST ENERGY INC., CARRYING ON BUSINESS AS SPECTRA ENERGY TRANSMISSION (W102)": "Westcoast Energy Inc."}
+companies = {
+    "ALLIANCE PIPELINE LTD. (A159)": "Alliance Pipeline Ltd.",
+    "ENBRIDGE PIPELINES (NW) INC. (E102)": "Enbridge Norman Wells",
+    "ENBRIDGE PIPELINES INC. (E101)": "Enbridge Pipelines Inc.",
+    "FOOTHILLS PIPE LINES LTD. (F115)": "Foothills Pipe Lines Ltd.",
+    "KINDER MORGAN COCHIN ULC (K077)": "PKM Cochin ULC",
+    "MARITIMES & NORTHEAST PIPELINE MANAGEMENT LTD. (M124)": "Maritimes & Northeast Pipeline Management Ltd.",
+    "NOVA GAS TRANSMISSION LTD. (N081)": "NOVA Gas Transmission Ltd.",
+    "TRANS MOUNTAIN PIPELINE ULC (T260)": "Trans Mountain Pipeline ULC",
+    "TRANS QUÉBEC AND MARITIMES PIPELINE INC. (T201)": "Trans Quebec and Maritimes Pipeline Inc.",
+    "TRANS-NORTHERN PIPELINES INC. (T217)": "Trans-Northern Pipelines Inc.",
+    "TRANSCANADA KEYSTONE PIPELINE GP LTD. (T241)": "TransCanada Keystone Pipeline GP Ltd.",
+    "TRANSCANADA PIPELINES LIMITED (T211)": "TransCanada PipeLines Limited",
+    "WESTCOAST ENERGY INC., CARRYING ON BUSINESS AS SPECTRA ENERGY TRANSMISSION (W102)": "Westcoast Energy Inc.",
+    "AURORA PIPE LINE COMPANY LTD. (A313)": "Aurora Pipe Line Company Ltd.",
+    "EMERA BRUNSWICK PIPELINE COMPANY LTD. (E236)": "Emera Brunswick Pipeline Company Ltd.",
+    "MONTREAL PIPE LINE LIMITED (M253)": "Montreal Pipe Line Limited",
+    "MANY ISLANDS PIPE LINES (CANADA) LIMITED (M182)": "Many Islands Pipe Lines (Canada) Limited",
+    "PLAINS MIDSTREAM CANADA ULC (P384)": "Plains Midstream Canada ULC",
+    "ENBRIDGE SOUTHERN LIGHTS GP INC. ON BEHALF OF ENBRIDGE SOUTHERN LIGHTS LP (E242)": "Southern Lights Pipeline"
+    }
 
 
 def import_tmx(crs_target=crs_proj):
@@ -151,7 +159,9 @@ def import_geodata(path, d_type, crs_target):
                        'UPDATED',
                        'UPI',
                        'LENGTH_CAL']
-        data = data[data['NEBGROUP'] == "Group 1"].copy().reset_index(drop=True)
+        
+        # print(sorted(list(set(data["OPERATOR"]))))
+        # data = data[data['NEBGROUP'] == "Group 1"].copy().reset_index(drop=True)
         # company_names = sorted(list(set(data['OPERATOR'])))
         # print(company_names)
         # TOOD: add a method that looks at all company names and flags a warning if a company name isnt in "replace" keys
@@ -338,6 +348,9 @@ def output_poly1(pipe, overlap, company):
         overlap = {'company': company, "overlaps": 0}
         with open('../company_data/'+folder_name+'/poly1.json', 'w') as f:
             json.dump(overlap, f)
+        
+        with open('../company_data/'+folder_name+'/landInfo.json', 'w') as fp:
+            json.dump({}, fp)
 
     with open('../company_data/'+folder_name+'/meta.json', 'w') as fp:
         json.dump(meta, fp)
@@ -360,7 +373,7 @@ def output_poly2(pipe, company):
         df_c['length_gpd'] = [int(x) for x in df_c['length_gpd']]
         df_c.to_json("../company_data/"+folder_name+"/poly2.json", orient='records')
     else:
-        df_c = {"company": company}
+        df_c = []
         with open("../company_data/"+folder_name+"/poly2.json", 'w') as f:
             json.dump(df_c, f)
     return pipe

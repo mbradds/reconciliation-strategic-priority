@@ -30,6 +30,7 @@ export function profile(
   meta,
   line = false
 ) {
+  const build = meta.totalLength > 0;
   const addStyle = (val) =>
     `<span class="bg-primary"><strong>&nbsp;${val}&nbsp;</strong></span>`;
   function addTraditionalTerritory() {
@@ -45,9 +46,11 @@ export function profile(
     };
     terrTables += listColumn(terr.slice(0, Math.ceil(terrTotal / 2)));
     terrTables += listColumn(terr.slice(Math.ceil(terr.length / 2)));
-    document.getElementById(
-      "territory-intro"
-    ).innerHTML = `<p>In addition to the First Nations Reserves above, This pipeline system passes through an estimated ${addStyle(
+    document.getElementById("territory-intro").innerHTML = `<p>${
+      build
+        ? "In addition to the First Nations Reserves above, "
+        : "This pipeline system does not directly pass through any First Nations Reserves. "
+    }In addition to the First Nations Reserves above, This pipeline system passes through an estimated ${addStyle(
       terrTotal
     )} Indigenous Traditional Territories, which are listed in alphabetical order below. This list may not be comprehensive, and will continue to be updated as new data and feedback is recieved.</p>`;
     document.getElementById(
@@ -116,41 +119,49 @@ export function profile(
   }
 
   function loadMap() {
-    const map = leafletBaseMap({
-      div: "map",
-      zoomDelta: 0.25,
-      initZoomLevel: 4,
-      initZoomTo: [55, -119],
-    });
+    const dashboardClass = document.getElementById("reserve-dashboard");
+    if (build) {
+      dynamicText(meta);
+      dashboardClass.classList.add("mrgn-tp-md");
+      dashboardClass.classList.add("mrgn-bttm-sm");
+      const map = leafletBaseMap({
+        div: "map",
+        zoomDelta: 0.25,
+        initZoomLevel: 4,
+        initZoomTo: [55, -119],
+      });
 
-    const geoLayer = L.geoJSON(landFeature, {
-      style: featureStyles.reserveOverlap,
-      landInfo,
-      incidentFeature,
-      pipelineProfile: true,
-      onEachFeature,
-    })
-      .bindTooltip((layer) =>
-        reserveTooltip(layer.feature.properties, landInfo)
-      )
-      .addTo(map);
+      const geoLayer = L.geoJSON(landFeature, {
+        style: featureStyles.reserveOverlap,
+        landInfo,
+        incidentFeature,
+        pipelineProfile: true,
+        onEachFeature,
+      })
+        .bindTooltip((layer) =>
+          reserveTooltip(layer.feature.properties, landInfo)
+        )
+        .addTo(map);
 
-    if (line) {
-      L.geoJSON(line, {
-        style: {
-          fillColor: cerPalette.Aubergine,
-          color: cerPalette.Aubergine,
-          className: "no-hover",
-          fillOpacity: 1,
-        },
-      }).addTo(map);
+      if (line) {
+        L.geoJSON(line, {
+          style: {
+            fillColor: cerPalette.Aubergine,
+            color: cerPalette.Aubergine,
+            className: "no-hover",
+            fillOpacity: 1,
+          },
+        }).addTo(map);
+      }
+
+      const territoryLayer = false;
+      mapLegend(map, territoryLayer);
+      resetZoom(map, geoLayer, territoryLayer);
+      resetListener(map, geoLayer, territoryLayer, true);
+      return map;
     }
-
-    const territoryLayer = false;
-    mapLegend(map, territoryLayer);
-    resetZoom(map, geoLayer, territoryLayer);
-    resetListener(map, geoLayer, territoryLayer, true);
-    return map;
+    dashboardClass.style.display = "none";
+    return undefined;
   }
 
   function loadNonMap() {
@@ -158,7 +169,6 @@ export function profile(
     clickExtraInfo();
     addpoly2Length(poly2Length, meta.company);
     showIamc();
-    dynamicText(meta);
     setUpHeight(true);
     addTraditionalTerritory();
   }
@@ -167,8 +177,7 @@ export function profile(
     async function buildPage() {
       const mapHeight = setLeafletHeight(0.7);
       loadNonMap();
-      const map = await loadMap(mapHeight);
-      return map;
+      return loadMap(mapHeight);
     }
 
     buildPage().then(() => {
