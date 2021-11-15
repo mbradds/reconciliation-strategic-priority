@@ -9,7 +9,15 @@ set_cwd_to_script()
 
 
 def processTerritoryInfo():
-    df = pd.read_excel(os.path.join(os.getcwd(),
+    bc = pd.read_excel(os.path.join(os.getcwd(),
+                                    "raw_data",
+                                    "traditional_territory",
+                                    "Alberta TMX Indigenous Community Listing October 27 2021.xlsx"),
+                       sheet_name="TMX_Indigenous Com",
+                       skiprows=1,
+                       engine="openpyxl")
+
+    ab = pd.read_excel(os.path.join(os.getcwd(),
                                     "raw_data",
                                     "traditional_territory",
                                     "TMX_IAMC_Indigenous_Community_Profiles.xlsx"),
@@ -33,6 +41,13 @@ def processTerritoryInfo():
                             skiprows=0,
                             engine="openpyxl")
 
+    bc.columns = [x.strip() for x in bc.columns]
+    ab.columns = [x.strip() for x in ab.columns]
+    for col in bc.columns:
+        if col not in ab:
+            ab[col] = ""
+
+    df = pd.concat([bc, ab], ignore_index=True)
     spreads = spreads.where(spreads.notnull(), None)
     with open('../company_data/TransMountainPipelineULC/spreads.json', 'w') as fp:
         json.dump(spreads.to_dict(orient="records"), fp)
