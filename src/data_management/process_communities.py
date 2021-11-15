@@ -39,7 +39,26 @@ def processTerritoryInfo():
 
     df = df[~df['Lat'].isnull()].reset_index(drop=True)
     df = df[df["Show"] != "No"].reset_index(drop=True)
-    df["mapFile"] = [str(x).strip() for x in df["mapFile"]]
+    for textCol in ["mapFile",
+                    "Community",
+                    "Leadership",
+                    "Contact person",
+                    "Address",
+                    "Contact Information",
+                    "Protocol",
+                    "Project Spreads",
+                    "History",
+                    "Community Website"]:
+
+        newText = []
+        for t in df[textCol]:
+            if isinstance(t, str):
+                newText.append(t.strip())
+            else:
+                newText.append(t)
+
+        df[textCol] = newText
+
     df["mapFile"] = df["mapFile"].replace({"nan": None})
     df = pd.merge(df, sources, how="left", left_on="Community", right_on="Community")
     df = df.where(df.notnull(), None)
@@ -83,9 +102,10 @@ def processTerritoryInfo():
     land = {}
 
     def addInfo(row):
-        return {"community": row["Community"],
+        return {"community": row["Community"].strip(),
                 "leadership": row["Leadership"],
                 "contactPerson": row["Contact person"],
+                "address": row["Address"],
                 "contactInfo": row["Contact Information"],
                 "protocol": row["Protocol"],
                 "about": row["History"],
@@ -98,11 +118,16 @@ def processTerritoryInfo():
                 "spreadNumber": row["spreadNumber"]}
 
     for i, row in df.iterrows():
-        if row["mapFile"] in land and land[row["mapFile"]]["loc"][0] == row["Lat"] and land[row["mapFile"]]["loc"][1] == row["Long"]:
-            land[row["mapFile"]]["info"].append(addInfo(row))
+        if not row["mapFile"]:
+            landKey = row["Community"]
         else:
-            land[row["mapFile"]] = {"loc": [row["Lat"], row["Long"]],
-                                    "info": [addInfo(row)]}
+            landKey = row["mapFile"]
+
+        if landKey in land and land[landKey]["loc"][0] == row["Lat"] and land[landKey]["loc"][1] == row["Long"]:
+            land[landKey]["info"].append(addInfo(row))
+        else:
+            land[landKey] = {"loc": [row["Lat"], row["Long"]],
+                             "info": [addInfo(row)]}
 
     with open('../company_data/community_profiles/community_info.json', 'w') as fp:
         json.dump(land, fp)

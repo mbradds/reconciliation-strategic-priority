@@ -30,6 +30,7 @@ function popUpTable(landInfo, hasImage) {
       ["Leadership", land.leadership],
       ["Contact Person", land.contactPerson],
       ["Contact Information", land.contactInfo],
+      ["Address", land.address],
       ["Protocol", land.protocol],
       ["Project Spreads", land.spread],
       ["About Us", land.about],
