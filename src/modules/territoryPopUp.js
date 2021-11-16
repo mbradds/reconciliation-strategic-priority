@@ -21,8 +21,7 @@ function popUpTable(landInfo, hasImage) {
   }
 
   landInfo.forEach((land) => {
-    let table = `<table class="table"><tbody>`;
-    table += `<h2 class="center-header">${land.community}</h2>`;
+    let table = `<table class="table"><tbody><h2 class="center-header">${land.community}</h2>`;
     if (land.pronounce) {
       table += `<h3 class="center-header"><i>Pronounced: ${land.pronounce}</i></h3>`;
     }
@@ -35,11 +34,11 @@ function popUpTable(landInfo, hasImage) {
       ["Project Spreads", land.spread],
       ["About Us", land.about],
     ].forEach((row) => {
-      const rowText = row[1] ? row[1] : "Not available";
-      table += `<tr><td>${row[0]}</td><td><strong>${rowText}</strong></td></tr>`;
+      table += `<tr><td>${row[0]}</td><td><strong>${
+        row[1] ? row[1] : "Not available"
+      }</strong></td></tr>`;
     });
-    table += `<tr><td colspan="2"><a href="${land.web}" target="_blank">Community Website</a></td></tr>`;
-    table += `</tbody></table>`;
+    table += `<tr><td colspan="2"><a href="${land.web}" target="_blank">Community Website</a></td></tr></tbody></table>`;
     tableHtml += table;
   });
   return tableHtml;

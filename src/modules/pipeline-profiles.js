@@ -50,7 +50,7 @@ export function profile(
       build
         ? "In addition to the First Nations Reserves above, "
         : "This pipeline system does not directly pass through any First Nations Reserves. "
-    }In addition to the First Nations Reserves above, This pipeline system passes through an estimated ${addStyle(
+    }This pipeline system passes through an estimated ${addStyle(
       terrTotal
     )} Indigenous Traditional Territories, which are listed in alphabetical order below. This list may not be comprehensive, and will continue to be updated as new data and feedback is recieved.</p>`;
     document.getElementById(
@@ -123,7 +123,7 @@ export function profile(
     if (build) {
       dynamicText(meta);
       dashboardClass.classList.add("mrgn-tp-md");
-      dashboardClass.classList.add("mrgn-bttm-sm");
+      dashboardClass.classList.add("mrgn-bttm-lg");
       const map = leafletBaseMap({
         div: "map",
         zoomDelta: 0.25,

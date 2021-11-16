@@ -20,6 +20,15 @@ const webpackOutputs = (function () {
     ["trans_northern", false],
     ["westcoast", true],
     ["montreal", false],
+    ["aurora", false],
+    ["emera", false],
+    ["foothills", false],
+    ["many_islands", false],
+    ["mnp", false],
+    ["cochin", false],
+    ["plains", false],
+    ["southern_lights", false],
+    ["tqm", false],
   ];
 
   function entryJs() {
