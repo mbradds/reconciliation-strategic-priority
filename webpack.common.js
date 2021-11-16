@@ -29,6 +29,10 @@ const webpackOutputs = (function () {
     ["plains", false],
     ["southern_lights", false],
     ["tqm", false],
+    ["genesis", false],
+    ["vector", false],
+    ["westspur", false],
+    ["enbridge_bakken", false],
   ];
 
   function entryJs() {

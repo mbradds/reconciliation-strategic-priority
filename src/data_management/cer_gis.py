@@ -30,7 +30,11 @@ companies = {
     "MONTREAL PIPE LINE LIMITED (M253)": "Montreal Pipe Line Limited",
     "MANY ISLANDS PIPE LINES (CANADA) LIMITED (M182)": "Many Islands Pipe Lines (Canada) Limited",
     "PLAINS MIDSTREAM CANADA ULC (P384)": "Plains Midstream Canada ULC",
-    "ENBRIDGE SOUTHERN LIGHTS GP INC. ON BEHALF OF ENBRIDGE SOUTHERN LIGHTS LP (E242)": "Southern Lights Pipeline"
+    "ENBRIDGE SOUTHERN LIGHTS GP INC. ON BEHALF OF ENBRIDGE SOUTHERN LIGHTS LP (E242)": "Southern Lights Pipeline",
+    "ENBRIDGE BAKKEN PIPELINE COMPANY INC., ON BEHALF OF ENBRIDGE BAKKEN PIPELINE LIMITED PARTNE...(E256)": "Enbridge Bakken System",
+    "VECTOR PIPELINE LIMITED PARTNERSHIP (V016)": "Vector Pipeline Limited Partnership",
+    "GENESIS PIPELINE CANADA LTD. (G062)": "Genesis Pipeline Canada Ltd.",
+    "TEML WESTSPUR PIPELINES LIMITED (T309)": "Kingston Midstream Westspur Limited"
     }
 
 
@@ -159,7 +163,7 @@ def import_geodata(path, d_type, crs_target):
                        'UPDATED',
                        'UPI',
                        'LENGTH_CAL']
-        
+
         # print(sorted(list(set(data["OPERATOR"]))))
         # data = data[data['NEBGROUP'] == "Group 1"].copy().reset_index(drop=True)
         # company_names = sorted(list(set(data['OPERATOR'])))
@@ -348,7 +352,7 @@ def output_poly1(pipe, overlap, company):
         overlap = {'company': company, "overlaps": 0}
         with open('../company_data/'+folder_name+'/poly1.json', 'w') as f:
             json.dump(overlap, f)
-        
+
         with open('../company_data/'+folder_name+'/landInfo.json', 'w') as fp:
             json.dump({}, fp)
 
