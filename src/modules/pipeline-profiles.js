@@ -11,7 +11,7 @@ import {
   onEachFeature,
   mapLegend,
   resetZoom,
-  reserveTooltip,
+  reserveTooltipSimple,
   resetListener,
   plural,
   featureStyles,
@@ -139,7 +139,7 @@ export function profile(
         onEachFeature,
       })
         .bindTooltip((layer) =>
-          reserveTooltip(layer.feature.properties, landInfo)
+          reserveTooltipSimple(layer.feature.properties, landInfo)
         )
         .addTo(map);
 

@@ -462,6 +462,12 @@ export function reserveTooltip(layer, landInfo) {
   return table;
 }
 
+export function reserveTooltipSimple(layer, landInfo) {
+  return `<span class="h3">${layer.NAME1} - ${
+    landInfo[layer.NAME1].meta.bandName
+  }</span><br><i class="center-footer">Click to view details</i>`;
+}
+
 export function metisTooltip(layer) {
   let table = `<table class="map-tooltip">`;
   table += `<caption><b>${layer.feature.properties.METIS_NAME}</b></caption>`;
