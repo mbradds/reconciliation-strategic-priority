@@ -8,6 +8,36 @@ from util import set_cwd_to_script
 set_cwd_to_script()
 
 
+def next_election(df, col="Leadership"):
+    elections = []
+    input_elections = [str(x).lower() for x in list(df[col])]
+    input_elections = [x.replace(":", "") for x in input_elections]
+    for lead in input_elections:
+        if "next election" in lead:
+            lead = lead.split("next election")
+            lead = [str(x).strip() for x in lead]
+            this_election = lead[-1]
+            if "." in this_election:
+                this_election = this_election.split(".")[0]
+            if this_election[0] == ",":
+                this_election = this_election[1:]
+            # print(this_election)
+            this_election = this_election.strip().capitalize()
+            elections.append(this_election)
+        else:
+            elections.append(None)
+    df["nextElection"] = elections
+    df["nextElection"] = pd.to_datetime(df["nextElection"], errors="coerce")
+    elections_list = []
+    for date in df["nextElection"]:
+        if date.year > 0:
+            elections_list.append([date.month, date.day, date.year])
+        else:
+            elections_list.append([])
+    df['nextElection'] = elections_list
+    return df
+
+
 def processTerritoryInfo():
     bc = pd.read_excel(os.path.join(os.getcwd(),
                                     "raw_data",
@@ -77,7 +107,7 @@ def processTerritoryInfo():
     df["mapFile"] = df["mapFile"].replace({"nan": None})
     df = pd.merge(df, sources, how="left", left_on="Community", right_on="Community")
     df = df.where(df.notnull(), None)
-    # df = df.fillna("")
+    df = next_election(df)
 
     for col in df:
         if "Unnamed" in col:
@@ -130,6 +160,7 @@ def processTerritoryInfo():
                 "srcTxt": row["Source"],
                 "srcLnk": row["Link"],
                 "pronounce": row["Pronounciation"],
+                # "election": row["nextElection"],
                 "spreadNumber": row["spreadNumber"]}
 
     for i, row in df.iterrows():

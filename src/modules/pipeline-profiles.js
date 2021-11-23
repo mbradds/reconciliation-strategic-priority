@@ -18,8 +18,7 @@ import {
   clickExtraInfo,
 } from "./util.js";
 import "leaflet/dist/leaflet.css";
-import "../main.css";
-import "../cer.css";
+import "../css/main.css";
 
 export function profile(
   landFeature,

@@ -35,4 +35,3 @@ if __name__ == "__main__":
     getMap("https://data.aadnc-aandc.gc.ca/geomatics/directories/output/DonneesOuvertes_OpenData/Traite_Pre_1975_Treaty/Traite_Pre_1975_Treaty_SHP.zip", "Traite_Pre_1975_Treaty_SHP")
     getMap("https://data.aadnc-aandc.gc.ca/geomatics/directories/output/DonneesOuvertes_OpenData/Premiere_Nation_First_Nation/Premiere_Nation_First_Nation_CSV.zip", "Premiere_Nation_First_Nation_CSV")
     getMap("https://data.aadnc-aandc.gc.ca/geomatics/directories/output/DonneesOuvertes_OpenData/Premiere_Nation_First_Nation/Relation_Premiere_Nation_reserve_Relation_First_Nation_Reserve_CSV.zip", "Relation_Premiere_Nation_reserve_Relation_First_Nation_Reserve_CSV")
-    getCsv("https://www.cer-rec.gc.ca/open/incident/pipeline-incidents-data.csv", "incident-data.csv")

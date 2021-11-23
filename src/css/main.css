@@ -1,3 +1,10 @@
+@import url("cer.css");
+
+.not-used {
+  height: auto;
+  color: #3498db;
+}
+
 html,
 body,
 .container-fluid {

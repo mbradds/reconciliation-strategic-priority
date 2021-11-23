@@ -21,7 +21,7 @@ import { spread } from "./spreads.js";
 import territoryPolygons from "../company_data/community_profiles/indigenousTerritoriesCa.json";
 
 import "leaflet/dist/leaflet.css";
-import "../main.css";
+import "../css/main.css";
 
 export function landDashboard(
   landFeature,
