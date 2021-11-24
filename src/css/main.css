@@ -45,12 +45,21 @@ body,
 }
 
 #map-panel-body {
-  height: 94%;
+  height: 88%;
   padding: 0px !important;
 }
 
 #map-panel-heading {
   height: 6%;
+}
+
+#map-panel-footing {
+  height: 6%;
+  position: relative;
+}
+
+#election-range {
+  width: 80%;
 }
 
 .center-vert {

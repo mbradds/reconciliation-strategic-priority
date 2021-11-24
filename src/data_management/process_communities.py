@@ -160,7 +160,7 @@ def processTerritoryInfo():
                 "srcTxt": row["Source"],
                 "srcLnk": row["Link"],
                 "pronounce": row["Pronounciation"],
-                # "election": row["nextElection"],
+                "election": row["nextElection"],
                 "spreadNumber": row["spreadNumber"]}
 
     for i, row in df.iterrows():
