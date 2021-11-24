@@ -191,16 +191,16 @@ export function landDashboard(
     map.warningMsg = info;
   }
 
-  function electionRangeListener() {
-    const displayDays = (days) => `Days to Election: (${days})`;
+  function electionRangeListener(territoryLayer) {
+    const displayDays = (days) => `Days to election: (${days})`;
     const display = document.getElementById("election-days-display");
     display.innerText = displayDays("All");
     const slider = document.getElementById("election-range-slider");
     slider.addEventListener("change", () => {
       const currentValue = slider.value;
-      display.innerText = displayDays(
-        currentValue > 365 ? "All" : currentValue
-      );
+      const displayValue = currentValue > 365 ? "All" : currentValue;
+      display.innerText = displayDays(displayValue);
+      territoryLayer.filterElections(displayValue);
     });
   }
 
@@ -237,7 +237,7 @@ export function landDashboard(
       //   layerControl.multi["Metis Settlements"] = metisLayer;
       // }
       spread(map, territoryLayer);
-      electionRangeListener();
+      electionRangeListener(territoryLayer);
     }
 
     const geoLayer = L.geoJSON(landFeature, {
