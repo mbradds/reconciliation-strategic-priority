@@ -62,20 +62,21 @@
               </div>
             </div>
             <footer class="panel-footer" id="map-panel-footing">
-              <h5 class="panel-title header-text center-vert">
+              <h5 class="panel-title header-text" id="election-header">
                 Election Filter
               </h5>
               <input
-                class="pull-right center-vert header-btn"
+                class="header-btn"
                 name="html5shim-1"
-                id="election-range"
+                id="election-range-slider"
                 type="range"
                 min="0"
-                max="100"
+                max="366"
                 step="1"
                 title="Range: 0 to 100 in steps of 1"
-                value="50"
+                value="366"
               />
+              <span id="election-days-display"></span>
             </footer>
           </section>
         </div>
