@@ -26,6 +26,20 @@ export const featureStyles = {
     opacity: 0.1,
     fillOpacity: 1,
   },
+  territoryElection: {
+    color: cerPalette["Night Sky"],
+    fillColor: cerPalette.Forest,
+    weight: 50,
+    opacity: 0.1,
+    fillOpacity: 1,
+  },
+  territoryNoElection: {
+    color: cerPalette["Night Sky"],
+    fillColor: cerPalette["Dim Grey"],
+    weight: 5,
+    opacity: 0.1,
+    fillOpacity: 0.1,
+  },
   community: {
     fillColor: cerPalette["Night Sky"],
     color: cerPalette.Ocean,
@@ -521,6 +535,7 @@ export function resetListener(
       map.youAreOn.removeHtml();
       if (territoryLayer) {
         territoryLayer.resetSpreads();
+        territoryLayer.resetStyle();
       }
     }
   });

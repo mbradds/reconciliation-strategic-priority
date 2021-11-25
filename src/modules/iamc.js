@@ -224,6 +224,8 @@ export function landDashboard(
       //   layerControl.multi["Metis Settlements"] = metisLayer;
       // }
       spread(map, territoryLayer);
+      // electionRangeListener(territoryLayer);
+      territoryLayer.electionRangeListener();
     }
 
     const geoLayer = L.geoJSON(landFeature, {

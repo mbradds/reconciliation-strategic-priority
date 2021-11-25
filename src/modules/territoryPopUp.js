@@ -65,7 +65,9 @@ export function addTraditionalTerritory(map, popHeight, popWidth) {
       const land = communityInfo[landName];
       const params = featureStyles.territory;
       params.spreadNums = land.info.map((l) => l.spreadNumber);
+      // params.electionDate = land.info.map((l) => l.election);
       const landMarker = L.circleMarker([land.loc[0], land.loc[1]], params);
+      landMarker.electionDate = land.info.map((l) => l.election);
       landMarker.bindTooltip(circleTooltip(land.info));
       const hasImage = !!land.info[0].map;
       const imgHtml = hasImage
@@ -85,6 +87,73 @@ export function addTraditionalTerritory(map, popHeight, popWidth) {
     });
 
     const territoryCircleLayer = L.featureGroup(landCircles);
+
+    const setDisplayDays = (days) => {
+      const display = document.getElementById("election-days-display");
+      const displayDays =
+        days === "All"
+          ? days
+          : `<strong style="color:${featureStyles.territoryElection.fillColor}";>${days} or less</strong>`;
+      display.innerHTML = `<span>Days to election: (${displayDays})</span>`;
+    };
+
+    territoryCircleLayer.resetStyle = function () {
+      Object.values(this._layers).forEach((circle) => {
+        circle.setStyle({
+          ...featureStyles.territory,
+        });
+      });
+      document.getElementById("election-range-slider").value = "366";
+      setDisplayDays("All");
+    };
+
+    territoryCircleLayer.electionRangeListener = function () {
+      setDisplayDays("All");
+      const slider = document.getElementById("election-range-slider");
+      slider.addEventListener("change", () => {
+        const currentValue = slider.value;
+        const displayValue = currentValue > 365 ? "All" : currentValue;
+        setDisplayDays(displayValue);
+        this.filterElections(displayValue);
+      });
+    };
+
+    territoryCircleLayer.filterElections = function (dayRange) {
+      const currentDate = Date.now();
+      if (dayRange !== "All") {
+        Object.values(this._layers).forEach((circle) => {
+          let insideRange = false;
+          circle.electionDate.forEach((date) => {
+            if (date.length === 3) {
+              const thisElection = new Date(date[2], date[0] - 1, date[1]);
+              const daysUntilElection =
+                (thisElection.getTime() - currentDate) / (1000 * 3600 * 24);
+              if (
+                daysUntilElection <= parseInt(dayRange, 10) &&
+                daysUntilElection > 0
+              ) {
+                insideRange = true;
+              }
+            } else {
+              circle.setStyle({
+                ...featureStyles.territoryNoElection,
+              });
+            }
+          });
+          if (insideRange) {
+            circle.setStyle({
+              ...featureStyles.territoryElection,
+            });
+          } else {
+            circle.setStyle({
+              ...featureStyles.territoryNoElection,
+            });
+          }
+        });
+      } else {
+        this.resetStyle();
+      }
+    };
 
     territoryCircleLayer.resetSpreads = function () {
       map.warningMsg.removeWarning();
