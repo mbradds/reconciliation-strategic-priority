@@ -26,6 +26,13 @@ export const featureStyles = {
     opacity: 0.1,
     fillOpacity: 1,
   },
+  territoryElection: {
+    color: cerPalette["Night Sky"],
+    fillColor: cerPalette.Forest,
+    weight: 50,
+    opacity: 0.1,
+    fillOpacity: 1,
+  },
   territoryNoElection: {
     color: cerPalette["Night Sky"],
     fillColor: cerPalette["Dim Grey"],
