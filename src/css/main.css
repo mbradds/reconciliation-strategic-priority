@@ -1,9 +1,5 @@
 @import url("cer.css");
-
-.not-used {
-  height: auto;
-  color: #3498db;
-}
+@import url("responsive.css");
 
 html,
 body,
@@ -47,20 +43,26 @@ body,
 #map-panel-body {
   height: 88%;
   padding: 0px !important;
+  position: relative;
+}
+
+.header-footer-percent {
+  height: 6%;
 }
 
 #map-panel-heading {
-  height: 6%;
+  position: relative;
 }
 
 #map-panel-footing {
-  height: 6%;
   width: 100%;
-  /* position: relative; */
   display: flex;
   flex-wrap: wrap;
   flex-flow: row wrap;
   align-items: center;
+  padding-top: 0px;
+  padding-bottom: 0px;
+  position: relative;
 }
 
 #election-range-slider {
