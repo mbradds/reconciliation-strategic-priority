@@ -218,13 +218,8 @@ export function landDashboard(
     let territoryLayer = false;
     if (meta.company === "Trans Mountain Pipeline ULC") {
       territoryLayer = addTraditionalTerritory(map, popHeight, popWidth);
-      layerControl.multi["Traditional Territory"] = territoryLayer;
-      // metisLayer = addMetisSettlements(map);
-      // if (metisLayer) {
-      //   layerControl.multi["Metis Settlements"] = metisLayer;
-      // }
+      layerControl.multi.Communities = territoryLayer;
       spread(map, territoryLayer);
-      // electionRangeListener(territoryLayer);
       territoryLayer.electionRangeListener();
     }
 

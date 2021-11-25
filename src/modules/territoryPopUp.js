@@ -64,10 +64,9 @@ export function addTraditionalTerritory(map, popHeight, popWidth) {
     const landCircles = Object.keys(communityInfo).map((landName) => {
       const land = communityInfo[landName];
       const params = featureStyles.territory;
-      params.spreadNums = land.info.map((l) => l.spreadNumber);
-      // params.electionDate = land.info.map((l) => l.election);
       const landMarker = L.circleMarker([land.loc[0], land.loc[1]], params);
       landMarker.electionDate = land.info.map((l) => l.election);
+      landMarker.spreadNums = land.info.map((l) => l.spreadNumber);
       landMarker.bindTooltip(circleTooltip(land.info));
       const hasImage = !!land.info[0].map;
       const imgHtml = hasImage
@@ -97,28 +96,32 @@ export function addTraditionalTerritory(map, popHeight, popWidth) {
       display.innerHTML = `<span>Days to election: (${displayDays})</span>`;
     };
 
+    territoryCircleLayer.resetSlider = function () {
+      document.getElementById("election-range-slider").value = "366";
+      setDisplayDays("All");
+    };
+
     territoryCircleLayer.resetStyle = function () {
       Object.values(this._layers).forEach((circle) => {
         circle.setStyle({
           ...featureStyles.territory,
         });
       });
-      document.getElementById("election-range-slider").value = "366";
-      setDisplayDays("All");
+      this.resetSlider();
     };
 
     territoryCircleLayer.electionRangeListener = function () {
       setDisplayDays("All");
       const slider = document.getElementById("election-range-slider");
       slider.addEventListener("change", () => {
-        const currentValue = slider.value;
-        const displayValue = currentValue > 365 ? "All" : currentValue;
+        const displayValue = slider.value > 365 ? "All" : slider.value;
         setDisplayDays(displayValue);
         this.filterElections(displayValue);
       });
     };
 
     territoryCircleLayer.filterElections = function (dayRange) {
+      this._map.legend.removeItem();
       const currentDate = Date.now();
       if (dayRange !== "All") {
         Object.values(this._layers).forEach((circle) => {
@@ -159,22 +162,19 @@ export function addTraditionalTerritory(map, popHeight, popWidth) {
       map.warningMsg.removeWarning();
       Object.values(this._layers).forEach((circle) => {
         circle.setStyle({
-          fillColor: featureStyles.territory.fillColor,
-          color: featureStyles.territory.color,
-          opacity: featureStyles.territory.opacity,
+          ...featureStyles.territory,
         });
       });
     };
     territoryCircleLayer.findSpreads = function (highlight) {
+      this.resetSlider();
       map.legend.removeItem();
       map.warningMsg.removeWarning();
       const zoomToLayer = [];
       Object.values(this._layers).forEach((circle) => {
-        if (circle.options.spreadNums.includes(highlight)) {
+        if (circle.spreadNums.includes(highlight)) {
           circle.setStyle({
-            fillColor: featureStyles.community.fillColor,
-            color: featureStyles.community.color,
-            opacity: featureStyles.community.opacity,
+            ...featureStyles.community,
           });
           zoomToLayer.push(circle);
         }
