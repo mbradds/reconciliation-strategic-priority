@@ -1,6 +1,6 @@
 {
   "name": "reconciliation-strategic-priority",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "sideEffects": false,
   "type": "module",
   "engines": {
@@ -46,7 +46,7 @@
     "webpack": "^5.64.4",
     "webpack-bundle-analyzer": "^4.5.0",
     "webpack-cli": "^4.9.1",
-    "webpack-dev-server": "^4.5.0",
+    "webpack-dev-server": "^4.6.0",
     "webpack-merge": "^5.8.0"
   },
   "dependencies": {
