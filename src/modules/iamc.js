@@ -16,7 +16,7 @@ import {
   featureStyles,
   findUser,
 } from "./util.js";
-import { addTraditionalTerritory } from "./territoryPopUp.js";
+import { addCommunityLayer } from "./communityPopUp.js";
 import { spread } from "./spreads.js";
 import territoryPolygons from "../company_data/community_profiles/indigenousTerritoriesCa.json";
 
@@ -215,12 +215,12 @@ export function landDashboard(
       popWidth = user[1] - 85;
     }
 
-    let territoryLayer = false;
+    let communityLayer = false;
     if (meta.company === "Trans Mountain Pipeline ULC") {
-      territoryLayer = addTraditionalTerritory(map, popHeight, popWidth);
-      layerControl.multi.Communities = territoryLayer;
-      spread(map, territoryLayer);
-      territoryLayer.electionRangeListener();
+      communityLayer = addCommunityLayer(map, popHeight, popWidth);
+      layerControl.multi.Communities = communityLayer;
+      spread(map, communityLayer);
+      communityLayer.electionRangeListener();
     }
 
     const geoLayer = L.geoJSON(landFeature, {
@@ -237,9 +237,9 @@ export function landDashboard(
     layerControl.multi["First Nations Reserves"] = geoLayer;
 
     onLand(map, false);
-    mapLegend(map, territoryLayer);
-    resetZoom(map, geoLayer, territoryLayer);
-    resetListener(map, geoLayer, territoryLayer);
+    mapLegend(map, communityLayer);
+    resetZoom(map, geoLayer, communityLayer);
+    resetListener(map, geoLayer, communityLayer);
     L.control
       .layers(layerControl.single, layerControl.multi, { position: "topleft" })
       .addTo(map);

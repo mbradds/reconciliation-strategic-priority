@@ -25,6 +25,9 @@ function popUpTable(landInfo, hasImage) {
     if (land.pronounce) {
       table += `<h3 class="center-header"><i>Pronounced: ${land.pronounce}</i></h3>`;
     }
+    if (land.web) {
+      table += `<a class="center-header" href="${land.web}" target="_blank">Community Website</a>`;
+    }
     [
       ["Leadership", land.leadership],
       ["Contact Person", land.contactPerson],
@@ -38,13 +41,13 @@ function popUpTable(landInfo, hasImage) {
         row[1] ? row[1] : "Not available"
       }</strong></td></tr>`;
     });
-    table += `<tr><td colspan="2"><a href="${land.web}" target="_blank">Community Website</a></td></tr></tbody></table>`;
+    table += `</tbody></table>`;
     tableHtml += table;
   });
   return tableHtml;
 }
 
-export function addTraditionalTerritory(map, popHeight, popWidth) {
+export function addCommunityLayer(map, popHeight, popWidth) {
   function circleTooltip(landInfo) {
     const communityNames = landInfo
       .map((land) =>
@@ -85,7 +88,7 @@ export function addTraditionalTerritory(map, popHeight, popWidth) {
       return landMarker;
     });
 
-    const territoryCircleLayer = L.featureGroup(landCircles);
+    const communityCircleLayer = L.featureGroup(landCircles);
 
     const setDisplayDays = (days) => {
       const display = document.getElementById("election-days-display");
@@ -96,12 +99,12 @@ export function addTraditionalTerritory(map, popHeight, popWidth) {
       display.innerHTML = `<span>Days to election: (${displayDays})</span>`;
     };
 
-    territoryCircleLayer.resetSlider = function () {
+    communityCircleLayer.resetSlider = function () {
       document.getElementById("election-range-slider").value = "366";
       setDisplayDays("All");
     };
 
-    territoryCircleLayer.resetStyle = function () {
+    communityCircleLayer.resetStyle = function () {
       Object.values(this._layers).forEach((circle) => {
         circle.setStyle({
           ...featureStyles.territory,
@@ -110,7 +113,7 @@ export function addTraditionalTerritory(map, popHeight, popWidth) {
       this.resetSlider();
     };
 
-    territoryCircleLayer.electionRangeListener = function () {
+    communityCircleLayer.electionRangeListener = function () {
       setDisplayDays("All");
       const slider = document.getElementById("election-range-slider");
       slider.addEventListener("change", () => {
@@ -120,7 +123,7 @@ export function addTraditionalTerritory(map, popHeight, popWidth) {
       });
     };
 
-    territoryCircleLayer.filterElections = function (dayRange) {
+    communityCircleLayer.filterElections = function (dayRange) {
       this._map.legend.removeItem();
       const currentDate = Date.now();
       if (dayRange !== "All") {
@@ -158,7 +161,7 @@ export function addTraditionalTerritory(map, popHeight, popWidth) {
       }
     };
 
-    territoryCircleLayer.resetSpreads = function () {
+    communityCircleLayer.resetSpreads = function () {
       map.warningMsg.removeWarning();
       Object.values(this._layers).forEach((circle) => {
         circle.setStyle({
@@ -166,7 +169,7 @@ export function addTraditionalTerritory(map, popHeight, popWidth) {
         });
       });
     };
-    territoryCircleLayer.findSpreads = function (highlight) {
+    communityCircleLayer.findSpreads = function (highlight) {
       this.resetSlider();
       map.legend.removeItem();
       map.warningMsg.removeWarning();
@@ -189,12 +192,15 @@ export function addTraditionalTerritory(map, popHeight, popWidth) {
       }
     };
 
-    territoryCircleLayer.addTo(map);
-    return territoryCircleLayer;
+    communityCircleLayer.addTo(map);
+    return communityCircleLayer;
   }
   return addCircles();
 }
 
+/**
+ * deprecated
+ */
 export function addDigitalTerritory(
   territory,
   digitalMatch,

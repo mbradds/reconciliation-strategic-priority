@@ -179,9 +179,7 @@ export function setUpHeight(pipelineProfile = false) {
 }
 
 export function addpoly2Length(treaties, company) {
-  let treatyHtml = '<table class="table">';
-  treatyHtml += `<thead><tr><th scope="col" class="col-sm-6">Treaty Name</th><th scope="col" class="col-sm-6">Operating Km</th></tr></thead>`;
-  treatyHtml += `<tbody>`;
+  let treatyHtml = `<table class="table"><thead><tr><th scope="col" class="col-sm-6">Treaty Name</th><th scope="col" class="col-sm-6">Operating Km</th></tr></thead><tbody>`;
   treaties.forEach((land) => {
     treatyHtml += `<tr><td>${land.ENAME}:</td><td> ${(
       land.length_gpd / 1000
@@ -222,8 +220,7 @@ function eventTooltip(event) {
     return str;
   };
 
-  let toolText = `<table class="map-tooltip">`;
-  toolText += `<caption><b>${event.id}</b></caption>`;
+  let toolText = `<table class="map-tooltip"><caption><b>${event.id}</b></caption>`;
   toolText += `<tr><td>Status:&nbsp</td><td><b>${event.status}</td></tr>`;
   toolText += `<tr><td>Incident Type:&nbsp</td><td><b>${event.type}</td></tr>`;
   toolText += `<tr><td>Substance:&nbsp</td><td><b>${event.sub}</td></tr>`;
@@ -420,7 +417,7 @@ export function onEachFeature(feature, layer) {
   });
 }
 
-export function mapLegend(map, territoryLayer, metisLayer) {
+export function mapLegend(map, communityLayer, metisLayer) {
   let legend = `<h4><span class="region-click-text" 
   style="height: 10px; background-color: ${featureStyles.reserveOverlap.fillColor}">
   &nbsp;&nbsp;&nbsp;</span>&nbsp;&nbsp;First Nations Reserve</h4>`;
@@ -431,7 +428,7 @@ export function mapLegend(map, territoryLayer, metisLayer) {
     &nbsp;&nbsp;&nbsp;</span>&nbsp;&nbsp;Métis Settlement</h4>`;
   }
 
-  if (territoryLayer) {
+  if (communityLayer) {
     legend += `<h4 style='color:${featureStyles.tmx.fillColor};'>&#9473;&#9473; TMX</h4>`;
     legend += `<h4 style='color:${featureStyles.territory.fillColor};'>&#11044; Community</h4>`;
   }
@@ -496,11 +493,11 @@ export function clickExtraInfo() {
   ).innerHTML = `<div class="alert alert-info"><p>Click on a <span class="region-click-text" style="background-color: ${featureStyles.reserveOverlap.fillColor};">region</span> to view extra info</p></div>`;
 }
 
-export function resetZoom(map, geoLayer, territoryLayer, fly = false) {
+export function resetZoom(map, geoLayer, communityLayer, fly = false) {
   let padd = [25, 25];
   let fullBounds = geoLayer.getBounds();
-  if (territoryLayer) {
-    fullBounds = fullBounds.extend(territoryLayer.getBounds());
+  if (communityLayer) {
+    fullBounds = fullBounds.extend(communityLayer.getBounds());
   }
 
   if (Object.keys(geoLayer._layers).length === 1) {
@@ -522,20 +519,20 @@ export function resetZoom(map, geoLayer, territoryLayer, fly = false) {
 export function resetListener(
   map,
   geoLayer,
-  territoryLayer,
+  communityLayer,
   pipelineProfile = false
 ) {
   document.getElementById("reset-map").addEventListener("click", () => {
-    resetZoom(map, geoLayer, territoryLayer, true);
+    resetZoom(map, geoLayer, communityLayer, true);
     removeIncidents(map);
     map.closePopup();
     if (pipelineProfile) {
       clickExtraInfo();
     } else {
       map.youAreOn.removeHtml();
-      if (territoryLayer) {
-        territoryLayer.resetSpreads();
-        territoryLayer.resetStyle();
+      if (communityLayer) {
+        communityLayer.resetSpreads();
+        communityLayer.resetStyle();
       }
     }
   });

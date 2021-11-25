@@ -108,6 +108,10 @@ def processTerritoryInfo():
     df = pd.merge(df, sources, how="left", left_on="Community", right_on="Community")
     df = df.where(df.notnull(), None)
     df = next_election(df)
+    
+    no_website = ["No Community Website", "No official Community site", "Not Available"]
+    for no_site in no_website:
+        df["Community Website"] = df["Community Website"].replace({no_site: None})
 
     for col in df:
         if "Unnamed" in col:

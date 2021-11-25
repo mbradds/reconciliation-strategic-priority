@@ -13,7 +13,7 @@ function getSpreadNumber(kpNumber) {
   return foundSpreads;
 }
 
-export function spread(map, territoryLayer) {
+export function spread(map, communityLayer) {
   const kpCircles = spreads.map((s) => {
     const params = featureStyles.spread;
     params.name = s.n;
@@ -32,8 +32,8 @@ export function spread(map, territoryLayer) {
   const spreadLayer = L.featureGroup(kpCircles);
   spreadLayer.on("click", (e) => {
     const spreadNumber = getSpreadNumber(e.sourceTarget.options.name);
-    territoryLayer.resetSpreads();
-    territoryLayer.findSpreads(spreadNumber.num);
+    communityLayer.resetSpreads();
+    communityLayer.findSpreads(spreadNumber.num);
   });
   spreadLayer.addTo(map);
   return spreadLayer;
