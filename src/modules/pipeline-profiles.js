@@ -19,6 +19,7 @@ import {
 } from "./util.js";
 import "leaflet/dist/leaflet.css";
 import "../css/main.css";
+import "../css/pipeline-profiles.css";
 
 export function profile(
   landFeature,

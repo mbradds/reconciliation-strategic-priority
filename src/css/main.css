@@ -1,26 +1,11 @@
+/* shared css between iamc and pipeline-profiles */
+
 @import url("cer.css");
-@import url("responsive.css");
 
 html,
 body,
 .container-fluid {
   height: 100%;
-}
-
-#summary-row {
-  display: flex;
-  flex-flow: row wrap;
-}
-
-.summary-point {
-  display: flex;
-  flex-flow: column;
-}
-.summary-point .alert {
-  display: flex;
-  align-items: stretch;
-  flex-direction: column;
-  flex-grow: 1;
 }
 
 #map {
@@ -29,10 +14,6 @@ body,
   align-items: center;
   height: 100%;
   width: 100%;
-}
-
-.map-row {
-  height: 80%;
 }
 
 #map-panel {
@@ -46,67 +27,12 @@ body,
   position: relative;
 }
 
-.header-footer-percent {
-  height: 6%;
-}
-
-#map-panel-heading {
-  position: relative;
-}
-
-#map-panel-footing {
-  width: 100%;
-  display: flex;
-  flex-wrap: wrap;
-  flex-flow: row wrap;
-  align-items: center;
-  padding-top: 0px;
-  padding-bottom: 0px;
-  position: relative;
-}
-
-#election-range-slider {
-  flex: 1;
-  margin-left: 20px;
-  margin-right: 10px;
-}
-
 .center-vert {
   margin: 0;
   top: 50%;
   position: absolute;
   -ms-transform: translateY(-50%);
   transform: translateY(-50%);
-}
-
-.header-btn {
-  position: relative !important;
-}
-
-.header-text {
-  display: inline !important;
-}
-
-.map-tooltip tr {
-  border-bottom: 2px solid #dcdcdc;
-  overflow: visible;
-}
-.map-tooltip td {
-  padding-bottom: 1px;
-  padding-top: 1px;
-}
-
-.fn-panel {
-  overflow: auto;
-}
-
-.text-val {
-  font-weight: bold;
-  font-style: normal;
-}
-
-#click-fn-info {
-  margin-bottom: 15px;
 }
 
 .region-click-text {
@@ -135,37 +61,6 @@ body,
   margin-top: 5px;
 }
 
-.territory-popup {
-  overflow-y: hidden;
-  overflow-x: hidden;
-}
-
-.iamc-popup tr {
-  font-size: 14px;
-}
-
-.iamc-popup p {
-  font-size: 14px;
-  margin-bottom: 0px !important;
-}
-
-#reserve-popup {
-  overflow: auto;
-}
-
-#image-disclaimer.alert > :first-child:before {
-  position: relative !important;
-}
-#image-disclaimer {
-  margin-top: 15px;
-  margin-bottom: 30px;
-  margin-right: 10px;
-}
-#image-disclaimer p {
-  margin: 1px;
-  font-size: 14px;
-}
-
 .legend {
   padding: 6px 8px;
   font: 14px/16px Arial, Helvetica, sans-serif;
@@ -183,6 +78,15 @@ body,
 
 .no-hover {
   cursor: grab !important;
+}
+
+.map-tooltip tr {
+  border-bottom: 2px solid #dcdcdc;
+  overflow: visible;
+}
+.map-tooltip td {
+  padding-bottom: 1px;
+  padding-top: 1px;
 }
 
 .loader {
