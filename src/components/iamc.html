@@ -17,7 +17,7 @@
       <div class="row mrgn-bttm-sm">
         <div class="col-md-12">
           <h1>Community Profiles Prototype</h1>
-          <p class="small">Updated November 2021</p>
+          <p class="small">Updated January 2022</p>
         </div>
       </div>
       <div class="row" id="summary-row">
@@ -46,18 +46,14 @@
                 class="panel-title header-text center-vert"
                 id="leaflet-map-title"
               ></h5>
-              <div
+              <button
+                type="button"
                 id="full-screen-btn"
-                class="pull-right center-vert header-btn"
+                class="btn btn-primary btn-xs pull-right center-vert header-btn"
+                onclick="openFullscreen();"
               >
-                <button
-                  type="button"
-                  class="btn btn-primary btn-xs"
-                  onclick="openFullscreen();"
-                >
-                  Enter Fullscreen
-                </button>
-              </div>
+                Enter Fullscreen
+              </button>
             </header>
             <div class="panel-body" id="map-panel-body">
               <div id="map">
