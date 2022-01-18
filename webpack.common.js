@@ -71,6 +71,14 @@ const webpackOutputs = (function () {
       }
       html.push(...htmls);
     });
+    html.push(
+      new HtmlWebpackPlugin({
+        filename: `html/tutorial/tutorial.html`,
+        template: "src/components/tutorial.html",
+        inject: false,
+        minify: true,
+      })
+    );
     return html;
   }
 
@@ -100,6 +108,10 @@ export default {
         {
           from: path.resolve(__dirname, "src", "index.html"),
           to: path.resolve(__dirname, "dist", "index.html"),
+        },
+        {
+          from: path.resolve(__dirname, "src", "components", "images"),
+          to: path.resolve(__dirname, "dist", "html", "tutorial", "images"),
         },
         {
           from: path.resolve(
