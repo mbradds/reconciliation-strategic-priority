@@ -16,13 +16,22 @@
     <style>
       .instruction-header {
         font-size: x-large;
+        font-weight: bold;
       }
-      img {
+      .img-right {
         float: right;
       }
       .center {
         display: flex;
         align-items: center;
+      }
+      img {
+        border-radius: 0.2em;
+        box-shadow: 0 0 10px 5px #559b37;
+      }
+      body {
+        font-size: 20px;
+        line-height: 1.65em;
       }
     </style>
     <title>Community Profiles Tutorial</title>
@@ -45,7 +54,43 @@
               >Grant Moss (grant.moss@cer-rec.gc.ca)</a
             >.
           </p>
-          <details open="open" class="mrgn-bttm-md">
+          <section class="panel panel-default">
+            <header class="panel-heading">
+              <h5 class="panel-title">Table of contents</h5>
+            </header>
+            <div class="panel-body">
+              <ul>
+                <li>
+                  <a href="#general-instructions">General Instructions</a>
+                </li>
+                <li>
+                  <a href="#basic-map-navigation">Basic Map Navigation</a>
+                </li>
+                <li>
+                  <a href="#communities">Map Feature - Communities</a>
+                </li>
+                <li>
+                  <a href="#tmx"
+                    >Map Feature - TMX Centerline, Kilometer Posts, and
+                    Spreads</a
+                  >
+                </li>
+                <li>
+                  <a href="#reserves"
+                    >Map Feature - First Nations Reserves and Pipeline
+                    Incidents</a
+                  >
+                </li>
+                <li>
+                  <a href="#elections">Map Feature - Election Filter</a>
+                </li>
+                <li>
+                  <a href="#find-me">Map Feature - Find Me</a>
+                </li>
+              </ul>
+            </div>
+          </section>
+          <details open="open" class="mrgn-bttm-md" id="general-instructions">
             <summary class="instruction-header">General Instructions</summary>
             <ul>
               <li>For the best experience, avoid using Internet Explorer.</li>
@@ -55,18 +100,22 @@
               </li>
             </ul>
           </details>
-          <details open="open" class="mrgn-bttm-md">
+          <details open="open" class="mrgn-bttm-md" id="basic-map-navigation">
             <summary class="instruction-header">Basic Map Navigation</summary>
-            <strong>Laptop/Desktop</strong>
-            <p>
-              While hovering over the map, use your mouse or trackpad to zoom in
-              and out of the map.
-            </p>
-            <strong>Phone/tablet</strong>
-            <p>
-              Use two fingers in a pinch action on the screen to zoom in and
-              out.
-            </p>
+            <p>Laptop/Desktop</p>
+            <ul>
+              <li>
+                While hovering over the map, use your mouse or trackpad to zoom
+                in and out of the map.
+              </li>
+            </ul>
+            <p>Phone/tablet</p>
+            <ul>
+              <li>
+                Use two fingers in a pinch action on the screen to zoom in and
+                out.
+              </li>
+            </ul>
             <div class="well">
               <div class="row center">
                 <div class="col-md-8">
@@ -84,6 +133,7 @@
                 </div>
                 <div class="col-md-4">
                   <img
+                    class="img-right"
                     src="/html/tutorial/images/map-navigation.png"
                     alt="alternatetext"
                     width="318"
@@ -102,8 +152,11 @@
                 </div>
                 <div class="col-md-4">
                   <img
+                    class="img-right"
                     src="/html/tutorial/images/fullscreen.png"
                     alt="alternatetext"
+                    width="242"
+                    height="103"
                   />
                 </div>
               </div>
@@ -120,38 +173,83 @@
                 </div>
                 <div class="col-md-4">
                   <img
+                    class="img-right"
                     src="/html/tutorial/images/reset-map.png"
                     alt="alternatetext"
+                    width="221"
+                    height="112"
                   />
                 </div>
               </div>
             </div>
           </details>
-          <details open="open" class="mrgn-bttm-md">
+          <details open="open" class="mrgn-bttm-md" id="communities">
             <summary class="instruction-header">
               Map Feature - Communities
             </summary>
-            <p>Coming soon!</p>
+            <p>
+              The main content of this app is contained in the
+              <i>community</i> layer. Communities are represented on the map as
+              grey circles with a large, transparent circular border. You can
+              zoom in to gain a better view of communities that are clustered
+              together, and evaluate the approximate location of the community
+              headquarters.
+            </p>
+            <p>
+              The location of each community has been estimated. The exact point
+              on the map often corresponds to something like the band office or
+              a community hall. The large transparent circular border around the
+              grey circle is used to indicate that the community is not
+              neccecarily a pinpoint on the map.
+            </p>
+            <div class="well">
+              <div class="row center">
+                <div class="col-md-8">
+                  <p>
+                    When hovering over a community circle, a tooltip will appear
+                    with some preliminary information. The community name is
+                    listed at the top in bold, and if available, the phonetic
+                    information will apear in brackets next to the name
+                    indicating the proper way to sound out the community name.
+                  </p>
+                  <p>
+                    When hovering over a community, the tooltip gives an
+                    indication that you can click directly on the circle to view
+                    additional information about the community. See additional
+                    instructions below.
+                  </p>
+                </div>
+                <div class="col-md-4">
+                  <img
+                    class="img-right"
+                    src="/html/tutorial/images/community-tooltip.png"
+                    alt="alternatetext"
+                    width="393"
+                    height="293"
+                  />
+                </div>
+              </div>
+            </div>
           </details>
-          <details open="open" class="mrgn-bttm-md">
+          <details open="open" class="mrgn-bttm-md" id="tmx">
             <summary class="instruction-header">
               Map Feature - TMX Centerline, Kilometer Posts, and Spreads
             </summary>
             <p>Coming soon!</p>
           </details>
-          <details open="open" class="mrgn-bttm-md">
+          <details open="open" class="mrgn-bttm-md" id="reserves">
             <summary class="instruction-header">
               Map Feature - First Nations Reserves and Pipeline Incidents
             </summary>
             <p>Coming soon!</p>
           </details>
-          <details open="open" class="mrgn-bttm-md">
+          <details open="open" class="mrgn-bttm-md" id="elections">
             <summary class="instruction-header">
               Map Feature - Election Filter
             </summary>
             <p>Coming soon!</p>
           </details>
-          <details open="open" class="mrgn-bttm-md">
+          <details open="open" class="mrgn-bttm-md" id="find-me">
             <summary class="instruction-header">Map Feature - Find Me</summary>
             <p>Coming soon!</p>
           </details>
